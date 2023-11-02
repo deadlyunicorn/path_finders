@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:path_finders/src/friends/friends_view.dart';
+import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
+import 'package:path_finders/src/sensors/sensors_view.dart';
+import 'package:provider/provider.dart';
 
-import 'sample_feature/sample_item_details_view.dart';
 import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -14,6 +16,7 @@ class MyApp extends StatelessWidget {
     required this.settingsController,
   });
 
+  
   final SettingsController settingsController;
 
   @override
@@ -22,10 +25,10 @@ class MyApp extends StatelessWidget {
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
-    return ListenableBuilder(
-      listenable: settingsController,
+    return ChangeNotifierProvider(
+      create: (_)=>CurrentPageState(),
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
+        return MaterialApp( 
           // Providing a restorationScopeId allows the Navigator built by the
           // MaterialApp to restore the navigation stack when a user leaves and
           // returns to the app after it has been killed while running in the
@@ -56,30 +59,81 @@ class MyApp extends StatelessWidget {
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
-          theme: ThemeData(),
-          darkTheme: ThemeData.dark(),
+          theme: ThemeData(
+            useMaterial3: true
+          ),
+          darkTheme: ThemeData.dark(
+            useMaterial3: true
+          ),
           themeMode: settingsController.themeMode,
+
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
-          onGenerateRoute: (RouteSettings routeSettings) {
-            return MaterialPageRoute<void>(
-              settings: routeSettings,
-              builder: (BuildContext context) {
-                switch (routeSettings.name) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
-                  default:
-                    return const SampleItemListView();
-                }
-              },
-            );
-          },
+          home: Scaffold(
+              appBar: AppBar(
+                title: const Text( "Hello world" ),
+              ),
+              body: const PageSelector(),
+              // Navigator( 
+              //   onGenerateRoute: ( routeSettings ){
+              //     return MaterialPageRoute(builder: (_) => routeSelection(routeSettings, settingsController));
+              //   },
+              // ) ,
+              bottomNavigationBar: const CustomNavigationBar() ,
+            )
         );
       },
+
     );
+  }
+}
+
+class PageSelector extends StatelessWidget{
+  
+  const PageSelector({ super.key });
+
+  @override
+  Widget build(BuildContext context) {
+
+    var appState = context.watch<CurrentPageState>();
+    int selectedIndex = appState.currentPageIndex;
+
+    switch( selectedIndex ){
+      case 0:
+        return FriendsView();
+      case 1:
+        return const SensorsView();
+      default:
+        return const SensorsView();
+    }
+  }
+
+}
+
+class CurrentPageState extends ChangeNotifier {
+
+  int _currentPageIndex = 1;
+
+  int get currentPageIndex => _currentPageIndex;
+
+  void setCurrentPageIndex( int value){
+    _currentPageIndex = value;
+    notifyListeners();
+  }
+}
+
+StatelessWidget routeSelection(RouteSettings routeSettings, SettingsController settingsController){
+
+
+  switch (routeSettings.name) {
+    /*case SettingsView.routeName:
+      // return SettingsView(controller: settingsController);
+    case SampleItemDetailsView.routeName:
+      return const SampleItemDetailsView();
+    case SampleItemListView.routeName:
+    */
+    default:
+      return const SampleItemListView();
   }
 }
