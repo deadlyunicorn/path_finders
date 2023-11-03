@@ -72,7 +72,9 @@ class MyApp extends StatelessWidget {
           // Flutter web url navigation and deep linking.
           home: Scaffold(
               appBar: AppBar(
-                title: const Text( "Hello world" ),
+                elevation: 1,
+                foregroundColor: Colors.blue.shade600,
+                title: const Text( "Path Finder" ),
               ),
               body: const PageSelector(),
               // Navigator( 
