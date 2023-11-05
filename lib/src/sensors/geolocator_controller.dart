@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-class SensorsController with ChangeNotifier{
+class GeolocatorController with ChangeNotifier{
 
-  SensorsController();
+  GeolocatorController();
 
 
   Future<bool> _hasLocationPermission() async{

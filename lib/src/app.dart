@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
               appBar: AppBar(
                 elevation: 1,
                 foregroundColor: Colors.blue.shade600,
-                title: const Text( "Path Finder" ),
+                title: const Text( "Path Finders" ),
               ),
               body: const PageSelector(),
               // Navigator( 
