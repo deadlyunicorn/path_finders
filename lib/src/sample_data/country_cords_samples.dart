@@ -1,3 +1,5 @@
+import 'package:path_finders/src/types/coordinates.dart';
+
 class SampleCoordinateData {
 
   Coordinates chinaCords   =  Coordinates( 31.2183202, 120.2284013);
@@ -7,10 +9,3 @@ class SampleCoordinateData {
 
 }
 
-class Coordinates {
-
-  double latitude;
-  double longitude;
-
-  Coordinates( this.latitude, this.longitude ); 
-}
