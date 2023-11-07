@@ -18,27 +18,27 @@ class Coordinates {
     return Coordinates( pointB.latitude - pointA.latitude, pointB.longitude - pointA.longitude );
   }
 
-  /// How many degrees ( clockwise ) should you rotate from North
+  /// How many rads ( clockwise ) should you rotate from North
   /// in order to face the coordinate location.
   double getRotationFromNorth(){
 
-    if ( longitude > 0 ){
+    if ( longitude >= 0 ){
      
-      if ( latitude > 0 ){
-        return num.parse( math.atan( ( longitude / latitude ) ).toStringAsFixed(2) ) as double;
+      if ( latitude >= 0 ){
+        return math.atan( ( longitude / latitude ) );
       }
       else{  // latitude < 0
-        return num.parse( ( -math.atan( ( latitude  / longitude ) ) + math.pi / 2  ).toStringAsFixed(2) ) as double;
+        return  ( -math.atan( ( latitude  / longitude ) ) + math.pi / 2  );
       }
     }
     else{ // longitude < 0
 
-      if ( latitude > 0 ){
+      if ( latitude >= 0 ){
         // math.tan() returns a negative here.
-        return num.parse( math.atan(  ( longitude / latitude ) ).toStringAsFixed(2) ) as double;
+        return  math.atan(  ( longitude / latitude ) );
       }
       else{ // latitude < 0
-        return num.parse( ( - math.atan( latitude / longitude ) - math.pi / 2 ).toStringAsFixed(2) ) as double;
+        return  ( - math.atan( latitude / longitude ) - math.pi / 2 );
       }
     }
   }
