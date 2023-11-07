@@ -54,6 +54,7 @@ app.*.map.json
 !pubspec.yaml
 !README.md
 !/lib
+!/test
 !/assets
 !/android
 android/.gitignore
@@ -64,3 +65,4 @@ android/settings.gradle
 android/gradle/wrapper/gradle-wrapper.properties
 .gitignore
 android/app/build.gradle
+test/widget_test.dart
