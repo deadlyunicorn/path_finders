@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_finders/src/friends/friends_view.dart';
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
+import 'package:path_finders/src/providers/friend_locator_provider.dart';
 import 'package:path_finders/src/sensors/sensors_view.dart';
 import 'package:provider/provider.dart';
 
@@ -76,7 +77,9 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.blue.shade600,
                 title: const Text( "Path Finders" ),
               ),
-              body: const PageSelector(),
+              body: ChangeNotifierProvider<FriendLocatorProvider>(
+                create: (_) => FriendLocatorProvider(),
+                child: const PageSelector() ), 
               // Navigator( 
               //   onGenerateRoute: ( routeSettings ){
               //     return MaterialPageRoute(builder: (_) => routeSelection(routeSettings, settingsController));
