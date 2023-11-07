@@ -3,12 +3,14 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_finders/src/providers/friend_locator_provider.dart';
 import 'package:path_finders/src/sample_data/country_cords_samples.dart';
 import 'package:path_finders/src/types/coordinates.dart';
+import 'package:provider/provider.dart';
 
 class LocationAllowedView extends StatefulWidget{
 
-  LocationAllowedView({ super.key });
+  const LocationAllowedView({ super.key });
 
   @override
   State<LocationAllowedView> createState() => _LocationAllowedViewState();
@@ -17,16 +19,15 @@ class LocationAllowedView extends StatefulWidget{
 class _LocationAllowedViewState extends State<LocationAllowedView> {
 
   Coordinates currentPosition = Coordinates( 0, 0 );
-  Coordinates pointOfInterest = Coordinates( 0, 0 );
 
-  CompassEvent? _lastRead;
   SampleCoordinateData sampleCoordinates = SampleCoordinateData();
   
 
   @override
   Widget build(BuildContext context) {
 
-    double pointOfInterestRotationInRads = currentPosition.getDifference( pointOfInterest ).getRotationFromNorth();
+    FriendLocatorProvider appState = context.watch<FriendLocatorProvider>();
+    Coordinates pointOfInterest = appState.pointOfInterest;
 
     return Column(
       children: [
@@ -38,6 +39,12 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
             stream: Geolocator.getPositionStream(), 
             builder: (context, snapshot) {
 
+              double pointOfInterestRotationInRads = num.parse( 
+                currentPosition
+                  .getDifference( pointOfInterest )
+                  .getRotationFromNorth()
+                  .toStringAsFixed(5) 
+              ) as double ;
 
               if ( snapshot.hasError ){
                 return Text( "Failed getting data");
@@ -49,29 +56,20 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                 return Column( 
                   children: [
                     Text( "Your current position is \n ${ currentPosition.latitude }, ${ currentPosition.longitude } " ),
-                    DropdownMenu(
-                      dropdownMenuEntries: [
-                        DropdownMenuEntry( value: sampleCoordinates.chinaCords , label: "China"),
-                        DropdownMenuEntry( value: sampleCoordinates.finlandCords , label: "Finland"),
-                        DropdownMenuEntry( value: sampleCoordinates.mexicoCords , label: "Mexico"),
-                        DropdownMenuEntry( value: sampleCoordinates.sAfricaCords , label: "South Africa"),
-                      ],
-                      onSelected: (value) {
-                        
-                        if ( value != null ){
-                          setState(() {
-                            pointOfInterest = value;
-                          });
-                        }
-                      },
-                    ),
-                    Text( 
-                      "Your position difference from your point of interest is"
-                      "\n${ currentPosition.getDifference( pointOfInterest ).toString() }" 
-                    ),
-                    Text(
-                      "Rotate ${ pointOfInterestRotationInRads * 57.29 } degress from North."
-                    )
+                    pointOfInterestRotationInRads.isFinite 
+                      ? Column(
+                        children: [
+                          Text(
+                              "Rotate clockwise ${pointOfInterestRotationInRads * 57.29 } degress from North."
+                            ),
+                              Center(child: 
+                                _buildCompass( context, pointOfInterestRotationInRads: pointOfInterestRotationInRads )
+                              )
+
+                        ],
+                      )
+                    
+                      : CircularProgressIndicator()
                   ],
                 );
               }
@@ -81,18 +79,12 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
             }
           )
         ),
-        Expanded(child: 
-          Center(child: 
-            _buildCompass()
-          )
-        )
         
       ],
     );
   }
 
-  Widget _buildCompass(){
-    double pointOfInterestRotationInRads = currentPosition.getDifference( pointOfInterest ).getRotationFromNorth();
+  Widget _buildCompass(BuildContext context, { required double pointOfInterestRotationInRads}){
 
     return StreamBuilder<CompassEvent>(
       stream: FlutterCompass.events, 
@@ -164,9 +156,10 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                     child: const Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("N", style: TextStyle( color: Colors.red), ),
+                        Text( "Target", style: TextStyle( color: Colors.green), ),
                         Icon(
-                          Icons.straight, 
+                          Icons.straight_rounded,
+                          color: Colors.green,
                           size: 100,
                         )
                       ],
