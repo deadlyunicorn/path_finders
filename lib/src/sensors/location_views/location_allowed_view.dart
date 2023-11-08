@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/providers/friend_locator_provider.dart';
-import 'package:path_finders/src/sample_data/country_cords_samples.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
 
@@ -20,13 +19,11 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
 
   Coordinates currentPosition = Coordinates( 0, 0 );
 
-  SampleCoordinateData sampleCoordinates = SampleCoordinateData();
-  
-
   @override
   Widget build(BuildContext context) {
 
     FriendLocatorProvider appState = context.watch<FriendLocatorProvider>();
+
     Coordinates pointOfInterest = appState.pointOfInterest;
 
     return Column(
@@ -60,11 +57,14 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                       ? Column(
                         children: [
                           Text(
-                              "Rotate clockwise ${pointOfInterestRotationInRads * 57.29 } degress from North."
+
+                              "Rotate clockwise ${pointOfInterestRotationInRads * 57.29 } degress from North,"
+                              "in order to look towards ${appState.friendlyNameOfPoint}.",
+                              textAlign: TextAlign.center,
                             ),
-                              Center(child: 
-                                _buildCompass( context, pointOfInterestRotationInRads: pointOfInterestRotationInRads )
-                              )
+                            Center(child: 
+                              _buildCompass( context, pointOfInterestRotationInRads: pointOfInterestRotationInRads )
+                            )
 
                         ],
                       )
