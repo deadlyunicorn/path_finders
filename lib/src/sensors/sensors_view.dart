@@ -16,8 +16,7 @@ class SensorsView extends StatefulWidget{
 
 class _SensorsViewState extends State<SensorsView> {
 
-  // ignore: unnecessary_cast
-  var sensorsView = LoadingLocationView() as Widget;
+  var sensorsView = LoadingLocationView();
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +28,16 @@ class _SensorsViewState extends State<SensorsView> {
       builder: (context, snapshot){
         if ( snapshot.hasData ){
           return snapshot.data == true
-            ? LocationAllowedView()
+            ? const LocationAllowedView()
             : LocationNotAllowedView();
         }
-        else{ // if ( snapshot.hasError )
+        else if( snapshot.hasError ){
           return (
-            Text("There was an error getting your location.")
+            const Text("There was an error getting your location.")
           ); 
+        }
+        else{ //not mounted yet.
+          return const SizedBox.shrink();
         }
       });
 
