@@ -16,16 +16,16 @@ class CompassView extends StatelessWidget {
       stream: FlutterCompass.events, 
       builder: (context, snapshot){
         if ( snapshot.hasError){
-          return Text("Error reading");
+          return const Text("Error reading");
         }
         if ( snapshot.connectionState == ConnectionState.waiting ){
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         double? direction = snapshot.data!.heading;
 
         if ( direction == null ){
-          return Center(
+          return const Center(
             child: Text("Your device doesn't have the required sensors")
           );
         }
@@ -37,7 +37,7 @@ class CompassView extends StatelessWidget {
               width: 130,
               child: Material(
                 shadowColor: Colors.blue,
-                shape: CircleBorder( 
+                shape: const CircleBorder( 
                   side: BorderSide( 
                     color: Colors.black26,
                     width: 5
@@ -63,11 +63,11 @@ class CompassView extends StatelessWidget {
                 ),
               )
             ),
-            Container(
+            SizedBox(
               width: 130,
               child: Material(
                 shadowColor: Colors.blue,
-                shape: CircleBorder( 
+                shape: const CircleBorder( 
                   side: BorderSide( 
                     color: Colors.black26,
                     width: 5
