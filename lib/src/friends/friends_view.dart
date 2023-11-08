@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_finders/src/friends/friends_view_components/friends_entries_view.dart';
 import 'package:path_finders/src/friends/id_formatter.dart';
-import 'package:path_finders/src/providers/friend_locator_provider.dart';
+import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:path_finders/src/providers/friend_locator_provider.dart';
+import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/sensors/location_views/compass_view.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
