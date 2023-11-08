@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
-class FriendLocatorProvider with ChangeNotifier{
+class TargetProvider with ChangeNotifier{
 
-  Coordinates _pointOfInterest = Coordinates( 0, 0);
-  String _friendlyNameOfPoint = "Earth's Center";
+  Coordinates _targetLocation = Coordinates( 0, 0);
+  String _targetName = "Earth's Center";
 
-  void setPointOfInterest( Coordinates newValue ){
+  void setTargetLocation( Coordinates newLocation ){
 
-    _pointOfInterest = newValue;
+    _targetLocation = newLocation;
     notifyListeners();
 
   }
 
-  void setFriendlyNameOfPoint( String newName ){
+  void setTargetName( String newName ){
     
-    _friendlyNameOfPoint = newName;
+    _targetName = newName;
     notifyListeners();
 
   }
 
-  get pointOfInterest => _pointOfInterest;
-  get friendlyNameOfPoint => _friendlyNameOfPoint;
+  get targetLocation => _targetLocation;
+  get targetName => _targetName;
 
 }
