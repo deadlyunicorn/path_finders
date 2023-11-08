@@ -77,8 +77,8 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.blue.shade600,
                 title: const Text( "Path Finders" ),
               ),
-              body: ChangeNotifierProvider<FriendLocatorProvider>(
-                create: (_) => FriendLocatorProvider(),
+              body: ChangeNotifierProvider<TargetProvider>(
+                create: (_) => TargetProvider(),
                 child: const PageSelector() ), 
               // Navigator( 
               //   onGenerateRoute: ( routeSettings ){
@@ -104,14 +104,13 @@ class PageSelector extends StatelessWidget{
     var appState = context.watch<CurrentPageState>();
     int selectedIndex = appState.currentPageIndex;
 
-    switch( selectedIndex ){
-      case 0:
-        return FriendsView();
-      case 1:
-        return const SensorsView();
-      default:
-        return const SensorsView();
-    }
+    return IndexedStack(
+      index: selectedIndex,
+      children: [
+        FriendsView(),
+        const SensorsView()
+      ],
+    );
   }
 
 }
