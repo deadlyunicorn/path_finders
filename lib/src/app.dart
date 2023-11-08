@@ -79,7 +79,13 @@ class MyApp extends StatelessWidget {
               ),
               body: ChangeNotifierProvider<TargetProvider>(
                 create: (_) => TargetProvider(),
-                child: const PageSelector() ), 
+                child: Container(
+                  padding: const EdgeInsets.only( bottom: 20, top: 20 ),
+                  alignment: Alignment.center,
+
+                  child: const PageSelector(),
+                )
+              ),
               // Navigator( 
               //   onGenerateRoute: ( routeSettings ){
               //     return MaterialPageRoute(builder: (_) => routeSelection(routeSettings, settingsController));
@@ -106,9 +112,9 @@ class PageSelector extends StatelessWidget{
 
     return IndexedStack(
       index: selectedIndex,
-      children: [
-        FriendsView(),
-        const SensorsView()
+      children: const [
+         FriendsView(),
+         SensorsView()
       ],
     );
   }
