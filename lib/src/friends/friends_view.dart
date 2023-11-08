@@ -28,69 +28,86 @@ class _FriendsViewState extends State<FriendsView> {
 
     FriendLocatorProvider appState = context.watch();  
 
-    sampleData.forEach((key, value) {
-      sampleDataTiles.add(
-        ListTile(
-          title: Text( key ),
-          onTap: () {
-            appState.setPointOfInterest( value );
-          }
-        )
-      );
-    });
-
     return (
-    
-          ListView(
-            children:
-              [...sampleDataTiles,
-              ListTile(
-                title: const Center (child: Text("Add with ID") ),
-                onTap: () => showDialog(
-                  context: context, 
-                  builder: (context) => AlertDialog(
-                    title: const Text("Enter user ID"),
-                    content: TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        CustomInputFormatter(),
-                        LengthLimitingTextInputFormatter(6),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          friendToAdd = value;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        labelText: "ID",
-                        hintText: "##-###",
+      Column(
+        children: [
+          Text("Currently ${appState.friendlyNameOfPoint} is selected."),
+          Expanded(
+            flex: 3,
+            child:
+            ListView.builder(
+              itemCount:  sampleData.length,
+              itemBuilder: (context, index) {
+                final key = sampleData.keys.elementAt(index);
+                final value = sampleData[key];
+                return ListTile(
+                  title: Text( key ),
+                  onTap: () {
+                    appState.setPointOfInterest( value! );
+                    appState.setFriendlyNameOfPoint( key );
+                  }
+                );
+              },
+            )
+          ),
+          Expanded(
+            child: 
+            ListView(
+              children: [
+                ListTile(
+                  title: const Center (child: Text("Add with ID") ),
+                  onTap: () => showDialog(
+                    context: context, 
+                    builder: (context) => AlertDialog(
+                      title: const Text("Enter user ID"),
+                      content: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          CustomInputFormatter(),
+                          LengthLimitingTextInputFormatter(6),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            friendToAdd = value;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          labelText: "ID",
+                          hintText: "##-###",
+                        ),
                       ),
-                    ),
-                    actions: [
-                      TextButton(onPressed: (){
-                        Navigator.pop(context,"Cancel");
-                      }, child: Text("Cancel")),
-                      TextButton(
-                        onPressed: (){
-                          friendToAdd.length < 5 ? null 
-                          : ((){
-                            Navigator.pop(context, "Submit");
-                            showDialog(
-                              context: context, 
-                              builder: (context) {
-                                print( friendToAdd );
-                                return AlertDialog(
-                                  content: LinearProgressIndicator(),
-                                );
-                              } 
-                            );
-                          })();
-                        }, 
-                        child: Text("Submit")),
-                    ],
-                  )),
-              )
+                      actions: [
+                        TextButton(onPressed: (){
+                          Navigator.pop(context,"Cancel");
+                        }, child: Text("Cancel")),
+                        TextButton(
+                          onPressed: (){
+                            friendToAdd.length < 5 ? null 
+                            : ((){
+                              Navigator.pop(context, "Submit");
+                              showDialog(
+                                context: context, 
+                                builder: (context) {
+                                  print( friendToAdd );
+                                  return const AlertDialog(
+                                    content: LinearProgressIndicator(),
+                                  );
+                                } 
+                              );
+                            })();
+                          }, 
+                          child: Text("Submit")
+                        ),
+                      ],
+                    )
+                  ),
+                )
               ]
-    ));
+            )
+          ),
+          Text("Enable Scan")
+        ],
+      )
+    );
   }
 }
