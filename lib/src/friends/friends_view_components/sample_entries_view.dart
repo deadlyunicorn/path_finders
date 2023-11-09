@@ -3,11 +3,11 @@ import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
 
-class FriendsEntriesView extends StatelessWidget{
+class SampleEntriesView extends StatelessWidget{
 
   final Map<String, Coordinates> listItems;
 
-  const FriendsEntriesView({ 
+  const SampleEntriesView({ 
     Key? key, 
     required this.listItems,
   }):super(key:key);
