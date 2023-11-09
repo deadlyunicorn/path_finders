@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_finders/src/friends/friends_view.dart';
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
+import 'package:path_finders/src/providers/target_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/sensors/sensors_view.dart';
 import 'package:provider/provider.dart';
@@ -110,12 +111,22 @@ class PageSelector extends StatelessWidget{
     var appState = context.watch<CurrentPageState>();
     int selectedIndex = appState.currentPageIndex;
 
-    return IndexedStack(
-      index: selectedIndex,
-      children: const [
-         FriendsView(),
-         SensorsView()
+    return MultiProvider(
+      providers: [ 
+        ChangeNotifierProvider(
+          create: (context) => TargetListingsProvider()
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TargetProvider()
+        )
       ],
+      child: IndexedStack(
+        index: selectedIndex,
+        children: const [
+          FriendsView(),
+          SensorsView()
+        ],
+      )
     );
   }
 
