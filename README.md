@@ -1,4 +1,4 @@
-# path_finders
+# Path Finders
 
 Path finders is about helping you find your friends.
 
