@@ -15,7 +15,7 @@ class LocationAllowedView extends StatefulWidget{
 
 class _LocationAllowedViewState extends State<LocationAllowedView> {
 
-  Coordinates currentPosition = Coordinates( 0, 0 );
+  Coordinates currentLocation = Coordinates( 0, 0 );
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
         builder: (context, snapshot) {
 
           double targetLocationRotationInRads = num.parse( 
-            currentPosition
+            currentLocation
               .getRotationFromNorthTo( targetLocation )
               .toStringAsFixed(5) 
           ) as double;
@@ -40,7 +40,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
           }
           else if ( snapshot.hasData ){
 
-            currentPosition = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
+            currentLocation = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
 
             return Column( 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,13 +48,14 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
               children: [
                 Text( 
                   "Your current position is \n" 
-                  "${ currentPosition.latitude }, ${ currentPosition.longitude }" 
+                  "${ currentLocation.latitude }, ${ currentLocation.longitude }" 
                 ),
                 targetLocationRotationInRads.isFinite 
                   ? Column(
                     children: [
                       Text(
-                          "Rotate clockwise ${targetLocationRotationInRads * 57.29 } degress from North,"
+                          "Your distance is ${ currentLocation.distanceInMetersTo( targetLocation ) } meters.\n"
+                          "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
                           "in order to look towards ${appState.targetName}.",
                           textAlign: TextAlign.center,
                         ),
