@@ -5,46 +5,94 @@ import 'dart:math' as math;
 
 void main(){
 
-  double pi = math.pi;
-  test( 'Should get 0 rads for North',(){
-    final north = Coordinates( 20, 0);
-    expect( north.getRotationFromNorth(), 0);
+  const double pi = math.pi;
+  final Coordinates centerOfEarth = Coordinates( 0, 0 );
+  final north = Coordinates( 20, 0);
+  final east = Coordinates( 0, 20);
+  final south = Coordinates( -20, 0);
+  final west = Coordinates( 0, -20 );
+  final northEast = Coordinates( 20, 20);
+  final southEast = Coordinates( -20, 20);
+  final southWest = Coordinates( -20, -20);
+  final northWest = Coordinates( 20, -20);
+
+  group( "Tests from the center of earth", () { 
+
+    Coordinates currentPosition = centerOfEarth;
+
+    test( 'Should get 0 rads for centerOfEarth ',(){
+      expect( currentPosition.getRotationFromNorthTo( centerOfEarth ), 0);
+    });
+
+    test( 'Should get 0 rads for North',(){
+      expect( currentPosition.getRotationFromNorthTo( north ), 0);
+    });
+
+    test( 'Should get π/2 rads for East',(){
+      expect( currentPosition.getRotationFromNorthTo( east ), pi / 2 );
+    });
+
+    test( 'Should get π rads for South',(){
+      expect( currentPosition.getRotationFromNorthTo( south ), pi );
+    });
+
+    test( 'Should get -π/2 rads for West',(){
+      expect( currentPosition.getRotationFromNorthTo( west ), -pi/2 );
+    });
+
+    test( 'Should get π/4 rads for NorthEast',(){
+      expect( currentPosition.getRotationFromNorthTo( northEast ), pi / 4 );
+    });
+
+    test( 'Should get π - π/4 rads for SouthEast',(){
+      expect( currentPosition.getRotationFromNorthTo( southEast ), pi -  pi / 4 );
+    });
+
+    test( 'Should get -π + π/4 rads for SouthWest',(){
+      expect( currentPosition.getRotationFromNorthTo( southWest ), -pi + pi / 4 );
+    });
+
+    test( 'Should get -π/4 rads for NorthWest',(){
+      expect( currentPosition.getRotationFromNorthTo( northWest ), -pi / 4 );
+    });
+
+  });
+  group( "Tests from the North", () { 
+
+
+    Coordinates currentPosition = north;
+
+    test( 'Should get π rads for centerOfEarth ',(){
+      expect( currentPosition.getRotationFromNorthTo( centerOfEarth ), pi );
+    });
+
+    test( 'Should get 0 rads for North',(){
+      expect( currentPosition.getRotationFromNorthTo( north ), 0);
+    });
+
+    test( 'Should get 3π/4 rads for East',(){
+      expect( currentPosition.getRotationFromNorthTo( east ), 3 * pi / 4 );
+    });
+
+    test( 'Should get π rads for South',(){
+      expect( currentPosition.getRotationFromNorthTo( south ), pi );
+    });
+
+    test( 'Should get -3π/4 rads for West',(){
+      expect( currentPosition.getRotationFromNorthTo( west ), -3 * pi / 4 );
+    });
+
+    test( 'Should get π/2 rads for NorthEast',(){
+      expect( currentPosition.getRotationFromNorthTo( northEast ), pi / 2 );
+    });
+
+    test( 'Should get -π/2 rads for NorthWest',(){
+      expect( currentPosition.getRotationFromNorthTo( northWest ), -pi / 2 );
+    });
+
   });
 
-  test( 'Should get π/2 rads for East',(){
-    final east = Coordinates( 0, 20);
-    expect( east.getRotationFromNorth(), pi / 2 );
-  });
-
-  test( 'Should get π rads for South',(){
-    final south = Coordinates( -20, 0);
-    expect( south.getRotationFromNorth(), pi );
-  });
-
-  test( 'Should get -π/2 rads for West',(){
-    final west = Coordinates( 0, -20 );
-    expect( west.getRotationFromNorth(), -pi/2 );
-  });
-
-  test( 'Should get π/4 rads for NorthEast',(){
-    final northEast = Coordinates( 20, 20);
-    expect( northEast.getRotationFromNorth(), pi / 4 );
-  });
-
-  test( 'Should get π - π/4 rads for SouthEast',(){
-    final southEast = Coordinates( -20, 20);
-    expect( southEast.getRotationFromNorth(), pi -  pi / 4 );
-  });
-
-  test( 'Should get -π + π/4 rads for SouthWest',(){
-    final southWest = Coordinates( -20, -20);
-    expect( southWest.getRotationFromNorth(), -pi + pi / 4 );
-  });
-
-  test( 'Should get -π/4 rads for NorthWest',(){
-    final southWest = Coordinates( 20, -20);
-    expect( southWest.getRotationFromNorth(), -pi / 4 );
-  });
+  
 
 
   
