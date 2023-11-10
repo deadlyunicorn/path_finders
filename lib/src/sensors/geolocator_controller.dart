@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 class GeolocatorController with ChangeNotifier{
 
   GeolocatorController();
-
+  
 
   Future<bool> _hasLocationPermission() async{
     bool serviceEnabled;

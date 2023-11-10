@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/sensors/location_views/location_allowed_view.dart';
-import 'package:path_finders/src/sensors/location_views/location_loading_view.dart';
-import 'package:path_finders/src/sensors/location_views/location_not_allowed_view.dart';
 import 'package:path_finders/src/sensors/geolocator_controller.dart';
 
 class SensorsView extends StatefulWidget{
@@ -16,12 +14,10 @@ class SensorsView extends StatefulWidget{
 
 class _SensorsViewState extends State<SensorsView> {
 
-  var sensorsView = LoadingLocationView();
+  GeolocatorController sensors = GeolocatorController();
 
   @override
   Widget build(BuildContext context) {
-
-    GeolocatorController sensors = GeolocatorController();
 
     return FutureBuilder<bool>(
       future: sensors.hasLocationPermission, 
@@ -29,7 +25,8 @@ class _SensorsViewState extends State<SensorsView> {
         if ( snapshot.hasData ){
           return snapshot.data == true
             ? const LocationAllowedView()
-            : LocationNotAllowedView();
+            : const Text("No location access. Retry button.");
+
         }
         else if( snapshot.hasError ){
           return (
