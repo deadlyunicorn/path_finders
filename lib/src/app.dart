@@ -5,7 +5,7 @@ import 'package:path_finders/src/friends/friends_view.dart';
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
 import 'package:path_finders/src/providers/target_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
-import 'package:path_finders/src/sensors/sensors_view.dart';
+import 'package:path_finders/src/tracker/tracker_view.dart';
 import 'package:provider/provider.dart';
 
 import 'sample_feature/sample_item_list_view.dart';

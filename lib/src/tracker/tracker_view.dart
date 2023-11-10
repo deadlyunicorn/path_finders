@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:path_finders/src/sensors/location_views/location_allowed_view.dart';
-import 'package:path_finders/src/sensors/geolocator_controller.dart';
+import 'package:path_finders/src/tracker/location_allowed_view.dart';
+import 'package:path_finders/src/tracker/geolocator_controller.dart';
 
 class SensorsView extends StatefulWidget{
 
