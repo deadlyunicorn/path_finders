@@ -31,8 +31,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
 
           double targetLocationRotationInRads = num.parse( 
             currentPosition
-              .getDifference( targetLocation )
-              .getRotationFromNorth()
+              .getRotationFromNorthTo( targetLocation )
               .toStringAsFixed(5) 
           ) as double;
 
