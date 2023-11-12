@@ -30,7 +30,7 @@ class _SensorsViewState extends State<SensorsView> {
         }
         else if( snapshot.hasError ){
           return (
-            const Text("There was an error getting your location.")
+            const Center( child:  Text("We couldn't get your location.") ) 
           ); 
         }
         else{ //not mounted yet.

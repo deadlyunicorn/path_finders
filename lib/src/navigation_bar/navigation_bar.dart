@@ -16,13 +16,16 @@ class CustomNavigationBar extends StatelessWidget{
       NavigationBar(
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.person), 
+            icon: Icon(Icons.group), 
             label: "Friends"
           ),
           NavigationDestination(
-            
             icon: Icon(Icons.gps_fixed), 
-            label: "Share",
+            label: "Track",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person), 
+            label: "Profile",
           )],
         selectedIndex: selectedIndex,
         onDestinationSelected: ( value ){
