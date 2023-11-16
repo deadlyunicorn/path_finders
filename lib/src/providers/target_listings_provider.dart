@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/storage_services.dart';
 
 class TargetListingsProvider extends ChangeNotifier{
 
-  Set<String> _targetEntries = { "12-312", "23-312" };
+  Set<String> _targetEntries = {};
 
-  addTargetEntry( String targetEntry ){
+  void initializeTargetEntries( Set<String> initialEntriesFromFile){
+    _targetEntries = initialEntriesFromFile;
+  }
+
+  Future<void> addTargetEntry( String targetEntry ) async{
+
+    await TargetsFile.writeTarget(targetEntry);
     _targetEntries.add( targetEntry );
     notifyListeners();
   }
 
-  removeTargetEntry( String key ){
-    _targetEntries.remove(key);
+  Future<void> removeTargetEntry( String targetEntry ) async{
+
+    await TargetsFile.removeTargetFromFile( targetEntry );
+    _targetEntries.remove( targetEntry );
     notifyListeners();
   }
 

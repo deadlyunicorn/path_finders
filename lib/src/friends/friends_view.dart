@@ -70,13 +70,13 @@ class _FriendsViewState extends State<FriendsView> {
                             Navigator.pop(context,"Cancel");
                           }, child: const Text("Cancel")),
                           TextButton(
-                              onPressed: (){
+                              onPressed: () async{
                                 friendToAdd.length < 5 ? null 
-                                : ((){
-                                  print( listingsProvider.targetEntries );
-                                  listingsProvider.addTargetEntry(friendToAdd);
-                                  Navigator.pop(context, "Submit");
-                                  
+                                : (() async{
+                                  await listingsProvider.addTargetEntry(friendToAdd);
+                                  if ( context.mounted ){
+                                    Navigator.pop(context, "Submit");
+                                  } 
                                 })();
                               }, 
                               child: const Text("Submit")
