@@ -14,7 +14,7 @@ class FriendEntriesView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    final Future<String> _mockDelay = Future<String>.delayed(
+    final Future<String> mockDelay = Future<String>.delayed(
     const Duration( seconds: 1),
     () => "Loaded",
   );
@@ -46,7 +46,7 @@ class FriendEntriesView extends StatelessWidget{
                     final entry = listingsProvider.targetEntries.elementAt(index);
                     return Consumer<TargetProvider>( builder: (context, targetProvider, child) 
                       => FutureBuilder(
-                        future: _mockDelay,
+                        future: mockDelay,
                         builder: (context, snapshot) { 
                           
                           Widget trailingIcon;

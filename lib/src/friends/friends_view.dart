@@ -89,9 +89,6 @@ class _FriendsViewState extends State<FriendsView> {
               )
             )
           ),
-          const Text("Your ID is: ######"),
-          const Text("Toggle Visibility"),
-          const Text("Regenerate ID"),
         ],
       )
     );

@@ -17,15 +17,13 @@ class ProfileView extends StatelessWidget{
           const Text("Toggle Visibility"),
           const Text("Regenerate ID"),
 
-          Text( "User profile will be in here "),
+          const Text( "User profile will be in here "),
           FutureBuilder(
             future: AppVault().showKeys(), 
             builder: (context, snapshot){
-              print("hello world!  ${ DateTime.now().toString().toString()}" );
-
               return snapshot.hasData
               ? Text( snapshot.data! )
-              : Text( "error" );
+              : const Text( "error" );
             }
               ,
           ),

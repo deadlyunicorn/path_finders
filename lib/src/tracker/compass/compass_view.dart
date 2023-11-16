@@ -33,7 +33,7 @@ class CompassView extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
+            SizedBox(
               width: 130,
               child: Material(
                 shadowColor: Colors.blue,
