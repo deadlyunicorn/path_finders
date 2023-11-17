@@ -78,7 +78,7 @@ class LocationSharingWidget extends StatelessWidget{
               children: [
                 const Text(
                   "Sharing Location",
-                  textScaler: 1.2
+                  textScaler: TextScaler.linear(1.2)
                 ),
                 StreamBuilder(
                   stream: _locationUpdateStream(),
