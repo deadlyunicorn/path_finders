@@ -70,8 +70,48 @@ class TargetsFile {
 }
 
 class UserFile {
-  Future<File> get _userIdFile async{
+  
+  static Future<File> get _userIdFile async{
     final path = await LocalFiles._localPath;
     return File( "$path/userId.txt");
+  }
+
+  /// Returns a valid userId else null.
+  static Future<String?> getUserId ()async{
+
+    final userIdFile = await _userIdFile;
+
+    try{
+      final String content = await userIdFile.readAsString();
+      if ( content.isEmpty ){
+        return null;
+      }
+      else if( content.length != 6 ){
+        await userIdFile.writeAsString('');
+        return null;
+      }
+      else{
+        return content;
+      }
+
+    }
+    catch( error ){
+      if ( error is PathNotFoundException ){
+        await userIdFile.writeAsString("");
+        return await getUserId();
+      }
+      else {
+        return null;
+      }
+    }
+
+    
+  }
+
+  static Future<void> writeUserId( String userId ) async{
+
+    final userIdFile = await _userIdFile;
+    await userIdFile.writeAsString( userId );
+
   }
 }
