@@ -1,34 +1,72 @@
-import 'package:flutter/widgets.dart';
-import 'package:path_finders/src/profile/user_registration_service.dart';
+import 'package:flutter/material.dart';
+import 'package:path_finders/src/profile/location_sharing_widget.dart';
+import 'package:path_finders/src/storage_services.dart';
 
-class ProfileView extends StatelessWidget{
+class ProfileView extends StatefulWidget{
 
   const ProfileView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<ProfileView> createState() => _ProfileViewState();
+}
 
-    
+class _ProfileViewState extends State<ProfileView> {
+
+  bool isSharing = false;
+
+  @override
+  Widget build(BuildContext context) {
     
     return Center( 
-      child: Column( 
-        children: [
-          const Text("Your ID is: ######"),
-          const Text("Toggle Visibility"),
-          const Text("Regenerate ID"),
+      child: FutureBuilder(
+            future: UserFile.getUserId(), 
+            builder: (context, userIdSnapshot){
 
-          const Text( "User profile will be in here "),
-          FutureBuilder(
-            future: AppVault().showKeys(), 
-            builder: (context, snapshot){
-              return snapshot.hasData
-              ? Text( snapshot.data! )
-              : const Text( "error" );
+              if (  userIdSnapshot.hasData && userIdSnapshot.data != null ){
+
+                final String userId = userIdSnapshot.data!;
+
+                return Column( 
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Your ID is: $userId", 
+                          textScaler: 2
+                        ),
+                        IconButton( 
+                          icon: const Icon(Icons.refresh), 
+                          tooltip: "Regenerate ID",
+                          onPressed: (){
+                            print("hello world");
+                          }
+                        ),
+                      ],
+                    ),
+                    const Text( "Toggle Visibility", textScaler: 1.5 ),
+                    Switch(
+                      value: isSharing, 
+                      onChanged: ( newValue ){
+                        setState(() {
+                          isSharing = newValue;
+                        });
+                      }),
+                    LocationSharingWidget(
+                      isSharing: isSharing,
+                      userId: userId 
+                    ),
+                  ]
+                );
+              }
+              else{
+                return const Text(
+                  "Your ID is missing. Are you connected to the internet?",
+                  textScaler: 2
+                );
+              }
+              
             }
-              ,
-          ),
-        ]
-      )
+          )
     );
   }
 }
