@@ -2,6 +2,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 class LocalFiles { 
@@ -21,19 +23,31 @@ class LocalFiles {
 class TargetsFile {
 
   static Future<File> writeTarget( String targetId ) async{
-    
+
     final targetsFile = await LocalFiles.targetsFile;
-    final String jsonListString = await targetsFile.readAsString();
+    try{
+      final String jsonListString = await targetsFile.readAsString();
 
-    final List<dynamic> targetMap = jsonListString.isEmpty
-    ?jsonDecode( "[]" )
-    :jsonDecode( jsonListString );
+      final List<dynamic> targetMap = jsonListString.isEmpty
+      ?jsonDecode( "[]" )
+      :jsonDecode( jsonListString );
 
-    targetMap.add({
-      "targetId": targetId
-    });
+      targetMap.add({
+        "targetId": targetId
+      });
+      return await targetsFile.writeAsString( jsonEncode( targetMap ) );
 
-    return await targetsFile.writeAsString( jsonEncode( targetMap ) );
+    }
+    catch( error ){
+      if ( error is PathNotFoundException ){
+        await targetsFile.writeAsString("");
+        return await writeTarget(targetId);
+      }
+      else{ 
+        throw "Uknown error.";
+      }
+    }
+    
   }
 
       // await targetsFile.writeAsString(""); used to delete for testing
@@ -83,12 +97,15 @@ class UserFile {
 
     try{
       final String content = await userIdFile.readAsString();
+
       if ( content.isEmpty ){
-        return null;
+        await setRandomUserIdFuture();
+        return await getUserId();
       }
       else if( content.length != 6 ){
         await userIdFile.writeAsString('');
-        return null;
+        await setRandomUserIdFuture();
+        return await getUserId();
       }
       else{
         return content;
@@ -104,8 +121,6 @@ class UserFile {
         return null;
       }
     }
-
-    
   }
 
   static Future<void> writeUserId( String userId ) async{
@@ -113,5 +128,32 @@ class UserFile {
     final userIdFile = await _userIdFile;
     await userIdFile.writeAsString( userId );
 
+  }
+
+  static Future<void> deleteUserIdFuture()async{
+    final userIdFile = await _userIdFile;
+    await userIdFile.delete();
+  }
+
+  static Future<void> setRandomUserIdFuture() async{
+    
+    final res =  await http.get(
+      Uri.parse('https://path-finders-backend.vercel.app/api/users/generateId')
+    ); 
+    final decodedJson = jsonDecode(res.body);
+
+
+    if ( decodedJson["data"] != null ){
+
+      final String userId = decodedJson["data"]["userId"].toString();
+      await UserFile.writeUserId( userId );
+    } 
+    else if( decodedJson["error"] != null){
+      throw( decodedJson["error"]["message"] );
+    }
+    else{
+      throw( "Network error." );
+    }
+    
   }
 }
