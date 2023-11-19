@@ -103,7 +103,7 @@ class LocationSharingWidget extends StatelessWidget{
                             return snapshot.connectionState == ConnectionState.waiting
                               ?const Text("Updating...")
                               : updatedAt != null
-                                ? Text("Updated at ${updatedAt.hour} : ${updatedAt.minute}")
+                                ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
                                 : const Text("There was a network error.");
                           }
                         }
