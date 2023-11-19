@@ -1,21 +1,24 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/logger_instance.dart';
 import 'package:path_finders/src/profile/user_registration_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_finders/src/storage_services.dart';
 
 
 class LocationSharingWidget extends StatelessWidget{
 
   final bool isSharing;
   final String userId;
+  final Function() refresh;
 
   const LocationSharingWidget({ 
     super.key, 
     required this.isSharing,
-    required this.userId 
+    required this.userId,
+    required this.refresh
   });
 
   Stream<Future<DateTime>> _locationUpdateStream()async*{
@@ -51,6 +54,7 @@ class LocationSharingWidget extends StatelessWidget{
 
     final userHash = await AppVault.getUserHash();
 
+
     final res = await http.put( 
       Uri.parse( "https://path-finders-backend.vercel.app/api/users/update" ),
       body: jsonEncode( {
@@ -65,14 +69,14 @@ class LocationSharingWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-
+    
     if ( isSharing ){
       return FutureBuilder(
 
-        future: AppVault.userHashExistsFuture(), 
+        future: AppVault.userHashExistsFuture( userId ), 
         builder: (context, snapshot){
 
-          LoggerInstance.log.i(" userHash was checked");
+          LoggerInstance.log.i("userHash was checked");
           if ( snapshot.hasData ){ // userHash exists //else throws error
             return Column(
               children: [
@@ -115,21 +119,43 @@ class LocationSharingWidget extends StatelessWidget{
             );
           }
           else{
-            return Text( "${snapshot.error??'There was an error.' }" ); 
+          
+              return Container(
+                margin: const EdgeInsets.only( top: 4 ),
+                width: 100,
+                child: snapshot.error != null 
+                ?Column ( 
+                  children: [
+                    const Text( "There was an error." ),
+                    IconButton( 
+                      icon: const Icon(Icons.refresh), 
+                      tooltip: "Regenerate ID",
+                      onPressed: ()async{
+                        await AppVault.deleteUserHashFuture();
+                        await UserFile.deleteUserIdFuture();
+                        refresh();
+                        
+                      }
+                    ),
+                  ]
+                ) 
+                :const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
+              );
+            }
+            
           }
-        
-        }
-      );
-    }
-    else{
-      return FutureBuilder(
-        future: _stopLocationSharingFuture(), 
-        builder: (context, snapshot) =>
-          ( snapshot.connectionState == ConnectionState.done )
-            ?const Text("Stopped location sharing.")
-            :const Text("Stopping..")
         );
-    }
+      }
+      else{
+
+        return FutureBuilder(
+          future: _stopLocationSharingFuture(), 
+          builder: (context, snapshot) =>
+            ( snapshot.connectionState == ConnectionState.done )
+              ?const Text("Stopped location sharing.")
+              :const Text("Stopping..")
+          );
+      }
     
   }
 }

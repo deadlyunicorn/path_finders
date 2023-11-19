@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path_finders/src/logger_instance.dart';
 import 'package:path_finders/src/profile/location_sharing_widget.dart';
 import 'package:path_finders/src/storage_services.dart';
 
@@ -14,11 +13,18 @@ class ProfileView extends StatefulWidget{
 class _ProfileViewState extends State<ProfileView> {
 
   bool isSharing = false;
+  
+  void refreshProfileView(){
+    setState(() {
+      isSharing = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     
     return Center( 
+
       child: FutureBuilder(
             future: UserFile.getUserId(), 
             builder: (context, userIdSnapshot){
@@ -32,15 +38,8 @@ class _ProfileViewState extends State<ProfileView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Your ID is: $userId", 
+                        Text("Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}", 
                           textScaler: const TextScaler.linear(2)
-                        ),
-                        IconButton( 
-                          icon: const Icon(Icons.refresh), 
-                          tooltip: "Regenerate ID",
-                          onPressed: (){
-                            LoggerInstance.log.f("hello world");
-                          }
                         ),
                       ],
                     ),
@@ -54,16 +53,31 @@ class _ProfileViewState extends State<ProfileView> {
                       }),
                     LocationSharingWidget(
                       isSharing: isSharing,
-                      userId: userId 
+                      userId: userId,
+                      refresh: refreshProfileView,
                     ),
                   ]
                 );
               }
               else{
-                return const Text(
-                  "Your ID is missing. Are you connected to the internet?",
-                  textScaler: TextScaler.linear( 2 )
-                );
+                
+                return Column(
+                  children: [
+                    const Text(
+                      "Session Error.",
+                      textScaler: TextScaler.linear( 1.1 ),
+                      textAlign: TextAlign.center,
+                    ),
+                    TextButton(
+                      onPressed: (){
+                        setState((){
+
+                        });
+                      }, 
+                      child: const Text("Retry")
+                    ),
+                  ],
+                ) ;
               }
               
             }

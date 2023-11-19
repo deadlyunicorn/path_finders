@@ -14,6 +14,7 @@ class FriendEntriesView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
     final Future<String> mockDelay = Future<String>.delayed(
     const Duration( seconds: 1),
     () => "Loaded",
@@ -27,8 +28,13 @@ class FriendEntriesView extends StatelessWidget{
           =>  FutureBuilder(
             future: TargetsFile.getTargetsFromFile(), 
             builder: (context, snapshot) {
+              
 
-              if ( snapshot.connectionState == ConnectionState.done ){
+
+              if ( snapshot.connectionState == ConnectionState.done 
+                  && snapshot.data != null 
+              ){
+
                 //This code seems to work.
                 //
                 //One of the main benefits of writing it this way
@@ -36,8 +42,8 @@ class FriendEntriesView extends StatelessWidget{
                 //we don't need to return a loading screen.
                 //We still keep our old entry list loaded.
                 
-
                 listingsProvider.initializeTargetEntries( snapshot.data! );
+
               }
 
                   return ListView.builder(
@@ -70,6 +76,7 @@ class FriendEntriesView extends StatelessWidget{
                               break;
 
                           }
+
 
                           return ListTile(
                             title: Text( entry ), 

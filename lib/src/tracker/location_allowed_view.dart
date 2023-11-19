@@ -15,13 +15,12 @@ class LocationAllowedView extends StatefulWidget{
 
 class _LocationAllowedViewState extends State<LocationAllowedView> {
 
-  Coordinates currentLocation = Coordinates( 0, 0 );
+  Coordinates? currentLocation;
 
   @override
   Widget build(BuildContext context) {
 
     TargetProvider appState = context.watch<TargetProvider>();
-
     Coordinates targetLocation = appState.targetLocation;
 
     return Center(
@@ -29,32 +28,39 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
         stream: Geolocator.getPositionStream(), 
         builder: (context, snapshot) {
 
-          double targetLocationRotationInRads = num.parse( 
-            currentLocation
-              .getRotationFromNorthTo( targetLocation )
-              .toStringAsFixed(5) 
-          ) as double;
+          double? targetLocationRotationInRads;
 
-          if ( snapshot.hasError ){
-            return const Text( "Failed getting data");
-          }
-          else if ( snapshot.hasData ){
+          if ( snapshot.hasData && snapshot.data != null ){ //has data
 
             currentLocation = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
 
-            return Column( 
+            if ( currentLocation != null ){
+
+              targetLocationRotationInRads= double.parse( 
+                currentLocation
+                  !.getRotationFromNorthTo( targetLocation )
+                  .toStringAsFixed(5) 
+              );
+
+            }
+
+            return ( currentLocation != null 
+              && targetLocationRotationInRads != null
+              && targetLocationRotationInRads.isFinite 
+            )
+            ? Column( 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text( 
                   "Your current position is \n" 
-                  "${ currentLocation.latitude }, ${ currentLocation.longitude }" 
+                  "${ currentLocation!.latitude }, ${ currentLocation!.longitude }" 
                 ),
-                targetLocationRotationInRads.isFinite 
-                  ? Column(
+                 
+                  Column(
                     children: [
                       Text(
-                          "Your distance is ${ currentLocation.distanceInMetersTo( targetLocation ) } meters.\n"
+                          "Your distance is ${ currentLocation!.distanceInMetersTo( targetLocation ) } meters.\n"
                           "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
                           "in order to look towards ${appState.targetName}.",
                           textAlign: TextAlign.center,
@@ -64,18 +70,32 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                         )
 
                     ],
-                  )
-                
-                  : const CircularProgressIndicator()
-              ],
-            );
+                  )                
+                ],
+            )
+            : const CircularProgressIndicator();
           }
           else{
+            if ( snapshot.connectionState == ConnectionState.active && snapshot.hasError ){
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text( "There was an error with the location service." ),
+                    TextButton(
+                      onPressed: ()async{
+                        await Geolocator.getCurrentPosition();
+                        setState(() {
+                        });
+                      }, 
+                      child: const Text("Retry")
+                    )                  
+                  ],
+              );
+            }
             return const CircularProgressIndicator();
           }
         }
-    )
-      
+      )
     );
   }
 }
