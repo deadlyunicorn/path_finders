@@ -53,7 +53,7 @@ class _FriendsViewState extends State<FriendsView> {
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             CustomInputFormatter(),
-                            LengthLimitingTextInputFormatter(6),
+                            LengthLimitingTextInputFormatter(7),
                           ],
                           onChanged: (value) {
                             setState(() {
@@ -62,7 +62,7 @@ class _FriendsViewState extends State<FriendsView> {
                           },
                           decoration: const InputDecoration(
                             labelText: "ID",
-                            hintText: "##-###",
+                            hintText: "###-###",
                           ),
                         ),
                         actions: [

@@ -9,14 +9,15 @@ class CustomInputFormatter extends TextInputFormatter{
 
     if ( 
       ( RegExp(r'^[0-9\-]+$').hasMatch( newValue.text ) || newValue.text.isEmpty )
-      && ( indexOfDash == 2 || indexOfDash == -1 ) 
-      && newValue.text.lastIndexOf('-') <= 2 
+      && ( indexOfDash == 3 || indexOfDash == -1 ) 
+      && newValue.text.lastIndexOf('-') <= 3
     ){
 
-      if ( newValue.text.length >= 3 && indexOfDash == -1 ){
+      if ( newValue.text.length >= 4 && indexOfDash == -1 ){
+
         return TextEditingValue(
           // ignore: prefer_interpolation_to_compose_strings
-          text: newValue.text.substring( 0, 2 ) + "-" + newValue.text.substring( 2 )
+          text: newValue.text.substring( 0, 3 ) + "-" + newValue.text.substring( 3 )
         );
       }
 
