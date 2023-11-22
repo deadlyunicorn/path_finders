@@ -3,8 +3,8 @@ import 'package:path_finders/src/types/coordinates.dart';
 
 class TargetProvider with ChangeNotifier{
 
-  Coordinates _targetLocation = Coordinates( 0, 0);
-  String _targetName = "Earth's Center";
+  Coordinates? _targetLocation;
+  String _targetName = "No location selected";
 
   void setTargetLocation( Coordinates newLocation ){
 
@@ -20,7 +20,7 @@ class TargetProvider with ChangeNotifier{
 
   }
 
-  Coordinates get targetLocation => _targetLocation;
+  Coordinates? get targetLocation => _targetLocation;
   String get targetName => _targetName;
 
 }

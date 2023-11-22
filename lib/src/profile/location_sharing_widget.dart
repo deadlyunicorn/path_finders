@@ -94,12 +94,11 @@ class LocationSharingWidget extends StatelessWidget{
                         builder: (context, snapshot) {
 
                           if ( snapshot.hasError ){
-                            return const Text("There has been an error..");
+                            return ErrorSharingLocationWidget( refresh: refresh);
                           }
                           else{
                             final updatedAt = snapshot.data?.toLocal();
 
-                          
                             return snapshot.connectionState == ConnectionState.waiting
                               ?const Text("Updating...")
                               : updatedAt != null
@@ -124,21 +123,7 @@ class LocationSharingWidget extends StatelessWidget{
                 margin: const EdgeInsets.only( top: 4 ),
                 width: 100,
                 child: snapshot.error != null 
-                ?Column ( 
-                  children: [
-                    const Text( "There was an error." ),
-                    IconButton( 
-                      icon: const Icon(Icons.refresh), 
-                      tooltip: "Regenerate ID",
-                      onPressed: ()async{
-                        await AppVault.deleteUserHashFuture();
-                        await UserFile.deleteUserIdFuture();
-                        refresh();
-                        
-                      }
-                    ),
-                  ]
-                ) 
+                ?ErrorSharingLocationWidget( refresh: refresh)
                 :const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
               );
             }
@@ -157,5 +142,30 @@ class LocationSharingWidget extends StatelessWidget{
           );
       }
     
+  }
+}
+
+class ErrorSharingLocationWidget extends StatelessWidget{ 
+
+  final Function refresh;
+  const ErrorSharingLocationWidget( {super.key, required this.refresh});
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return Column ( 
+        children: [
+          const Text( "There was an error." ),
+          IconButton( 
+            icon: const Icon(Icons.refresh), 
+            tooltip: "Regenerate ID",
+            onPressed: ()async{
+              await AppVault.deleteUserHashFuture();
+              await UserFile.deleteUserIdFuture();
+              refresh();
+            }
+          ),
+        ]
+      );
   }
 }

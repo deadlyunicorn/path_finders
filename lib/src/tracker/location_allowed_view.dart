@@ -21,7 +21,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
   Widget build(BuildContext context) {
 
     TargetProvider appState = context.watch<TargetProvider>();
-    Coordinates targetLocation = appState.targetLocation;
+    Coordinates? targetLocation = appState.targetLocation;
 
     return Center(
       child: StreamBuilder(
@@ -32,20 +32,20 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
 
           if ( snapshot.hasData && snapshot.data != null ){ //has data
 
-            currentLocation = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
+            final currentLocation = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
 
-            if ( currentLocation != null ){
+            if ( targetLocation != null ){
 
               targetLocationRotationInRads= double.parse( 
                 currentLocation
-                  !.getRotationFromNorthTo( targetLocation )
+                  .getRotationFromNorthTo( targetLocation )
                   .toStringAsFixed(5) 
               );
 
             }
 
-            return ( currentLocation != null 
-              && targetLocationRotationInRads != null
+            return ( 
+              targetLocationRotationInRads != null
               && targetLocationRotationInRads.isFinite 
             )
             ? Column( 
@@ -54,17 +54,21 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
               children: [
                 Text( 
                   "Your current position is \n" 
-                  "${ currentLocation!.latitude }, ${ currentLocation!.longitude }" 
+                  "${ currentLocation.latitude }, ${ currentLocation.longitude }\n"
+                  "Go to Profile Tab to enable/disable sharing." 
+
                 ),
                  
                   Column(
                     children: [
-                      Text(
-                          "Your distance is ${ currentLocation!.distanceInMetersTo( targetLocation ) } meters.\n"
+                      targetLocation != null 
+                      ?Text(
+                          "Your distance is ${ currentLocation.distanceInMetersTo( targetLocation ) } meters.\n"
                           "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
                           "in order to look towards ${appState.targetName}.",
                           textAlign: TextAlign.center,
-                        ),
+                        )
+                      :const Text( "Not following anyone's location" ),
                         Center(child: 
                           CompassView( targetLocationRotationInRads: targetLocationRotationInRads )
                         )
