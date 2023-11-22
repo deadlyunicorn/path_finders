@@ -16,10 +16,6 @@ class FriendEntriesView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    final Future<String> mockDelay = Future<String>.delayed(
-    const Duration( seconds: 1),
-    () => "Loaded",
-  );
 
     return Expanded(
       flex: 3,
