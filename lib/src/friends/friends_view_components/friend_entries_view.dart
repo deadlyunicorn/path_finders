@@ -53,65 +53,84 @@ class FriendEntriesView extends StatelessWidget{
                 stream: TargetLocationServices.targetLocationIntervalStream(), 
                 builder: ( context, index){
 
-                  print( " hello ??" );
 
                   return ListView.builder(
                     itemCount:  listingsProvider.targetEntries.length,
                     itemBuilder: (context, index) {
 
+                      //using .read() instead of .watch()
+                      //to not rebuild/refetch when changing targets.
+                      final targetProvider = context.read<TargetProvider>();
+                      
                       final targetId = listingsProvider.targetEntries.elementAt(index);
-
-                      return Consumer<TargetProvider>( builder: (context, targetProvider, child) 
-                        =>  FutureBuilder(
-                          future: TargetLocationServices.getTargetDetails( targetId ), 
-                          builder: ( context, snapshot ) {
-
-                            print( snapshot );
-                            if ( snapshot.hasData && snapshot.data != null ){
-                              print ( snapshot.data );
-                              print( "snapshot is above");
-                            }
+                      
+                      if ( 
+                        targetId == targetProvider.targetName
+                      ){
+                        print( "ok");
+                        // targetProvider.setTargetLocation( snapshotData.getCoordinates()! );
+                      }
 
 
-                            Widget trailingIcon;
-                            switch ( snapshot.connectionState ){
 
-                              case ConnectionState.waiting:
-                                trailingIcon = const CircularProgressIndicator ( strokeWidth: 0.1,);
-                                break;
 
-                              case ConnectionState.done:
-                                if ( snapshot.hasData ){
-                                  trailingIcon = const Icon( Icons.done, color: Colors.green, );
+                      return FutureBuilder(
+                        future: TargetLocationServices.getTargetDetails( targetId ), 
+                        builder: ( context, snapshot ) {
+
+                          final snapshotData = snapshot.data; 
+                          Widget leadingIcon;
+
+                          switch ( snapshot.connectionState ){
+
+                            case ConnectionState.waiting:
+                              leadingIcon = const CircularProgressIndicator ( strokeWidth: 0.1,);
+                              break;
+
+                            case ConnectionState.done:
+                              if ( snapshot.hasData && snapshotData != null ){
+
+                                if ( snapshotData.hasErrorMessage() ){
+                                  leadingIcon = const Icon ( Icons.error, color: Colors.red );
                                 }
                                 else{
-                                  trailingIcon = const Icon ( Icons.close, color: Colors.red );
+                                  leadingIcon = const Icon( Icons.done, color: Colors.green, );
                                 }
                                 break;
 
-                              default:
-                                trailingIcon = const Icon( Icons.warning, color: Colors.yellow );
+                              }
+                              else{
+                                leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
                                 break;
+                              }
 
-                            }
-
-
-                            return ListTile(
-                              title: Text( targetId ), 
-                              trailing: trailingIcon ,
-                              onTap: () {
-                                if ( snapshot.hasData ){
-                                  targetProvider.setTargetName( listingsProvider.targetEntries.elementAt(index));
-                                }
-                              },
-                              onLongPress: () {
-                                listingsProvider.removeTargetEntry( targetId );
-
-                              },
-                            );
+                            default:
+                              leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
+                              break;
 
                           }
-                        )
+
+                          return ListTile(
+                            title: Text( targetId ), 
+                            leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
+                            trailing:  ( snapshotData != null && snapshotData.hasErrorMessage() )
+                              ? Text( snapshotData.getErrorMessage()! )
+                              : const SizedBox.shrink(),
+                            onTap: () {
+                              if ( snapshotData != null && !snapshotData.hasErrorMessage() ){
+
+                                targetProvider.setTargetName( targetId ) ;
+                                targetProvider.setTargetLocation( snapshotData.getCoordinates()! ) ;
+
+                              }
+                            },
+                            onLongPress: () {
+                              listingsProvider.removeTargetEntry( targetId );
+
+                            },
+                          );
+
+                        }
                       );
                     },
                   );
