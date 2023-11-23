@@ -85,7 +85,7 @@ class FriendEntriesView extends StatelessWidget{
                                   if ( snapshot.hasData && snapshotData != null ){
 
                                     if ( snapshotData.hasErrorMessage() ){
-                                      leadingIcon = const Icon ( Icons.error, color: Colors.red );
+                                      leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
                                     }
                                     else{
                                       leadingIcon = const Icon( Icons.done, color: Colors.green, );
@@ -94,12 +94,12 @@ class FriendEntriesView extends StatelessWidget{
 
                                   }
                                   else{
-                                    leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
+                                    leadingIcon = const Icon ( Icons.error, color: Colors.red );
                                     break;
                                   }
 
                                 default:
-                                  leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
+                                  leadingIcon = const Icon ( Icons.error, color: Colors.red );
                                   break;
 
                               }
@@ -109,7 +109,9 @@ class FriendEntriesView extends StatelessWidget{
                                 leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
                                 trailing:  ( snapshotData != null && snapshotData.hasErrorMessage() )
                                   ? Text( snapshotData.getErrorMessage()! )
-                                  : const SizedBox.shrink(),
+                                  : ( snapshotData == null && snapshot.connectionState == ConnectionState.done )
+                                    ? const Text("Network error") 
+                                    : const SizedBox.shrink(),
                                 onTap: () {
                                   if ( snapshotData != null && !snapshotData.hasErrorMessage() ){
 
