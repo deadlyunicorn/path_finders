@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
     // Glue the SettingsController to the MaterialApp.
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
@@ -79,15 +81,12 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.blue.shade600,
                 title: const Text( "Path Finders" ),
               ),
-              body: ChangeNotifierProvider<TargetProvider>(
-                create: (_) => TargetProvider(),
-                child: Container(
-                  padding: const EdgeInsets.only( bottom: 20, top: 20 ),
-                  alignment: Alignment.center,
-
-                  child: const PageSelector(),
-                )
-              ),
+              body: Container(
+                padding: const EdgeInsets.only( bottom: 20, top: 20 ),
+                alignment: Alignment.center,
+                child: const PageSelector(),
+              )
+              ,
               // Navigator( 
               //   onGenerateRoute: ( routeSettings ){
               //     return MaterialPageRoute(builder: (_) => routeSelection(routeSettings, settingsController));
@@ -108,6 +107,8 @@ class PageSelector extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+
 
     var appState = context.watch<CurrentPageState>();
     int selectedIndex = appState.currentPageIndex;
