@@ -44,40 +44,52 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
 
             }
 
-            return ( 
-              targetLocationRotationInRads != null
-              && targetLocationRotationInRads.isFinite 
-            )
-            ? Column( 
+            return Column( 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text( 
                   "Your current position is \n" 
                   "${ currentLocation.latitude }, ${ currentLocation.longitude }\n"
-                  "Go to Profile Tab to enable/disable sharing." 
-
+                  "Go to Profile Tab to enable/disable sharing.",
+                  textAlign: TextAlign.center,
+                  
                 ),
-                 
-                  Column(
-                    children: [
+                Column(
+                  children: [
+                    (
                       targetLocation != null 
-                      ?Text(
-                          "Your distance is ${ currentLocation.distanceInMetersTo( targetLocation ) } meters.\n"
-                          "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
-                          "in order to look towards ${appState.targetName}.",
-                          textAlign: TextAlign.center,
-                        )
-                      :const Text( "Not following anyone's location" ),
+                      && targetLocationRotationInRads != null
+                      && targetLocationRotationInRads.isFinite
+                    ) 
+
+                    ?Column(
+                      children: [
+                        Center( 
+                          child:Text(
+                            "Your distance is ${ currentLocation.distanceInMetersTo( targetLocation ) } meters.\n"
+                            "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
+                            "in order to look towards ${appState.targetName}.",
+                            textAlign: TextAlign.center,
+                          )
+                        ),
                         Center(child: 
                           CompassView( targetLocationRotationInRads: targetLocationRotationInRads )
                         )
-
-                    ],
-                  )                
-                ],
-            )
-            : const CircularProgressIndicator();
+                      ],
+                    ) 
+                    :SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: const Center( child: 
+                       Text( 
+                        "Select someone to locate, at the 'Friends' Tab.",
+                        style: TextStyle( color: Colors.red ), )
+                      ),
+                    ) ,
+                  ],
+                )                
+              ],
+            );
           }
           else{
             if ( snapshot.connectionState == ConnectionState.active && snapshot.hasError ){
