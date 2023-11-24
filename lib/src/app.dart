@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path_finders/src/friends/friends_view.dart';
+import 'package:path_finders/src/location_services_checker_view.dart';
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
 import 'package:path_finders/src/profile/profile_view.dart';
 import 'package:path_finders/src/providers/target_listings_provider.dart';
@@ -126,8 +127,8 @@ class PageSelector extends StatelessWidget{
         index: selectedIndex,
         children: const [
           FriendsView(),
-          SensorsView(),
-          ProfileView()
+          LocationServicesCheckerView(child: TrackerView()),
+          LocationServicesCheckerView(child: ProfileView()) 
         ],
       )
     );
