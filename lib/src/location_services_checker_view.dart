@@ -1,47 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:path_finders/src/tracker/geolocator_controller.dart';
+import 'package:path_finders/src/providers/location_services_provider.dart';
+import 'package:provider/provider.dart';
 
-class LocationServicesCheckerView extends StatefulWidget{
+class LocationServicesCheckerView extends StatelessWidget{
   
   final Widget child;
   const LocationServicesCheckerView( {super.key, required this.child});
 
   @override
-  State<LocationServicesCheckerView> createState() => _LocationServicesCheckerViewState();
-}
-
-class _LocationServicesCheckerViewState extends State<LocationServicesCheckerView> {
-
-  void reinvokeGeolocator ()async{
-    try{
-      await Geolocator.getCurrentPosition();
-      setState((){
-        sensors = GeolocatorController();
-      });
-    }
-    catch(_){}
-  }
-
-  GeolocatorController sensors = GeolocatorController();
-
-
-  
-  @override
   Widget build(BuildContext context) {
+
+    final locationServicesProvider = context.watch<LocationServicesProvider>();
+
     return FutureBuilder<bool>(
-      future: sensors.hasLocationPermission, 
+      future: locationServicesProvider.sensors.hasLocationPermission, 
       builder: (context, snapshot){
         if ( snapshot.hasData ){
           return snapshot.data == true
-            ? widget.child
+            ? child
             : Center ( child: 
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Can't get location.. Is GPS enabled?"),
                   TextButton(
-                    onPressed: reinvokeGeolocator, 
+                    onPressed: locationServicesProvider.reinvokeGeolocator, 
                     child:  const Text( "Retry") )
                 ],
               )

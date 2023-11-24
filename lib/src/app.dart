@@ -5,6 +5,7 @@ import 'package:path_finders/src/friends/friends_view.dart';
 import 'package:path_finders/src/location_services_checker_view.dart';
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
 import 'package:path_finders/src/profile/profile_view.dart';
+import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:path_finders/src/providers/target_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/tracker/tracker_view.dart';
@@ -121,6 +122,9 @@ class PageSelector extends StatelessWidget{
         ),
         ChangeNotifierProvider(
           create: (context) => TargetProvider()
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LocationServicesProvider() 
         )
       ],
       child: IndexedStack(
