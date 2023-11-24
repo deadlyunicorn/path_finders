@@ -30,9 +30,7 @@ class FriendEntriesView extends StatelessWidget{
               
 
 
-              if ( snapshot.connectionState == ConnectionState.done 
-                  && targetsSetSnapshot != null 
-              ){
+              if ( targetsSetSnapshot != null ){
 
                 //This code seems to work.
                 //
@@ -152,15 +150,21 @@ class FriendEntriesView extends StatelessWidget{
                       );
                     }
                     else{
-                      return const CircularProgressIndicator();
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
                   } 
                 ); 
 
               }
-
+              else if ( snapshot.connectionState == ConnectionState.done ){
+                return const Center( child: Text( "No friend entries." ) ); 
+              }
               else { 
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
             },
           )

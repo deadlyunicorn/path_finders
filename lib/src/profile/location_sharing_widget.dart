@@ -137,7 +137,7 @@ class LocationSharingWidget extends StatelessWidget{
           future: _stopLocationSharingFuture(), 
           builder: (context, snapshot) =>
             ( snapshot.connectionState == ConnectionState.done )
-              ?const Text("Stopped location sharing.")
+              ?const Text("Location is not being shared.")
               :const Text("Stopping..")
           );
       }
