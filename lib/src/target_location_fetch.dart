@@ -17,9 +17,6 @@ class TargetLocationServices {
     final targetInfoBody = await http.get( Uri.parse("https://path-finders-backend.vercel.app/api/users/$targetId" ))
       .then( ( response ) => jsonDecode( response.body )  );
 
-    print( targetInfoBody );
-
-
     if( targetInfoBody["error"] != null ){
 
         errorMessage = targetInfoBody["error"]["message"];
