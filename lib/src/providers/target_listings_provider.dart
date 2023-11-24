@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/storage_services.dart';
 
-class TargetListingsProvider extends ChangeNotifier{
+class TargetListingsProvider with ChangeNotifier{
 
   Set<String> _targetEntries = {};
 

@@ -5,7 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/logger_instance.dart';
 import 'package:path_finders/src/profile/user_registration_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
+import 'package:provider/provider.dart';
 
 
 class LocationSharingWidget extends StatelessWidget{
@@ -21,33 +23,46 @@ class LocationSharingWidget extends StatelessWidget{
     required this.refresh
   });
 
-  Stream<Future<DateTime>> _locationUpdateStream()async*{
+
+  Stream<DateTime?> _locationUpdateStream()async*{
     while ( true ){
-      yield _uploadLocationFuture();
+
+      final updatedAt = await _uploadLocationFuture();
+      yield updatedAt;
       await Future.delayed( const Duration( minutes: 2 ) );
     }
   }
 
-  Future<DateTime> _uploadLocationFuture() async{
+  Future<DateTime?> _uploadLocationFuture() async{
 
-    final currentPosition = await Geolocator.getCurrentPosition();
-    final userHash = await AppVault.getUserHash();
-    final longitude = currentPosition.longitude;
-    final latitude = currentPosition.latitude;
+    try{
 
-    final res = await http.put( 
-      Uri.parse( "https://path-finders-backend.vercel.app/api/users/update" ),
-      body: jsonEncode( {
-        "userId" : int.parse(userId),
-        "hash": userHash,
-        "location": {
-          "longitude": longitude,
-          "latitude": latitude
-        }
-      }) 
-    );
-    // await Future.delayed( Duration(seconds: 2)); //await to be updated
-    return DateTime.parse( jsonDecode( res.body )["data"]["updatedAt"] );
+      final currentPosition = await Geolocator.getCurrentPosition();
+
+      final userHash = await AppVault.getUserHash();
+
+      final longitude = currentPosition.longitude;
+      final latitude = currentPosition.latitude;
+
+      final res = await http.put( 
+        Uri.parse( "https://path-finders-backend.vercel.app/api/users/update" ),
+        body: jsonEncode( {
+          "userId" : int.parse(userId),
+          "hash": userHash,
+          "location": {
+            "longitude": longitude,
+            "latitude": latitude
+          }
+        }) 
+      );
+      // await Future.delayed( Duration(seconds: 2)); //await to be updated
+      return DateTime.parse( jsonDecode( res.body )["data"]["updatedAt"] );
+
+    }
+    catch(_){
+      return null;
+    }
+    
   }
 
   Future<DateTime> _stopLocationSharingFuture() async{
@@ -75,72 +90,84 @@ class LocationSharingWidget extends StatelessWidget{
 
         future: AppVault.userHashExistsFuture( userId ), 
         builder: (context, snapshot){
+          
 
+          if ( snapshot.hasData && snapshot.connectionState == ConnectionState.done ){ // userHash exists //else throws error
           LoggerInstance.log.i("userHash was checked");
-          if ( snapshot.hasData ){ // userHash exists //else throws error
-            return Column(
-              children: [
-                const Text(
-                  "Sharing Location",
-                  textScaler: TextScaler.linear(1.2)
-                ),
-                StreamBuilder(
-                  stream: _locationUpdateStream(),
-                  builder: (context, snapshot) {
 
-                    if ( snapshot.connectionState != ConnectionState.done ){
-                      return FutureBuilder(
-                        future: snapshot.data, 
-                        builder: (context, snapshot) {
+            return 
+              StreamBuilder(
+                stream: _locationUpdateStream(),
+                builder: (context, updatedAtSnapshot) {
 
-                          if ( snapshot.hasError ){
-                            return ErrorSharingLocationWidget( refresh: refresh);
-                          }
-                          else{
-                            final updatedAt = snapshot.data?.toLocal();
+                  
 
-                            return snapshot.connectionState == ConnectionState.waiting
-                              ?const Text("Updating...")
-                              : updatedAt != null
-                                ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
-                                : const Text("There was a network error.");
-                          }
+                  if ( updatedAtSnapshot.connectionState != ConnectionState.done ){
+                    //connection still open
+
+                        if ( updatedAtSnapshot.hasError ){
+                          return ErrorSharingLocationWidget( refresh: refresh);
                         }
-                          
-                      );
-                    }
-                    else{
-                      return const Text("No longer sharing..");//const SizedBox.shrink();//
-                    }
+                        else{
+                          final updatedAt = updatedAtSnapshot.data?.toLocal();
+
+                          //this one switches the switch if the user
+                          //disables gps after the app thinks he has it enabled.
+                          context.watch<LocationServicesProvider>().sensors
+                            .hasLocationPermission
+                            .then(
+                              ( hasGPS ) {
+                              if ( !hasGPS ){
+                                refresh();
+                              }
+                            }
+                          );
+
+                          return Column(
+                            children: [
+                              const Text(
+                                "Sharing Location",
+                                textScaler: TextScaler.linear(1.2)
+                              ),
+                              updatedAt != null
+                                ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
+                                : updatedAtSnapshot.connectionState == ConnectionState.done
+                                  ? const Text("There was a network error.")
+                                  : const Text("Updating...")
+                            ]
+                          );
+                        }
                   }
-                )
-              ]
-            );
+                  else{
+                    return const Text("No longer sharing..");//const SizedBox.shrink();//
+                  }
+                }
+              );
           }
           else{
           
-              return Container(
-                margin: const EdgeInsets.only( top: 4 ),
-                width: 100,
-                child: snapshot.error != null 
-                ?ErrorSharingLocationWidget( refresh: refresh)
-                :const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
-              );
-            }
-            
+            return Container(
+              margin: const EdgeInsets.only( top: 4 ),
+              width: 100,
+              child: snapshot.connectionState == ConnectionState.done 
+              ?ErrorSharingLocationWidget( refresh: refresh)
+              :const SizedBox.shrink() //const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
+            );
           }
-        );
-      }
-      else{
+            
+        }
+      );
+    }
+    else{
 
-        return FutureBuilder(
-          future: _stopLocationSharingFuture(), 
-          builder: (context, snapshot) =>
-            ( snapshot.connectionState == ConnectionState.done )
-              ?const Text("Location is not being shared.")
-              :const Text("Stopping..")
-          );
-      }
+      return FutureBuilder(
+        future: _stopLocationSharingFuture(), 
+        builder: (context, snapshot) =>
+          ( snapshot.connectionState == ConnectionState.done )
+            ?const Text("Location is not being shared.")
+            :const Text("Stopping..")
+        );
+    }
     
   }
 }
