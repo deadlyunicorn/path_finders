@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_finders/src/friends/friends_view_components/live_entries_view.dart';
-import 'package:path_finders/src/friends/friends_view_components/sample_entries_view.dart';
+import 'package:path_finders/src/friends/friends_view_components/static_entries_view.dart';
 import 'package:path_finders/src/friends/id_formatter.dart';
 import 'package:path_finders/src/providers/target_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
@@ -35,7 +35,7 @@ class _FriendsViewState extends State<FriendsView> {
       Column(
         children: [
           Text("Currently ${context.watch<TargetProvider>().targetName} is selected."),
-          SampleEntriesView( listItems: sampleData ),
+          StaticEntriesView( listItems: sampleData ),
           const LiveEntriesView(),
           Consumer<TargetListingsProvider>(
             builder: (context, listingsProvider, child) 
