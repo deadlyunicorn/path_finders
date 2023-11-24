@@ -5,9 +5,9 @@ import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/target_location_fetch.dart';
 import 'package:provider/provider.dart';
 
-class FriendEntriesView extends StatelessWidget{
+class LiveEntriesView extends StatelessWidget{
 
-  const FriendEntriesView({ 
+  const LiveEntriesView({ 
     Key? key, 
   }):super(key:key);
 

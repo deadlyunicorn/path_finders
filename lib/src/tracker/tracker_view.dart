@@ -42,7 +42,7 @@ class _TrackerViewState extends State<TrackerView> {
               targetLocationRotationInRads= double.parse( 
                 currentLocation
                   .getRotationFromNorthTo( targetLocation )
-                  .toStringAsFixed(5) 
+                  .toStringAsFixed(7) 
               );
 
 
