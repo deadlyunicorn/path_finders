@@ -26,12 +26,12 @@ class FriendEntriesView extends StatelessWidget{
             future: TargetsFile.getTargetsFromFile(), 
             builder: (context, snapshot) {
 
-              final snapshotData = snapshot.data;
+              final targetsSetSnapshot = snapshot.data;
               
 
 
               if ( snapshot.connectionState == ConnectionState.done 
-                  && snapshotData != null 
+                  && targetsSetSnapshot != null 
               ){
 
                 //This code seems to work.
@@ -40,14 +40,14 @@ class FriendEntriesView extends StatelessWidget{
                 //is that on entry addition/removal
                 //we don't need to return a loading screen.
                 //We still keep our old entry list loaded.
-                listingsProvider.initializeTargetEntries( snapshotData );
+                listingsProvider.initializeTargetEntries( targetsSetSnapshot );
                 
 
                 return StreamBuilder(
                   stream: TargetLocationServices.targetLocationIntervalStream(), 
-                  builder: ( context, streamerSnapshot ){
+                  builder: ( context, intervalStreamerSnapshot ){
 
-                    if ( streamerSnapshot.connectionState == ConnectionState.active ){
+                    if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
                       return ListView.builder(
                         itemCount:  listingsProvider.targetEntries.length,
                         itemBuilder: (context, index) {
@@ -58,12 +58,6 @@ class FriendEntriesView extends StatelessWidget{
                           
                           final targetId = listingsProvider.targetEntries.elementAt(index);
                           
-                          if ( 
-                            targetId == targetProvider.targetName
-                          ){
-                            print( "ok");
-                            // targetProvider.setTargetLocation( snapshotData.getCoordinates()! );
-                          }
 
 
 
@@ -72,7 +66,7 @@ class FriendEntriesView extends StatelessWidget{
                             future: TargetLocationServices.getTargetDetails( targetId ), 
                             builder: ( context, snapshot ) {
 
-                              final snapshotData = snapshot.data; 
+                              final targetDetailsSnapshot = snapshot.data; 
                               Widget leadingIcon;
 
                               switch ( snapshot.connectionState ){
@@ -82,9 +76,9 @@ class FriendEntriesView extends StatelessWidget{
                                   break;
 
                                 case ConnectionState.done:
-                                  if ( snapshot.hasData && snapshotData != null ){
+                                  if ( snapshot.hasData && targetDetailsSnapshot != null ){
 
-                                    if ( snapshotData.hasErrorMessage() ){
+                                    if ( targetDetailsSnapshot.hasErrorMessage() ){
                                       leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
                                     }
                                     else{
@@ -104,19 +98,45 @@ class FriendEntriesView extends StatelessWidget{
 
                               }
 
+
+                              // Updating the target provider's location whenever there is new data.
+                              if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
+
+                                if ( 
+                                  targetId == targetProvider.targetName
+                                  && targetDetailsSnapshot != null
+                                  && !targetDetailsSnapshot.hasErrorMessage()
+                                ){
+                                  var coordinates = targetDetailsSnapshot.getCoordinates();
+                                  if ( coordinates != targetProvider.targetLocation ){
+
+                                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
+                                      //the above ensures that it will run after 
+                                      //everything has been built
+                                      // *prevents exception*
+                                      targetProvider.setTargetLocation( targetDetailsSnapshot.getCoordinates()! );
+                                    });
+
+                                  }
+                                 
+                                }
+
+                              }
+
+
                               return ListTile(
                                 title: Text( targetId ), 
                                 leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
-                                trailing:  ( snapshotData != null && snapshotData.hasErrorMessage() )
-                                  ? Text( snapshotData.getErrorMessage()! )
-                                  : ( snapshotData == null && snapshot.connectionState == ConnectionState.done )
+                                trailing:  ( targetDetailsSnapshot != null && targetDetailsSnapshot.hasErrorMessage() )
+                                  ? Text( targetDetailsSnapshot.getErrorMessage()! )
+                                  : ( targetDetailsSnapshot == null && snapshot.connectionState == ConnectionState.done )
                                     ? const Text("Network error") 
                                     : const SizedBox.shrink(),
                                 onTap: () {
-                                  if ( snapshotData != null && !snapshotData.hasErrorMessage() ){
+                                  if ( targetDetailsSnapshot != null && !targetDetailsSnapshot.hasErrorMessage() ){
 
                                     targetProvider.setTargetName( targetId ) ;
-                                    targetProvider.setTargetLocation( snapshotData.getCoordinates()! ) ;
+                                    targetProvider.setTargetLocation( targetDetailsSnapshot.getCoordinates()! ) ;
 
                                   }
                                 },
