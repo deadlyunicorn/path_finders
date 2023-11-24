@@ -23,6 +23,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
     TargetProvider appState = context.watch<TargetProvider>();
     Coordinates? targetLocation = appState.targetLocation;
 
+
     return Center(
       child: StreamBuilder(
         stream: Geolocator.getPositionStream(), 
@@ -33,6 +34,8 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
           if ( snapshot.hasData && snapshot.data != null ){ //has data
 
             final currentLocation = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
+            final int? distanceToTarget = targetLocation != null? currentLocation.distanceInMetersTo( targetLocation ) :null;
+
 
             if ( targetLocation != null ){
 
@@ -41,6 +44,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                   .getRotationFromNorthTo( targetLocation )
                   .toStringAsFixed(5) 
               );
+
 
             }
 
@@ -59,6 +63,7 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                   children: [
                     (
                       targetLocation != null 
+                      && distanceToTarget != null
                       && targetLocationRotationInRads != null
                       && targetLocationRotationInRads.isFinite
                     ) 
@@ -66,8 +71,11 @@ class _LocationAllowedViewState extends State<LocationAllowedView> {
                     ?Column(
                       children: [
                         Center( 
-                          child:Text(
-                            "Your distance is ${ currentLocation.distanceInMetersTo( targetLocation ) } meters.\n"
+                          child: 
+                          ( distanceToTarget < 7 )
+                          ?const Text( "Your friend is nearby!" )
+                          :Text(
+                            "Your distance is $distanceToTarget meters.\n"
                             "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
                             "in order to look towards ${appState.targetName}.",
                             textAlign: TextAlign.center,
