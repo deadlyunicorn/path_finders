@@ -110,8 +110,15 @@ class LiveEntriesView extends StatelessWidget{
                               && !targetDetailsSnapshot.hasErrorMessage()
                             ){
                               
-                              final coordinates = targetDetailsSnapshot.getCoordinates();
-                              if ( coordinates != null && coordinates != targetProvider.targetLocation ){
+                              final targetLocationFromServer = targetDetailsSnapshot.getCoordinates();
+                              final targetLocationFromProvider = targetProvider.targetLocation;
+      
+
+                              if ( targetLocationFromServer != null 
+                                && targetLocationFromProvider != null
+                                && targetLocationFromServer.latitude != targetLocationFromProvider.latitude 
+                                && targetLocationFromServer.longitude != targetLocationFromProvider.longitude 
+                              ){
 
                                 WidgetsBinding.instance.addPostFrameCallback((duration) async { 
                                   //the above ensures that it will run after 
@@ -123,8 +130,7 @@ class LiveEntriesView extends StatelessWidget{
 
                                   //we still need the stream to refetch the status 
                                   //of the other targets.
-                                  await Future.delayed( const Duration( seconds: 40) );
-                                  targetProvider.setTargetLocation( coordinates );
+                                  targetProvider.setTargetLocation( targetLocationFromServer );
                                 });
 
                               }
