@@ -13,19 +13,12 @@ class TargetWithIdListingsProvider with ChangeNotifier{
   Future<void> addTargetWithIdEntry( String targetId, { String? targetName } ) async{
 
     await TargetsFiles.writeTargetWithId(targetId, targetName: targetName);
-
-    _targetWithIdEntries.add( { 
-      "targetId": targetId,
-      "targetName": targetName
-    } );
-    
     notifyListeners();
   }
 
   Future<void> removeTargetWithIdEntry( String targetId ) async{
 
     await TargetsFiles.removeTargetWithIdFromFile( targetId );
-    _targetWithIdEntries.remove( targetId );
     notifyListeners();
   }
 
