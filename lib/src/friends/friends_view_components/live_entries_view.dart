@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:path_finders/src/providers/target_listings_provider.dart';
+import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/target_location_fetch.dart';
@@ -20,7 +20,7 @@ class LiveEntriesView extends StatelessWidget{
     return Expanded(
       flex: 3,
       child:
-        Consumer<TargetListingsProvider>( 
+        Consumer<TargetWithIdListingsProvider>( 
           builder: (context, listingsProvider, child) 
           =>  FutureBuilder(
             future: TargetsFiles.getTargetsWithIdFromFile(), 
@@ -40,7 +40,7 @@ class LiveEntriesView extends StatelessWidget{
                 //is that on entry addition/removal
                 //we don't need to return a loading screen.
                 //We still keep our old entry list loaded.
-                listingsProvider.initializeTargetEntries( targetsMapListSnapshot );
+                listingsProvider.initializeTargetWithIdEntries( targetsMapListSnapshot );
                 
 
                 return StreamBuilder(

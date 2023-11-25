@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_finders/src/friends/id_formatter.dart';
 
-import 'package:path_finders/src/providers/target_listings_provider.dart';
+import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:provider/provider.dart';
 
 class EntryInsertionButtons extends StatelessWidget{
@@ -12,7 +12,7 @@ class EntryInsertionButtons extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    final listingsProvider = context.watch<TargetListingsProvider>();
+    final listingsProvider = context.watch<TargetWithIdListingsProvider>();
 
     
     return Row(
@@ -39,7 +39,7 @@ class EntryInsertionButtons extends StatelessWidget{
 
 class LiveEntryDialog extends StatefulWidget{
 
-  final TargetListingsProvider listingsProvider;
+  final TargetWithIdListingsProvider listingsProvider;
 
   const LiveEntryDialog({super.key, required this.listingsProvider});
 

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/storage_services.dart';
 
-class TargetListingsProvider with ChangeNotifier{
+class TargetWithIdListingsProvider with ChangeNotifier{
 
-  List _targetEntries = [];
+  List _targetWithIdEntries = [];
 
-  void initializeTargetEntries( List initialEntriesFromFile){
+  void initializeTargetWithIdEntries( List initialEntriesFromFile){
 
-    _targetEntries = initialEntriesFromFile;
+    _targetWithIdEntries = initialEntriesFromFile;
   }
 
   Future<void> addTargetWithIdEntry( String targetId, { String? targetName } ) async{
 
     await TargetsFiles.writeTargetWithId(targetId, targetName: targetName);
 
-    _targetEntries.add( { 
+    _targetWithIdEntries.add( { 
       "targetId": targetId,
       "targetName": targetName
     } );
@@ -25,10 +25,10 @@ class TargetListingsProvider with ChangeNotifier{
   Future<void> removeTargetWithIdEntry( String targetId ) async{
 
     await TargetsFiles.removeTargetWithIdFromFile( targetId );
-    _targetEntries.remove( targetId );
+    _targetWithIdEntries.remove( targetId );
     notifyListeners();
   }
 
-  List get targetEntries => _targetEntries;
+  List get targetEntries => _targetWithIdEntries;
  
 }
