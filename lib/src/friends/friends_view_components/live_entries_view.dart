@@ -27,6 +27,10 @@ class LiveEntriesView extends StatelessWidget{
             builder: (context, snapshot) {
 
               final targetsMapListSnapshot = snapshot.data;
+             
+              //using .read() instead of .watch()
+              //to not rebuild/refetch when changing targets.
+              final targetProvider = context.watch<TargetProvider>();
               
 
 
@@ -54,9 +58,6 @@ class LiveEntriesView extends StatelessWidget{
                         itemCount:  listingsProvider.targetEntries.length,
                         itemBuilder: (context, index) {
 
-                          //using .read() instead of .watch()
-                          //to not rebuild/refetch when changing targets.
-                          final targetProvider = context.read<TargetProvider>();
                           
                           final targetEntry = listingsProvider.targetEntries.elementAt(index);
                           
@@ -107,19 +108,26 @@ class LiveEntriesView extends StatelessWidget{
                               // Updating the target provider's location whenever there is new data.
                               if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
 
+                                
+
                                 if ( 
                                   targetId == targetProvider.targetName
                                   && targetDetailsSnapshot != null
                                   && !targetDetailsSnapshot.hasErrorMessage()
                                 ){
-                                  var coordinates = targetDetailsSnapshot.getCoordinates();
-                                  if ( coordinates != targetProvider.targetLocation ){
+                                  
+                                  final coordinates = targetDetailsSnapshot.getCoordinates();
+                                  if ( coordinates != null && coordinates != targetProvider.targetLocation ){
 
-                                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
+                                    WidgetsBinding.instance.addPostFrameCallback((duration) async { 
                                       //the above ensures that it will run after 
                                       //everything has been built
                                       // *prevents exception*
-                                      targetProvider.setTargetLocation( targetDetailsSnapshot.getCoordinates()! );
+
+                                      //it will basically run BEFORE the interval stream
+                                      //to update the target
+                                      await Future.delayed( const Duration( seconds: 40) );
+                                      targetProvider.setTargetLocation( coordinates );
                                     });
 
                                   }
@@ -129,38 +137,50 @@ class LiveEntriesView extends StatelessWidget{
                               }
 
 
-                              return ListTile(
-                                title: Flex( 
-                                  direction: Axis.horizontal,
-                                  
-                                  children: [
-                                    Text( targetName ?? "#$targetId" ),
-                                    const SizedBox( width: 5 ),
-                                    targetName != null 
-                                    ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
-                                    : const SizedBox.shrink()
-                                  ]
-                                ),
-                                leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
-                                trailing:  ( targetDetailsSnapshot != null && targetDetailsSnapshot.hasErrorMessage() )
-                                  ? Text( targetDetailsSnapshot.getErrorMessage()! )
-                                  : ( targetDetailsSnapshot == null && snapshot.connectionState == ConnectionState.done )
-                                    ? const Text("Network error") 
-                                    : const SizedBox.shrink(),
-                                onTap: () {
-                                  if ( targetDetailsSnapshot != null && !targetDetailsSnapshot.hasErrorMessage() ){
+                              return Container ( 
+                                margin: const EdgeInsets.all( 8 ),
+                                decoration: targetProvider.targetName == targetId 
+                                ? BoxDecoration(
+                                  border: Border.all(
+                                    color: Theme.of( context ).highlightColor
+                                  ),
+                                  borderRadius: BorderRadius.circular( 4 ),
+                                )
+                                :null,
+                                  child:ListTile(
+                                  title: Flex( 
+                                    direction: Axis.horizontal,
+                                    
+                                    children: [
+                                      Text( targetName ?? "#$targetId" ),
+                                      const SizedBox( width: 5 ),
+                                      targetName != null 
+                                      ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
+                                      : const SizedBox.shrink()
+                                    ]
+                                  ),
+                                  leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
+                                  trailing:  ( targetDetailsSnapshot != null && targetDetailsSnapshot.hasErrorMessage() )
+                                    ? Text( targetDetailsSnapshot.getErrorMessage()! )
+                                    : ( targetDetailsSnapshot == null && snapshot.connectionState == ConnectionState.done )
+                                      ? const Text("Network error") 
+                                      : const SizedBox.shrink(),
+                                  onTap: () {
+                                    if ( targetDetailsSnapshot != null 
+                                      && !targetDetailsSnapshot.hasErrorMessage() 
+                                    ){
 
-                                    targetProvider.setTargetName( targetId ) ;
-                                    targetProvider.setTargetLocation( targetDetailsSnapshot.getCoordinates()! ) ;
+                                      targetProvider.setTargetName( targetId ) ;
+                                      targetProvider.setTargetLocation( targetDetailsSnapshot.getCoordinates()! ) ;
 
-                                  }
-                                },
-                                onLongPress: () {
-                                  listingsProvider.removeTargetWithIdEntry( targetId );
+                                    }
+                                  },
+                                  onLongPress: () {
+                                    listingsProvider.removeTargetWithIdEntry( targetId );
 
-                                },
+                                  },
+                                )
                               );
-
                             }
                           );
                         },

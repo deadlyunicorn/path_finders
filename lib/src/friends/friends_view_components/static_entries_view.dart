@@ -62,20 +62,31 @@ class StaticEntriesView extends StatelessWidget{
               
               final currentElement = sampleData[index];
               final targetName = currentElement["targetName"];//listItems.keys.elementAt(index);
-              final Coordinates value = Coordinates( currentElement["latitude"], currentElement["longitude"]); //listItems[targetName];
+              final Coordinates targetCoordinates = Coordinates( currentElement["latitude"], currentElement["longitude"]); //listItems[targetName];
 
               return Consumer<TargetProvider>(
                 builder: (context, targetProvider, child) 
-                  => ListTile(
-                      title: Text( targetName ), 
+                  => Container ( 
+                    margin: const EdgeInsets.all( 8 ),
+                    decoration: targetProvider.targetName == targetName 
+                    ? BoxDecoration(
+                      border: Border.all(
+                        color: Theme.of( context ).highlightColor
+                      ),
+                      borderRadius: BorderRadius.circular( 4 ),
+                    )
+                    :null,
+                    child: ListTile(
+                      title: Text( targetName ),
                       onTap: () {
-                        targetProvider.setTargetLocation( value );
+                        targetProvider.setTargetLocation( targetCoordinates );
                         targetProvider.setTargetName( targetName );
                       },
                       onLongPress: (){
                         listingsProvider.removeTargetWithCoordinatesEntry(targetName);
                       },
                   )
+                )
               );
             },
           )
