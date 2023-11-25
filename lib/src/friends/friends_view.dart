@@ -22,18 +22,47 @@ class _FriendsViewState extends State<FriendsView> {
   Widget build(BuildContext context) {
 
     return (
-      Column(
+      const Column(
         children: [
-          Text("Currently ${context.watch<TargetProvider>().targetName} is selected."),
-          const ListHeader(text: "Static Entries"),
-          const StaticEntriesView(),
-          const ListHeader(text: "Live Entries"),
-          const LiveEntriesView(),
-          const EntryInsertionButtons(),
+          SelectionHeader(),
+          ListHeader(text: "Static Entries"),
+          StaticEntriesView(),
+          ListHeader(text: "Live Entries"),
+          LiveEntriesView(),
+          EntryInsertionButtons(),
         ],
       )
     );
   }
+}
+
+class SelectionHeader extends StatelessWidget{
+
+  const SelectionHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return RichText(
+            textScaler: const TextScaler.linear( 2.5 ),
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: "Currently ",
+              children: [
+                TextSpan(
+                  text: context.watch<TargetProvider>().targetName,
+                  style: const TextStyle(
+                    decoration: TextDecoration.underline
+                  ),
+                ),
+                const TextSpan( text: " is selected." )
+              ]
+            ),
+          );
+  }
+
+
+
 }
 
 class ListHeader extends StatelessWidget{ 
