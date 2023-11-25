@@ -22,7 +22,7 @@ class LocalFiles {
 
 class TargetsFile {
 
-  static Future<File> writeTarget( String targetId, { String? targetName} ) async{
+  static Future<File> writeTargetWithId( String targetId, { String? targetName} ) async{
 
     final targetsFile = await LocalFiles.targetsFile;
     try{
@@ -46,7 +46,7 @@ class TargetsFile {
     catch( error ){
       if ( error is PathNotFoundException ){
         await targetsFile.writeAsString("");
-        return await writeTarget(targetId, targetName: targetName );
+        return await writeTargetWithId(targetId, targetName: targetName );
       }
       else{ 
         throw "Uknown error.";
@@ -56,7 +56,7 @@ class TargetsFile {
   }
 
       // await targetsFile.writeAsString(""); used to delete for testing
-  static Future<List> getTargetsFromFile() async{
+  static Future<List> getTargetsWithIdFromFile() async{
 
       final targetsFile = await LocalFiles.targetsFile;
       final contents = await targetsFile.readAsString();
@@ -77,7 +77,7 @@ class TargetsFile {
 
   }
 
-  static Future<void> removeTargetFromFile( String targetId )async{
+  static Future<void> removeTargetWithIdFromFile( String targetId )async{
 
       final targetsFile = await LocalFiles.targetsFile;
       final contents = await targetsFile.readAsString();

@@ -23,7 +23,7 @@ class LiveEntriesView extends StatelessWidget{
         Consumer<TargetListingsProvider>( 
           builder: (context, listingsProvider, child) 
           =>  FutureBuilder(
-            future: TargetsFile.getTargetsFromFile(), 
+            future: TargetsFile.getTargetsWithIdFromFile(), 
             builder: (context, snapshot) {
 
               final targetsMapListSnapshot = snapshot.data;
@@ -156,7 +156,7 @@ class LiveEntriesView extends StatelessWidget{
                                   }
                                 },
                                 onLongPress: () {
-                                  listingsProvider.removeTargetEntry( targetId );
+                                  listingsProvider.removeTargetWithIdEntry( targetId );
 
                                 },
                               );

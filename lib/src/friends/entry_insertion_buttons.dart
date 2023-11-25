@@ -104,7 +104,7 @@ class _LiveEntryDialogState extends State<LiveEntryDialog> {
             onPressed: () async{
               targetId.length < 5 ? null 
               : (() async{
-                await listingsProvider.addTargetEntry( targetId, targetName: targetName );
+                await listingsProvider.addTargetWithIdEntry( targetId, targetName: targetName );
                 if ( context.mounted ){
                   Navigator.pop(context, "Submit");
                 } 

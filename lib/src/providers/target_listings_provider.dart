@@ -10,9 +10,9 @@ class TargetListingsProvider with ChangeNotifier{
     _targetEntries = initialEntriesFromFile;
   }
 
-  Future<void> addTargetEntry( String targetId, { String? targetName } ) async{
+  Future<void> addTargetWithIdEntry( String targetId, { String? targetName } ) async{
 
-    await TargetsFile.writeTarget(targetId, targetName: targetName);
+    await TargetsFile.writeTargetWithId(targetId, targetName: targetName);
 
     _targetEntries.add( { 
       "targetId": targetId,
@@ -22,9 +22,9 @@ class TargetListingsProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> removeTargetEntry( String targetId ) async{
+  Future<void> removeTargetWithIdEntry( String targetId ) async{
 
-    await TargetsFile.removeTargetFromFile( targetId );
+    await TargetsFile.removeTargetWithIdFromFile( targetId );
     _targetEntries.remove( targetId );
     notifyListeners();
   }
