@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:path_finders/src/friends/entry_insertion_views/entry_insertion_buttons.dart';
+import 'package:path_finders/src/friends/entry_insertion_buttons.dart';
 import 'package:path_finders/src/friends/friends_view_components/live_entries_view.dart';
 import 'package:path_finders/src/friends/friends_view_components/static_entries_view.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
