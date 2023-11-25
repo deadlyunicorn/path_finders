@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path_finders/src/friends/id_formatter.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/live_entry_dialog_view.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/static_entry_dialog_view.dart';
 
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
+import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
 import 'package:provider/provider.dart';
 
 class EntryInsertionButtons extends StatelessWidget{
@@ -12,14 +13,19 @@ class EntryInsertionButtons extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    final listingsProvider = context.watch<TargetWithIdListingsProvider>();
+    final liveListingsProvider = context.watch<TargetWithIdListingsProvider>();
+    final staticListingsProvider = context.watch<TargetWithCoordinatesListingsProvider>();
 
     
     return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children:[
                 FilledButton.tonal(
-                  onPressed: (){}, 
+                  onPressed: () => showDialog(
+                    context: context, 
+                    builder: (context) => 
+                      StaticEntryDialog( staticListingsProvider: staticListingsProvider ),
+                  ), 
                   child: const Text("Add Coordinates"),
                 ),
                 FilledButton.tonal(
@@ -27,93 +33,12 @@ class EntryInsertionButtons extends StatelessWidget{
                   onPressed: () => showDialog(
                     context: context, 
                     builder: (context) => 
-                      LiveEntryDialog( listingsProvider: listingsProvider ),
+                      LiveEntryDialog( listingsProvider: liveListingsProvider ),
                   ),
                   child:const Text("Add ID") 
                 )
                 
               ]
             );
-  }
-}
-
-class LiveEntryDialog extends StatefulWidget{
-
-  final TargetWithIdListingsProvider listingsProvider;
-
-  const LiveEntryDialog({super.key, required this.listingsProvider});
-
-  @override
-  State<LiveEntryDialog> createState() => _LiveEntryDialogState();
-}
-
-class _LiveEntryDialogState extends State<LiveEntryDialog> {
-
-  String targetId="";
-  String? targetName;
-
-  @override
-  Widget build(BuildContext context) {
-
-    final listingsProvider = widget.listingsProvider;
-
-    return AlertDialog(
-      title: const Text("Enter user ID"),
-
-      content: Column( 
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              CustomInputFormatter(),
-              LengthLimitingTextInputFormatter(7),
-            ],
-            onChanged: (value) {
-              setState(() {
-                targetId = value;
-              });
-            },
-            decoration: const InputDecoration(
-              labelText: "ID",
-              hintText: "###-###",
-            ),
-          ),
-
-          const SizedBox(
-            height: 20,
-          ),
-
-          TextField(
-            onChanged: (value){
-              targetName = value;
-
-            },
-            decoration: const InputDecoration(
-              labelText: "Friendly Name",
-              hintText: "A fellow lost soul",
-            ),
-
-          )
-        ]), 
-      actions: [
-        TextButton(onPressed: (){
-          Navigator.pop(context,"Cancel");
-        }, child: const Text("Cancel")),
-        TextButton(
-            onPressed: () async{
-              targetId.length < 5 ? null 
-              : (() async{
-                await listingsProvider.addTargetWithIdEntry( targetId, targetName: targetName );
-                if ( context.mounted ){
-                  Navigator.pop(context, "Submit");
-                } 
-              })();
-            }, 
-            child: const Text("Submit")
-        )
-      ],
-    );
-
   }
 }
