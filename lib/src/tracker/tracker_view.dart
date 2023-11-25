@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/tracker/compass/compass_view.dart';
+import 'package:path_finders/src/tracker/format_distance.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,37 @@ class TrackerView extends StatefulWidget{
 class _TrackerViewState extends State<TrackerView> {
 
   Coordinates? currentLocation;
+
+  @override
+  void initState() {
+
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+
+      await Future.delayed( const Duration( seconds: 3) )
+        .then((value){
+          ScaffoldMessenger.of( context )
+          .showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration( seconds: 5 ),
+              backgroundColor: Colors.blue.shade700 ,
+              content: 
+                Text( 
+                  "Go to 'Profile' Tab to enable/disable location sharing.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).indicatorColor
+                  ),
+                ),
+            )
+          );
+        });
+      
+    });
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,53 +80,72 @@ class _TrackerViewState extends State<TrackerView> {
 
             }
 
+            
+
             return Column( 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text( 
-                  "Your current position is \n" 
-                  "${ currentLocation.latitude }, ${ currentLocation.longitude }\n"
-                  "Go to Profile Tab to enable/disable sharing.",
-                  textAlign: TextAlign.center,
-                  
-                ),
                 Column(
                   children: [
-                    (
-                      targetLocation != null 
-                      && distanceToTarget != null
-                      && targetLocationRotationInRads != null
-                      && targetLocationRotationInRads.isFinite
-                    ) 
+                    distanceToTarget != null ? 
+                      RichText( 
+                        text: 
+                        ( distanceToTarget < 7 )
+                        ?const TextSpan( text:"Your friend is nearby!" )
+                        :TextSpan(
+                          text:"Your distance to ${appState.targetName} is \n",
+                          children: [ 
+                            TextSpan( 
+                              style: const TextStyle( fontSize: 24 ),
+                              text: DistanceFormatter.metersFormatter( distanceToTarget )
+                            )
+                          ]
+                        ),
+                        textAlign: TextAlign.center,
+                        textScaler: const TextScaler.linear(1.5),
+                      )
+                      :const SizedBox.shrink(),
+                    const SizedBox( height: 5 ),
+                  ],
+                ),
+                Expanded(
 
-                    ?Column(
-                      children: [
-                        Center( 
-                          child: 
-                          ( distanceToTarget < 7 )
-                          ?const Text( "Your friend is nearby!" )
-                          :Text(
-                            "Your distance is $distanceToTarget meters.\n"
-                            "Rotate clockwise ${ ( targetLocationRotationInRads * 57.29 ).round() } degress from North, "
-                            "in order to look towards ${appState.targetName}.",
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    children:
+                      (
+                        targetLocation != null 
+                        && distanceToTarget != null
+                        && targetLocationRotationInRads != null
+                        && targetLocationRotationInRads.isFinite
+                      ) 
+
+                      ?[
+                          const SizedBox.square( dimension:  8),
+                          CompassView( targetLocationRotationInRads: targetLocationRotationInRads ),
+                          Text( 
+                            "Your current position is \n" 
+                            "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
+                            textScaler: const TextScaler.linear( 1.5 ),
                             textAlign: TextAlign.center,
                           )
-                        ),
-                        Center(child: 
-                          CompassView( targetLocationRotationInRads: targetLocationRotationInRads )
-                        )
+                      ]
+
+                      :[
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: const Center( 
+                            child: Text( 
+                              "Select a 'Target' at the 'Friends' Tab",
+                              textScaler: TextScaler.linear( 1.4 ),
+                            ),
+                          )
+                        ) 
                       ],
-                    ) 
-                    :SizedBox(
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: const Center( child: 
-                       Text( 
-                        "Select someone to locate, at the 'Friends' Tab.",
-                        style: TextStyle( color: Colors.red ), )
-                      ),
-                    ) ,
-                  ],
+                  )
+
                 )                
               ],
             );
