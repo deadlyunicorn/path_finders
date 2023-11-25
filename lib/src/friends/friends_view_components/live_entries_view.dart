@@ -26,11 +26,13 @@ class LiveEntriesView extends StatelessWidget{
             future: TargetsFile.getTargetsFromFile(), 
             builder: (context, snapshot) {
 
-              final targetsSetSnapshot = snapshot.data;
+              final targetsMapListSnapshot = snapshot.data;
               
 
 
-              if ( targetsSetSnapshot != null ){
+              if ( targetsMapListSnapshot != null ){
+
+                
 
                 //This code seems to work.
                 //
@@ -38,7 +40,7 @@ class LiveEntriesView extends StatelessWidget{
                 //is that on entry addition/removal
                 //we don't need to return a loading screen.
                 //We still keep our old entry list loaded.
-                listingsProvider.initializeTargetEntries( targetsSetSnapshot );
+                listingsProvider.initializeTargetEntries( targetsMapListSnapshot );
                 
 
                 return StreamBuilder(
@@ -46,7 +48,9 @@ class LiveEntriesView extends StatelessWidget{
                   builder: ( context, intervalStreamerSnapshot ){
 
                     if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
+
                       return ListView.builder(
+
                         itemCount:  listingsProvider.targetEntries.length,
                         itemBuilder: (context, index) {
 
@@ -54,7 +58,10 @@ class LiveEntriesView extends StatelessWidget{
                           //to not rebuild/refetch when changing targets.
                           final targetProvider = context.read<TargetProvider>();
                           
-                          final targetId = listingsProvider.targetEntries.elementAt(index);
+                          final targetEntry = listingsProvider.targetEntries.elementAt(index);
+                          
+                          final String targetId = targetEntry["targetId"];
+                          final String? targetName = targetEntry["targetName"];
                           
 
 
@@ -123,7 +130,17 @@ class LiveEntriesView extends StatelessWidget{
 
 
                               return ListTile(
-                                title: Text( targetId ), 
+                                title: Flex( 
+                                  direction: Axis.horizontal,
+                                  
+                                  children: [
+                                    Text( targetName ?? "#$targetId" ),
+                                    const SizedBox( width: 5 ),
+                                    targetName != null 
+                                    ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
+                                    : const SizedBox.shrink()
+                                  ]
+                                ),
                                 leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
                                 trailing:  ( targetDetailsSnapshot != null && targetDetailsSnapshot.hasErrorMessage() )
                                   ? Text( targetDetailsSnapshot.getErrorMessage()! )

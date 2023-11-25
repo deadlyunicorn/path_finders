@@ -3,26 +3,32 @@ import 'package:path_finders/src/storage_services.dart';
 
 class TargetListingsProvider with ChangeNotifier{
 
-  Set<String> _targetEntries = {};
+  List _targetEntries = [];
 
-  void initializeTargetEntries( Set<String> initialEntriesFromFile){
+  void initializeTargetEntries( List initialEntriesFromFile){
+
     _targetEntries = initialEntriesFromFile;
   }
 
-  Future<void> addTargetEntry( String targetEntry ) async{
+  Future<void> addTargetEntry( String targetId, { String? targetName } ) async{
 
-    await TargetsFile.writeTarget(targetEntry);
-    _targetEntries.add( targetEntry );
+    await TargetsFile.writeTarget(targetId, targetName: targetName);
+
+    _targetEntries.add( { 
+      "targetId": targetId,
+      "targetName": targetName
+    } );
+    
     notifyListeners();
   }
 
-  Future<void> removeTargetEntry( String targetEntry ) async{
+  Future<void> removeTargetEntry( String targetId ) async{
 
-    await TargetsFile.removeTargetFromFile( targetEntry );
-    _targetEntries.remove( targetEntry );
+    await TargetsFile.removeTargetFromFile( targetId );
+    _targetEntries.remove( targetId );
     notifyListeners();
   }
 
-  Set<String> get targetEntries => _targetEntries;
+  List get targetEntries => _targetEntries;
  
 }

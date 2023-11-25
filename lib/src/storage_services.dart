@@ -22,7 +22,7 @@ class LocalFiles {
 
 class TargetsFile {
 
-  static Future<File> writeTarget( String targetId ) async{
+  static Future<File> writeTarget( String targetId, { String? targetName} ) async{
 
     final targetsFile = await LocalFiles.targetsFile;
     try{
@@ -32,16 +32,21 @@ class TargetsFile {
       ?jsonDecode( "[]" )
       :jsonDecode( jsonListString );
 
-      targetMap.add({
-        "targetId": targetId
-      });
+
+      if ( targetMap.where((element) => element["targetId"] == targetId).isEmpty ){
+        targetMap.add({
+          "targetId": targetId,
+          "targetName": targetName
+        });
+      }
+      
       return await targetsFile.writeAsString( jsonEncode( targetMap ) );
 
     }
     catch( error ){
       if ( error is PathNotFoundException ){
         await targetsFile.writeAsString("");
-        return await writeTarget(targetId);
+        return await writeTarget(targetId, targetName: targetName );
       }
       else{ 
         throw "Uknown error.";
@@ -51,22 +56,24 @@ class TargetsFile {
   }
 
       // await targetsFile.writeAsString(""); used to delete for testing
-  static Future<Set<String>> getTargetsFromFile() async{
+  static Future<List> getTargetsFromFile() async{
 
       final targetsFile = await LocalFiles.targetsFile;
       final contents = await targetsFile.readAsString();
-      final dynamic targetsJson = json.decode(contents);
+      final List targetsJson = json.decode(contents);
 
-      final Set<String> finalSet = {};
 
-      for( var target in targetsJson ){
-        String? targetId = target["targetId"];
-        if ( targetId !=null && targetId.isNotEmpty ){
-          finalSet.add( targetId.toString() );
-        }
-      }
 
-      return finalSet;
+      // final Set<String> finalSet = {};
+
+      // for( var target in targetsJson ){
+      //   String? targetId = target["targetId"];
+      //   if ( targetId !=null && targetId.isNotEmpty ){
+      //     finalSet.add( targetId.toString() );
+      //   }
+      // }
+
+      return targetsJson;
 
   }
 
@@ -77,7 +84,6 @@ class TargetsFile {
       final List targetsJson = json.decode( contents );
 
       targetsJson.removeWhere(( jsonObject ) => jsonObject["targetId"] == targetId );
-      
       await targetsFile.writeAsString( jsonEncode( targetsJson ));
   }
 
