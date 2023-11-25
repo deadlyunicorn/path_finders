@@ -4,7 +4,7 @@ import 'package:path_finders/src/types/coordinates.dart';
 class TargetProvider with ChangeNotifier{
 
   Coordinates? _targetLocation;
-  String _targetName = "No location selected";
+  String _targetName = "No location";
 
   void setTargetLocation( Coordinates newLocation ){
 
