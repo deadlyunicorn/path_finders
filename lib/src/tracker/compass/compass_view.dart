@@ -30,32 +30,38 @@ class CompassView extends StatelessWidget {
           );
         }
 
-        return Row(
+        return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(
-              width: 130,
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.2,
               child: Material(
-                shadowColor: Colors.blue,
+                shadowColor: Colors.brown.shade700,
                 shape: const CircleBorder( 
                   side: BorderSide( 
                     color: Colors.black26,
-                    width: 5
+                    width: 7
                     )
                   ),
-                elevation: 2,
+                elevation: 3,
                 color: Colors.transparent,
                 child: Container(
                   alignment: Alignment.center,
                   child: Transform.rotate(
                     angle: ( direction * ( math.pi / 180 ) * -1 ),
-                    child: const Column(
+                    child:  Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("N", style: TextStyle( color: Colors.red), ),
+                        const Text( 
+                          "N", 
+                          style: TextStyle( color: Colors.red),
+                          textScaler: TextScaler.linear( 2 ) 
+                        ),
                         Icon(
-                          Icons.straight, 
-                          size: 100,
+                          Icons.straight,
+                          color: Colors.white38,
+                          size: MediaQuery.of(context).size.width * 0.3,
                         )
                       ],
                     ) 
@@ -63,30 +69,35 @@ class CompassView extends StatelessWidget {
                 ),
               )
             ),
+            const SizedBox.square( dimension: 48 ),
             SizedBox(
-              width: 130,
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.2,
               child: Material(
-                shadowColor: Colors.blue,
+                shadowColor: Colors.brown.shade700,
                 shape: const CircleBorder( 
                   side: BorderSide( 
                     color: Colors.black26,
-                    width: 5
+                    width: 7
                     )
                   ),
-                elevation: 2,
+                elevation: 3,
                 color: Colors.transparent,
                 child: Container(
                   alignment: Alignment.center,
                   child: Transform.rotate(
                     angle: ( direction * ( math.pi / 180 ) * -1 + targetLocationRotationInRads ),
-                    child: const Column(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text( "Target", style: TextStyle( color: Colors.green), ),
+                        const Text( 
+                          "Target", 
+                          textScaler: TextScaler.linear( 1.5 ),
+                          style: TextStyle( color: Colors.white) ),
                         Icon(
                           Icons.straight_rounded,
-                          color: Colors.green,
-                          size: 100,
+                          color: Colors.white38,
+                          size: MediaQuery.of(context).size.width * 0.3,
                         )
                       ],
                     ) 

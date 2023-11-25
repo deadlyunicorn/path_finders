@@ -83,6 +83,9 @@ class MyApp extends StatelessWidget {
                 elevation: 1,
                 foregroundColor: Colors.blue.shade600,
                 title: const Text( "Path Finders" ),
+                actions: const [
+                  Icon( Icons.settings )
+                ],
               ),
               body: Container(
                 padding: const EdgeInsets.only( bottom: 20, top: 20 ),

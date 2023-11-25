@@ -44,10 +44,10 @@ class SelectionHeader extends StatelessWidget{
   Widget build(BuildContext context) {
     
     return RichText(
-            textScaler: const TextScaler.linear( 2.5 ),
+            textScaler: const TextScaler.linear( 1.5 ),
             textAlign: TextAlign.center,
             text: TextSpan(
-              text: "Currently ",
+              text: "Current selection: ",
               children: [
                 TextSpan(
                   text: context.watch<TargetProvider>().targetName,
@@ -55,7 +55,6 @@ class SelectionHeader extends StatelessWidget{
                     decoration: TextDecoration.underline
                   ),
                 ),
-                const TextSpan( text: " is selected." )
               ]
             ),
           );
@@ -76,9 +75,10 @@ class ListHeader extends StatelessWidget{
     
     return Container(
       padding: const EdgeInsets.all( 8 ),
+      margin: const EdgeInsets.only( top: 8 ),
       child: Text( 
         text, 
-        textScaler: const TextScaler.linear( 1.8 )
+        textScaler: const TextScaler.linear( 1.4 )
       ),
     );
   }  

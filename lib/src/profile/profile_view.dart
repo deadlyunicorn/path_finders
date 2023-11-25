@@ -35,27 +35,55 @@ class _ProfileViewState extends State<ProfileView> {
 
                 return Column( 
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}", 
-                          textScaler: const TextScaler.linear(2)
-                        ),
-                      ],
+                    Text("Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}", 
+                      textScaler: const TextScaler.linear(2)
                     ),
-                    const Text( "Toggle Visibility", textScaler: TextScaler.linear(1.5) ),
-                    Switch(
-                      value: isSharing, 
-                      onChanged: ( newValue ){
-                        setState(() {
-                          isSharing = newValue;
-                        });
-                      }),
-                    LocationSharingWidget(
-                      isSharing: isSharing,
-                      userId: userId,
-                      refresh: refreshProfileView,
+                    const SizedBox(
+                      child: Text("App logo goes here"),
                     ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text( "Toggle Visibility", textScaler: TextScaler.linear( 2 ) ),
+                              SizedBox( width: 5 ),
+                              Image(
+                                image: AssetImage('assets/images/deadlyunicorn.png'),
+                                height: 24,
+                              ),
+                            ]
+                          ),
+                          SizedBox(
+                            height: 72,
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: Switch(
+                                value: isSharing, 
+                                onChanged: ( newValue ){
+                                  setState(() {
+                                    isSharing = newValue;
+                                  });
+                                }
+                              ),
+                            ) 
+                          ),
+                          SizedBox(
+                            height: 42,
+                            child: Center(
+                                child: LocationSharingWidget(
+                                  isSharing: isSharing,
+                                  userId: userId,
+                                  refresh: refreshProfileView,
+                              )
+                            ) 
+                          )
+                        ],
+                      ),
+                    ),
+                    
                   ]
                 );
               }
