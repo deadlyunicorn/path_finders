@@ -38,58 +38,6 @@ class _FriendsViewState extends State<FriendsView> {
           const ListHeader(text: "Live Entries"),
           const LiveEntriesView(),
           const EntryInsertionButtons(),
-          Consumer<TargetListingsProvider>(
-            builder: (context, listingsProvider, child) 
-            =>Expanded(
-            child: 
-              ListView(
-                children: [
-                  ListTile(
-                    title: const Center (child: Text("Add with ID") ),
-                    onTap: () => showDialog(
-                      context: context, 
-                      builder: (context) => AlertDialog(
-                        title: const Text("Enter user ID"),
-                        content: TextField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            CustomInputFormatter(),
-                            LengthLimitingTextInputFormatter(7),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              friendToAdd = value;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: "ID",
-                            hintText: "###-###",
-                          ),
-                        ),
-                        actions: [
-                          TextButton(onPressed: (){
-                            Navigator.pop(context,"Cancel");
-                          }, child: const Text("Cancel")),
-                          TextButton(
-                              onPressed: () async{
-                                friendToAdd.length < 5 ? null 
-                                : (() async{
-                                  await listingsProvider.addTargetEntry(friendToAdd);
-                                  if ( context.mounted ){
-                                    Navigator.pop(context, "Submit");
-                                  } 
-                                })();
-                              }, 
-                              child: const Text("Submit")
-                          )
-                        ],
-                      )
-                    )
-                  )
-                ]
-              )
-            )
-          ),
         ],
       )
     );
