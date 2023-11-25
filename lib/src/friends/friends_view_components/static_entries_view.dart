@@ -1,41 +1,86 @@
 import 'package:flutter/material.dart';
+
 import 'package:path_finders/src/providers/target_provider.dart';
+import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
+import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
 
 class StaticEntriesView extends StatelessWidget{
 
-  final Map<String, Coordinates> listItems;
-
   const StaticEntriesView({ 
     Key? key, 
-    required this.listItems,
   }):super(key:key);
 
   @override
   Widget build(BuildContext context) {
 
+    final List<Map<String, dynamic>> sampleData = [
+      { 
+        "targetName" : "China",
+        "latitude"   : 31.2183202,
+        "longitude"  : 120.2284013
+      },
+      {
+        "targetName" :"Mexico",
+        "latitude"   :19.3904678,
+        "longitude"  :-99.455446,
+      },
+      {
+        "targetName" :"Finland",
+        "latitude"   :65.0679042,
+        "longitude"  :25.58678
+      },
+      {
+        "targetName" :"South Africa",
+        "latitude"   :-33.925108,
+        "longitude"  :18.5315826 
+      }
+    ];
+    final listingsProvider = context.watch<TargetWithCoordinatesListingsProvider>(); 
 
-    return Expanded(
-      flex: 3,
-      child:
-      ListView.builder(
-        itemCount:  listItems.length,
-        itemBuilder: (context, index) {
-          final key = listItems.keys.elementAt(index);
-          final value = listItems[key];
-          return Consumer<TargetProvider>(
-            builder: (context, targetProvider, child) 
-              => ListTile(
-                  title: Text( key ), 
-                  onTap: () {
-                    targetProvider.setTargetLocation( value! );
-                    targetProvider.setTargetName( key );
-                  }
-              )
-          );
-        },
-      )
-    );
+    return FutureBuilder(
+      future: TargetsFiles.getTargetsWithCoordinatesFromFile(), 
+      builder: ( context, targetsSnapshot ) {
+
+        if ( targetsSnapshot.connectionState == ConnectionState.done ){
+          
+          final targetData = targetsSnapshot.data;
+          if ( targetData != null ){
+            listingsProvider.initializeTargetWithCoordinatesEntries( targetData );
+            sampleData.addAll(  [ ...targetData ] ); 
+          }
+          
+        }
+
+        return Expanded(
+          flex: 3,
+          child:
+          ListView.builder(
+            itemCount:  sampleData.length,//listItems.length,
+            itemBuilder: (context, index) {
+              
+              final currentElement = sampleData[index];
+              final targetName = currentElement["targetName"];//listItems.keys.elementAt(index);
+              final Coordinates value = Coordinates( currentElement["latitude"], currentElement["longitude"]); //listItems[targetName];
+
+              return Consumer<TargetProvider>(
+                builder: (context, targetProvider, child) 
+                  => ListTile(
+                      title: Text( targetName ), 
+                      onTap: () {
+                        targetProvider.setTargetLocation( value );
+                        targetProvider.setTargetName( targetName );
+                      },
+                      onLongPress: (){
+                        listingsProvider.removeTargetWithCoordinatesEntry(targetName);
+                      },
+                  )
+              );
+            },
+          )
+        );
+      }
+    ); 
   }
 }
