@@ -3,8 +3,8 @@ import 'package:path_finders/src/types/coordinates.dart';
 
 class TargetProvider with ChangeNotifier{
 
-  Coordinates? _targetLocation;
-  String _targetName = "No location";
+  Coordinates _targetLocation = Coordinates(  90, 0 );
+  String _targetName = "North Pole";
 
   void setTargetLocation( Coordinates newLocation ){
 
