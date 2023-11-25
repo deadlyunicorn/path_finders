@@ -35,8 +35,26 @@ class LocationServicesCheckerView extends StatelessWidget{
             const Center( child:  Text("No location services found.") ) 
           ); 
         }
-        else{ //not mounted yet.
-          return const SizedBox.shrink();
+        else{ 
+          
+          if ( snapshot.connectionState == ConnectionState.done ){
+            return Center ( child: 
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Can't get location.. Is GPS enabled?"),
+                  TextButton(
+                    onPressed: locationServicesProvider.reinvokeGeolocator, 
+                    child:  const Text( "Retry") )
+                ],
+              )
+            );
+          }
+          else{
+            //not mounted yet.
+            return const SizedBox.shrink();
+          }
+          
         }
       });
   }
