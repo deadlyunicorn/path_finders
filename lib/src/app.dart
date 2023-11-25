@@ -8,6 +8,7 @@ import 'package:path_finders/src/profile/profile_view.dart';
 import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
+import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
 import 'package:path_finders/src/tracker/tracker_view.dart';
 import 'package:provider/provider.dart';
 
@@ -125,6 +126,9 @@ class PageSelector extends StatelessWidget{
         ),
         ChangeNotifierProvider(
           create: (_) => LocationServicesProvider() 
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TargetWithCoordinatesListingsProvider()
         )
       ],
       child: IndexedStack(
