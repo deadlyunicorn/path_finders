@@ -12,7 +12,7 @@ class TargetListingsProvider with ChangeNotifier{
 
   Future<void> addTargetWithIdEntry( String targetId, { String? targetName } ) async{
 
-    await TargetsFile.writeTargetWithId(targetId, targetName: targetName);
+    await TargetsFiles.writeTargetWithId(targetId, targetName: targetName);
 
     _targetEntries.add( { 
       "targetId": targetId,
@@ -24,7 +24,7 @@ class TargetListingsProvider with ChangeNotifier{
 
   Future<void> removeTargetWithIdEntry( String targetId ) async{
 
-    await TargetsFile.removeTargetWithIdFromFile( targetId );
+    await TargetsFiles.removeTargetWithIdFromFile( targetId );
     _targetEntries.remove( targetId );
     notifyListeners();
   }

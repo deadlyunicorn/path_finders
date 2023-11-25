@@ -4,6 +4,7 @@ import 'dart:io';
 
 
 import 'package:http/http.dart' as http;
+import 'package:path_finders/src/types/coordinates.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LocalFiles { 
@@ -13,18 +14,25 @@ class LocalFiles {
     return directory.path;
   }
 
-  static Future<File> get targetsFile async{
+  static Future<File> get targetsWithIdFile async{
     final path = await _localPath;
-    return File( "$path/targets.json");
+    return File( "$path/targetsWithId.json");
+  }
+
+  static Future<File> get targetsWithCoordinatesFile async{
+    final path = await _localPath;
+    return File( "$path/targetsWithCoordinates.json");
   }
   
 }
 
-class TargetsFile {
+class TargetsFiles {
 
   static Future<File> writeTargetWithId( String targetId, { String? targetName} ) async{
 
-    final targetsFile = await LocalFiles.targetsFile;
+    final targetsFile = await LocalFiles.targetsWithIdFile;
+
+
     try{
       final String jsonListString = await targetsFile.readAsString();
 
@@ -44,7 +52,7 @@ class TargetsFile {
 
     }
     catch( error ){
-      if ( error is PathNotFoundException ){
+      if ( error is PathNotFoundException ){ //less maintainable..
         await targetsFile.writeAsString("");
         return await writeTargetWithId(targetId, targetName: targetName );
       }
@@ -55,14 +63,39 @@ class TargetsFile {
     
   }
 
+  static Future<void> writeTargetWithCoordinates( String targetName, Coordinates coordinates ) async{
+      
+    final targetsWithCoordinatesFile = await LocalFiles.targetsWithCoordinatesFile;
+
+    if ( !await targetsWithCoordinatesFile.exists() ){
+      await targetsWithCoordinatesFile.writeAsString("");
+    }
+    final String jsonListString = await targetsWithCoordinatesFile.readAsString();
+
+    final List<dynamic> targetMap = jsonListString.isEmpty
+    ?jsonDecode( "[]" )
+    :jsonDecode( jsonListString );
+
+    if ( targetMap.where((element) => element["targetName"] == targetName).isEmpty ){
+      targetMap.add({
+        "targetName": targetName,
+        "longitude": coordinates.longitude,
+        "latitude": coordinates.latitude
+      });
+    }
+    
+    await targetsWithCoordinatesFile.writeAsString( jsonEncode( targetMap ) );
+
+  }
+
       // await targetsFile.writeAsString(""); used to delete for testing
   static Future<List> getTargetsWithIdFromFile() async{
 
-      final targetsFile = await LocalFiles.targetsFile;
+      final targetsFile = await LocalFiles.targetsWithIdFile;
       final contents = await targetsFile.readAsString();
       final List targetsJson = json.decode(contents);
 
-
+      return targetsJson;
 
       // final Set<String> finalSet = {};
 
@@ -72,19 +105,34 @@ class TargetsFile {
       //     finalSet.add( targetId.toString() );
       //   }
       // }
+  }
 
-      return targetsJson;
+  static Future<List> getTargetsWithCoordinatesFromFile() async{
+
+      final targetsWithCoordinatesFile = await LocalFiles.targetsWithCoordinatesFile;
+      final contents = await targetsWithCoordinatesFile.readAsString();
+      return json.decode(contents);
 
   }
 
   static Future<void> removeTargetWithIdFromFile( String targetId )async{
 
-      final targetsFile = await LocalFiles.targetsFile;
+      final targetsFile = await LocalFiles.targetsWithIdFile;
       final contents = await targetsFile.readAsString();
       final List targetsJson = json.decode( contents );
 
       targetsJson.removeWhere(( jsonObject ) => jsonObject["targetId"] == targetId );
       await targetsFile.writeAsString( jsonEncode( targetsJson ));
+  }
+
+    static Future<void> removeTargetWithCoordinatesFromFile( String targetName )async{
+
+      final targetsWithCoordinatesFile = await LocalFiles.targetsWithCoordinatesFile;
+      final contents = await targetsWithCoordinatesFile.readAsString();
+      final List targetsJson = json.decode( contents );
+
+      targetsJson.removeWhere(( jsonObject ) => jsonObject["targetName"] == targetName );
+      await targetsWithCoordinatesFile.writeAsString( jsonEncode( targetsJson ));
   }
 
 }

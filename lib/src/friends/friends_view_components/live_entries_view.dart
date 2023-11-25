@@ -23,7 +23,7 @@ class LiveEntriesView extends StatelessWidget{
         Consumer<TargetListingsProvider>( 
           builder: (context, listingsProvider, child) 
           =>  FutureBuilder(
-            future: TargetsFile.getTargetsWithIdFromFile(), 
+            future: TargetsFiles.getTargetsWithIdFromFile(), 
             builder: (context, snapshot) {
 
               final targetsMapListSnapshot = snapshot.data;
