@@ -41,7 +41,19 @@ class LocationServicesCheckerView extends StatelessWidget{
               );
           }
           else{ //Loading..
-            return const CircularProgressIndicator();
+            return FutureBuilder(
+              future: Future.delayed( const Duration( seconds: 5)), 
+              builder: (_, timerSnapshot ){
+                if ( timerSnapshot.connectionState == ConnectionState.done ){
+                  return TextButton(
+                    onPressed: locationServicesProvider.reinvokeGeolocator, 
+                    child:  const Text( "Load Compass") );
+                }
+                else{
+                  return const CircularProgressIndicator();
+                }
+              }
+            );
           }
         }
       )
