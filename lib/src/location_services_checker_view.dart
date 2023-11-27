@@ -12,33 +12,24 @@ class LocationServicesCheckerView extends StatelessWidget{
 
     final locationServicesProvider = context.watch<LocationServicesProvider>();
 
-    return FutureBuilder<bool>(
-      future: locationServicesProvider.sensors.hasLocationPermission, 
-      builder: (context, snapshot){
-        if ( snapshot.hasData ){
-          return snapshot.data == true
-            ? child
-            : Center ( child: 
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Can't get location.. Is GPS enabled?"),
-                  TextButton(
-                    onPressed: locationServicesProvider.reinvokeGeolocator, 
-                    child:  const Text( "Retry") )
-                ],
-              )
-            );
-        }
-        else if( snapshot.hasError ){
-          return (
-            const Center( child:  Text("No location services found.") ) 
-          ); 
-        }
-        else{ 
-          
+    return Center ( 
+      child: FutureBuilder<bool>(
+        future: locationServicesProvider.sensors.hasLocationPermission, 
+        builder: (context, snapshot){
+
           if ( snapshot.connectionState == ConnectionState.done ){
-            return Center ( child: 
+
+            if ( snapshot.hasData && snapshot.data == true ){
+              return child;
+            }
+            // else if( snapshot.hasError ){
+            //   return (
+            //     const Center( child:  Text("No location services found.") ) 
+            //   ); 
+            // }
+
+            //has loaded but something is wrong.
+            return 
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -47,15 +38,13 @@ class LocationServicesCheckerView extends StatelessWidget{
                     onPressed: locationServicesProvider.reinvokeGeolocator, 
                     child:  const Text( "Retry") )
                 ],
-              )
-            );
+              );
           }
-          else{
-            //not mounted yet.
-            return const SizedBox.shrink();
+          else{ //Loading..
+            return const CircularProgressIndicator();
           }
-          
         }
-      });
+      )
+    );
   }
 }

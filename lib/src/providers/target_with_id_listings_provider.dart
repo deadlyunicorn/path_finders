@@ -5,9 +5,9 @@ class TargetWithIdListingsProvider with ChangeNotifier{
 
   List _targetWithIdEntries = [];
 
-  void initializeTargetWithIdEntries( List initialEntriesFromFile){
-
-    _targetWithIdEntries = initialEntriesFromFile;
+  void setTargetWithIdEntries( List targetWithIdEntries){
+    _targetWithIdEntries = targetWithIdEntries;
+    notifyListeners();
   }
 
   Future<void> addTargetWithIdEntry( String targetId, { String? targetName } ) async{

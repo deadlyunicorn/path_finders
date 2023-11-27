@@ -38,60 +38,71 @@ class StaticEntriesView extends StatelessWidget{
       }
     ];
     final listingsProvider = context.watch<TargetWithCoordinatesListingsProvider>(); 
+    final targetProvider = context.watch<TargetProvider>();
 
-    return FutureBuilder(
-      future: TargetsFiles.getTargetsWithCoordinatesFromFile(), 
-      builder: ( context, targetsSnapshot ) {
+    return Expanded(
+      flex: 3,
+      child: FutureBuilder(
+        future: TargetsFiles.getTargetsWithCoordinatesFromFile(), 
+        builder: ( context, targetsSnapshot ) {
 
-        if ( targetsSnapshot.connectionState == ConnectionState.done ){
-          
-          final targetData = targetsSnapshot.data;
-          if ( targetData != null ){
-            listingsProvider.initializeTargetWithCoordinatesEntries( targetData );
-            sampleData.addAll(  [ ...targetData ] ); 
+
+          if ( targetsSnapshot.connectionState == ConnectionState.done ){
+            
+            final targetData = targetsSnapshot.data;
+
+            if ( targetData != null ){
+              //has no notifyListeners(), it is used to disappear entries on removal.
+              listingsProvider.initializeTargetWithCoordinatesEntries( targetData );
+              sampleData.addAll(  [ ...targetData ] ); 
+            }
+
+            return ListView.builder(
+
+                itemCount:  sampleData.length,//listItems.length,
+                itemBuilder: (context, index) {
+                  
+                  final currentElement = sampleData[index];
+                  final targetName = currentElement["targetName"];//listItems.keys.elementAt(index);
+                  final Coordinates targetCoordinates = Coordinates( currentElement["latitude"], currentElement["longitude"]); //listItems[targetName];
+
+                  return  Container ( 
+
+                      margin: const EdgeInsets.all( 8 ),
+                      decoration: targetProvider.targetName == targetName 
+                      ? BoxDecoration(
+                        border: Border.all(
+                          color: Theme.of( context ).highlightColor
+                        ),
+                        borderRadius: BorderRadius.circular( 4 ),
+                      )
+                      :null,
+                      child: ListTile(
+                        title: Text( targetName ),
+                        onTap: () {
+                          targetProvider.setTargetLocation( targetCoordinates );
+                          targetProvider.setTargetName( targetName );
+                        },
+                        onLongPress: (){
+                          listingsProvider.removeTargetWithCoordinatesEntry(targetName);
+                        },
+                    )
+                  );
+
+                },
+            );
+            
           }
+          else{
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+
           
         }
-
-        return Expanded(
-          flex: 3,
-          child:
-          ListView.builder(
-            itemCount:  sampleData.length,//listItems.length,
-            itemBuilder: (context, index) {
-              
-              final currentElement = sampleData[index];
-              final targetName = currentElement["targetName"];//listItems.keys.elementAt(index);
-              final Coordinates targetCoordinates = Coordinates( currentElement["latitude"], currentElement["longitude"]); //listItems[targetName];
-
-              return Consumer<TargetProvider>(
-                builder: (context, targetProvider, child) 
-                  => Container ( 
-                    margin: const EdgeInsets.all( 8 ),
-                    decoration: targetProvider.targetName == targetName 
-                    ? BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of( context ).highlightColor
-                      ),
-                      borderRadius: BorderRadius.circular( 4 ),
-                    )
-                    :null,
-                    child: ListTile(
-                      title: Text( targetName ),
-                      onTap: () {
-                        targetProvider.setTargetLocation( targetCoordinates );
-                        targetProvider.setTargetName( targetName );
-                      },
-                      onLongPress: (){
-                        listingsProvider.removeTargetWithCoordinatesEntry(targetName);
-                      },
-                  )
-                )
-              );
-            },
-          )
-        );
-      }
-    ); 
+      )
+    );
   }
 }

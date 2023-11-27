@@ -26,7 +26,7 @@ class _TrackerViewState extends State<TrackerView> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 
       await Future.delayed( const Duration( seconds: 3) )
-        .then((value){
+        .then((_){
           ScaffoldMessenger.of( context )
           .showSnackBar(
             SnackBar(
@@ -53,42 +53,40 @@ class _TrackerViewState extends State<TrackerView> {
   Widget build(BuildContext context) {
 
     TargetProvider appState = context.watch<TargetProvider>();
-    Coordinates? targetLocation = appState.targetLocation;
+    Coordinates targetLocation = appState.targetLocation;
 
 
     return Center(
       child: StreamBuilder(
         stream: Geolocator.getPositionStream(), 
-        builder: (context, snapshot) {
-
-          double? targetLocationRotationInRads;
-
-          if ( snapshot.hasData && snapshot.data != null ){ //has data
-
-            final currentLocation = Coordinates( snapshot.data!.latitude, snapshot.data!.longitude ); 
-            final int? distanceToTarget = targetLocation != null? currentLocation.distanceInMetersTo( targetLocation ) :null;
+        builder: (context, positionStreamSnapshot) {
 
 
-            if ( targetLocation != null ){
+          if ( positionStreamSnapshot.connectionState == ConnectionState.active ){
 
-              targetLocationRotationInRads= double.parse( 
-                currentLocation
-                  .getRotationFromNorthTo( targetLocation )
-                  .toStringAsFixed(7) 
+            final positionStreamSnapshotData = positionStreamSnapshot.data;
+
+            if ( positionStreamSnapshot.hasData 
+              && positionStreamSnapshotData != null 
+            ){ //has position data
+
+              final currentLocation = Coordinates( 
+                positionStreamSnapshotData.latitude, 
+                positionStreamSnapshotData.longitude 
+              ); 
+              final int distanceToTarget = currentLocation.distanceInMetersTo( targetLocation );
+              final double targetLocationRotationInRads = double.parse( 
+                  currentLocation
+                    .getRotationFromNorthTo( targetLocation )
+                    .toStringAsFixed(7) 
               );
 
-
-            }
-
-            
-
-            return Column( 
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    distanceToTarget != null ? 
+              return Column( 
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
                       RichText( 
                         text: 
                         ( distanceToTarget < 7 )
@@ -104,54 +102,32 @@ class _TrackerViewState extends State<TrackerView> {
                         ),
                         textAlign: TextAlign.center,
                         textScaler: const TextScaler.linear(1.5),
-                      )
-                      :const SizedBox.shrink(),
-                    const SizedBox( height: 5 ),
-                  ],
-                ),
-                Expanded(
+                      ),
+                      const SizedBox( height: 5 ),
+                    ],
+                  ),
+                  Expanded(
 
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                    children:
-                      (
-                        targetLocation != null 
-                        && distanceToTarget != null
-                        && targetLocationRotationInRads != null
-                        && targetLocationRotationInRads.isFinite
-                      ) 
-
-                      ?[
-                          const SizedBox.square( dimension:  8),
-                          CompassView( targetLocationRotationInRads: targetLocationRotationInRads ),
-                          Text( 
-                            "Your current position is \n" 
-                            "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
-                            textScaler: const TextScaler.linear( 1.5 ),
-                            textAlign: TextAlign.center,
-                          )
+                      children: [
+                        const SizedBox.square( dimension:  8),
+                        CompassView( targetLocationRotationInRads: targetLocationRotationInRads ),
+                        Text( 
+                          "Your current position is \n" 
+                          "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
+                          textScaler: const TextScaler.linear( 1.5 ),
+                          textAlign: TextAlign.center,
+                        )
                       ]
+                    )
+                  )                
+                ],
+              );
 
-                      :[
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: const Center( 
-                            child: Text( 
-                              "Select a 'Target' at the 'Friends' Tab",
-                              textScaler: TextScaler.linear( 1.4 ),
-                            ),
-                          )
-                        ) 
-                      ],
-                  )
-
-                )                
-              ],
-            );
-          }
-          else{
-            if ( snapshot.connectionState == ConnectionState.active && snapshot.hasError ){
+            }
+            else if ( positionStreamSnapshot.hasError ){
               return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -167,7 +143,14 @@ class _TrackerViewState extends State<TrackerView> {
                   ],
               );
             }
+            else{
+              return const CircularProgressIndicator();
+            }
+          }
+          else{
+            
             return const CircularProgressIndicator();
+
           }
         }
       )

@@ -15,98 +15,62 @@ class CompassView extends StatelessWidget {
     return StreamBuilder<CompassEvent>(
       stream: FlutterCompass.events, 
       builder: (context, snapshot){
-        if ( snapshot.hasError){
-          return const Text("Error reading");
+
+
+        if ( snapshot.connectionState == ConnectionState.active ){
+
+          final double? direction = snapshot.data?.heading;
+
+          if ( direction == null || snapshot.hasError ){
+            return const Center(
+              child: Text("Your device doesn't have the required sensors")
+            );
+          }
+          else{
+
+            
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Compass(
+                  angle: direction * ( math.pi / 180 ) * -1, 
+                  children: [
+                    const Text( 
+                      "N", 
+                      style: TextStyle( color: Colors.red),
+                      textScaler: TextScaler.linear( 2 ) 
+                    ),
+                    Icon(
+                      Icons.straight,
+                      color: Colors.white38,
+                      size: MediaQuery.of(context).size.width * 0.3,
+                    )
+                  ]
+                ),
+                const SizedBox.square( dimension: 48 ),
+                Compass(
+                  angle: direction * ( math.pi / 180 ) * -1 + targetLocationRotationInRads, 
+                  children: [
+                    const Text( 
+                      "Target", 
+                      textScaler: TextScaler.linear( 1.5 ),
+                      style: TextStyle( color: Colors.white) ),
+                    Icon(
+                      Icons.straight_rounded,
+                      color: Colors.white38,
+                      size: MediaQuery.of(context).size.width * 0.3,
+                    )
+                  ]
+                )
+              ],
+            );
+
+          }
         }
-        if ( snapshot.connectionState == ConnectionState.waiting ){
+        else{
           return const Center(child: CircularProgressIndicator());
         }
-
-        double? direction = snapshot.data!.heading;
-
-        if ( direction == null ){
-          return const Center(
-            child: Text("Your device doesn't have the required sensors")
-          );
-        }
-
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.2,
-              child: Material(
-                shadowColor: Colors.brown.shade700,
-                shape: const CircleBorder( 
-                  side: BorderSide( 
-                    color: Colors.black26,
-                    width: 7
-                    )
-                  ),
-                elevation: 3,
-                color: Colors.transparent,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Transform.rotate(
-                    angle: ( direction * ( math.pi / 180 ) * -1 ),
-                    child:  Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text( 
-                          "N", 
-                          style: TextStyle( color: Colors.red),
-                          textScaler: TextScaler.linear( 2 ) 
-                        ),
-                        Icon(
-                          Icons.straight,
-                          color: Colors.white38,
-                          size: MediaQuery.of(context).size.width * 0.3,
-                        )
-                      ],
-                    ) 
-                  )
-                ),
-              )
-            ),
-            const SizedBox.square( dimension: 48 ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.2,
-              child: Material(
-                shadowColor: Colors.brown.shade700,
-                shape: const CircleBorder( 
-                  side: BorderSide( 
-                    color: Colors.black26,
-                    width: 7
-                    )
-                  ),
-                elevation: 3,
-                color: Colors.transparent,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Transform.rotate(
-                    angle: ( direction * ( math.pi / 180 ) * -1 + targetLocationRotationInRads ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text( 
-                          "Target", 
-                          textScaler: TextScaler.linear( 1.5 ),
-                          style: TextStyle( color: Colors.white) ),
-                        Icon(
-                          Icons.straight_rounded,
-                          color: Colors.white38,
-                          size: MediaQuery.of(context).size.width * 0.3,
-                        )
-                      ],
-                    ) 
-                  )
-                ),
-              )
-            )
-          ],
-        );
           
         
       }
@@ -117,4 +81,45 @@ class CompassView extends StatelessWidget {
 
 
     
+}
+
+class Compass extends StatelessWidget {
+
+  final double angle;
+  final List<Widget> children;
+
+  const Compass( {super.key, required this.angle, required this.children } );
+
+  @override
+  Widget build(BuildContext context) {
+
+    final compassWidth = MediaQuery.of(context).size.width * 0.8;
+    final compassHeight = MediaQuery.of(context).size.height * 0.2;
+
+    return SizedBox(
+      width: compassWidth,
+      height: compassHeight,
+      child: Material(
+        shadowColor: Colors.brown.shade700,
+        shape: const CircleBorder( 
+          side: BorderSide( 
+            color: Colors.black26,
+            width: 7
+            )
+          ),
+        elevation: 3,
+        color: Colors.transparent,
+        child: Container(
+          alignment: Alignment.center,
+          child: Transform.rotate(
+            angle: angle,
+            child:  Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ) 
+          )
+        ),
+      )
+    );
+  }
 }

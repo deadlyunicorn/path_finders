@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:path_finders/src/logger_instance.dart';
 import 'package:path_finders/src/profile/user_registration_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_finders/src/providers/location_services_provider.dart';
@@ -29,8 +28,117 @@ class LocationSharingWidget extends StatelessWidget{
 
       final updatedAt = await _uploadLocationFuture();
       yield updatedAt;
-      await Future.delayed( const Duration( minutes: 2 ) );
+      await Future.delayed( const Duration( minutes: 30 ) );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final locationServicesProvider = context.watch<LocationServicesProvider>();
+    
+    if ( isSharing ){
+
+      return FutureBuilder(
+
+        future: AppVault.userHashExistsFuture( userId ), 
+        builder: (context, userHashSnapshot){
+          
+
+          if ( userHashSnapshot.connectionState == ConnectionState.done ){ 
+            // userHash was checked.
+
+            if ( userHashSnapshot.hasData  ){
+              //hasHash exists -- doesn't return null.
+              return StreamBuilder(
+                stream: _locationUpdateStream(),
+                builder: (context, updatedAtStreamSnapshot) {
+
+                  if ( updatedAtStreamSnapshot.connectionState == ConnectionState.active ){
+                    //connection still open
+
+                        if ( updatedAtStreamSnapshot.hasError ){
+                          return ErrorSharingLocationWidget( refresh: refresh);
+                        }
+                        else{
+                          final updatedAt = updatedAtStreamSnapshot.data?.toLocal();
+
+                          //this one switches the switch if the user
+                          //disables gps after the app thinks he has it enabled.
+                          locationServicesProvider.sensors
+                            .hasLocationPermission
+                            .then(
+                              ( hasGPS ) {
+                              if ( !hasGPS ){
+                                refresh();
+                              }
+                            }
+                          );
+
+                          return Column(
+                            children: [
+                              const Text(
+                                "Sharing Location",
+                                textScaler: TextScaler.linear(1.2)
+                              ),
+                              updatedAt != null
+                                ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
+                                : updatedAtStreamSnapshot.connectionState == ConnectionState.done
+                                  ? const Text("There was a network error.")
+                                  : const Text("Updating...")
+                            ]
+                          );
+                        }
+                  }
+                  else{
+                    return const CircularProgressIndicator();
+                  }
+                }
+              );
+
+            }
+            else{
+              return Container(
+              margin: const EdgeInsets.only( top: 4 ),
+              width: 100,
+              child: ErrorSharingLocationWidget( refresh: refresh)
+              );
+            }
+          }
+          else{
+            //userHash wasn't checked yet.
+            return const SizedBox.shrink(); //const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
+          }
+            
+        }
+      );
+    }
+    else{ //User is not sharing their location
+
+      return FutureBuilder(
+        future: _stopLocationSharingFuture(), 
+        builder: (context, snapshot) =>
+          ( snapshot.connectionState == ConnectionState.done )
+            ?const Text("Location is not being shared.")
+            :const Text("Stopping..")
+        );
+    }
+    
+  }
+
+  Future<DateTime> _stopLocationSharingFuture() async{
+
+    final userHash = await AppVault.getUserHash();
+
+    final res = await http.put( 
+      Uri.parse( "https://path-finders-backend.vercel.app/api/users/update" ),
+      body: jsonEncode( {
+        "userId" : int.parse(userId),
+        "hash": userHash,
+        "stopSharing": "true" 
+      }) 
+    );
+    return DateTime.parse( jsonDecode( res.body )["data"]["updatedAt"] );
   }
 
   Future<DateTime?> _uploadLocationFuture() async{
@@ -61,112 +169,6 @@ class LocationSharingWidget extends StatelessWidget{
     }
     catch(_){
       return null;
-    }
-    
-  }
-
-  Future<DateTime> _stopLocationSharingFuture() async{
-
-    final userHash = await AppVault.getUserHash();
-
-
-    final res = await http.put( 
-      Uri.parse( "https://path-finders-backend.vercel.app/api/users/update" ),
-      body: jsonEncode( {
-        "userId" : int.parse(userId),
-        "hash": userHash,
-        "stopSharing": "true" 
-      }) 
-    );
-    // await Future.delayed( Duration(seconds: 2)); //await to be updated
-    return DateTime.parse( jsonDecode( res.body )["data"]["updatedAt"] );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    
-    if ( isSharing ){
-      return FutureBuilder(
-
-        future: AppVault.userHashExistsFuture( userId ), 
-        builder: (context, snapshot){
-          
-
-          if ( snapshot.hasData && snapshot.connectionState == ConnectionState.done ){ // userHash exists //else throws error
-          LoggerInstance.log.i("userHash was checked");
-
-            return 
-              StreamBuilder(
-                stream: _locationUpdateStream(),
-                builder: (context, updatedAtSnapshot) {
-
-                  
-
-                  if ( updatedAtSnapshot.connectionState != ConnectionState.done ){
-                    //connection still open
-
-                        if ( updatedAtSnapshot.hasError ){
-                          return ErrorSharingLocationWidget( refresh: refresh);
-                        }
-                        else{
-                          final updatedAt = updatedAtSnapshot.data?.toLocal();
-
-                          //this one switches the switch if the user
-                          //disables gps after the app thinks he has it enabled.
-                          context.watch<LocationServicesProvider>().sensors
-                            .hasLocationPermission
-                            .then(
-                              ( hasGPS ) {
-                              if ( !hasGPS ){
-                                refresh();
-                              }
-                            }
-                          );
-
-                          return Column(
-                            children: [
-                              const Text(
-                                "Sharing Location",
-                                textScaler: TextScaler.linear(1.2)
-                              ),
-                              updatedAt != null
-                                ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
-                                : updatedAtSnapshot.connectionState == ConnectionState.done
-                                  ? const Text("There was a network error.")
-                                  : const Text("Updating...")
-                            ]
-                          );
-                        }
-                  }
-                  else{
-                    return const Text("No longer sharing..");//const SizedBox.shrink();//
-                  }
-                }
-              );
-          }
-          else{
-          
-            return Container(
-              margin: const EdgeInsets.only( top: 4 ),
-              width: 100,
-              child: snapshot.connectionState == ConnectionState.done 
-              ?ErrorSharingLocationWidget( refresh: refresh)
-              :const SizedBox.shrink() //const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
-            );
-          }
-            
-        }
-      );
-    }
-    else{
-
-      return FutureBuilder(
-        future: _stopLocationSharingFuture(), 
-        builder: (context, snapshot) =>
-          ( snapshot.connectionState == ConnectionState.done )
-            ?const Text("Location is not being shared.")
-            :const Text("Stopping..")
-        );
     }
     
   }

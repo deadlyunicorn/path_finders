@@ -32,174 +32,181 @@ class LiveEntriesView extends StatelessWidget{
           final targetsWithIdListingsProvider = context.watch<TargetWithIdListingsProvider>();
           
 
-          if ( targetsMapListSnapshot != null ){
-
+          
+          if ( snapshot.connectionState == ConnectionState.done ){
             
+            if ( targetsMapListSnapshot != null ){ 
+              
+              //We have ID entries in our file.
+              if( targetsWithIdListingsProvider.targetEntries != targetsMapListSnapshot ){
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  targetsWithIdListingsProvider.setTargetWithIdEntries( targetsMapListSnapshot );
+                });
+              } 
 
-            //This code seems to work.
-            //
-            //One of the main benefits of writing it this way
-            //is that on entry addition/removal
-            //we don't need to return a loading screen.
-            //We still keep our old entry list loaded.
-            targetsWithIdListingsProvider.initializeTargetWithIdEntries( targetsMapListSnapshot );
-            
+              return StreamBuilder(
+                stream: TargetLocationServices.targetLocationIntervalStream(), 
+                builder: ( context, intervalStreamerSnapshot ){
 
-            return StreamBuilder(
-              stream: TargetLocationServices.targetLocationIntervalStream(), 
-              builder: ( context, intervalStreamerSnapshot ){
+                  if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
 
-                if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
+                    return ListView.builder(
 
-                  return ListView.builder(
+                      itemCount:  targetsWithIdListingsProvider.targetEntries.length,
+                      itemBuilder: (context, index) {
 
-                    itemCount:  targetsWithIdListingsProvider.targetEntries.length,
-                    itemBuilder: (context, index) {
+                        
+                        final targetEntry = targetsWithIdListingsProvider.targetEntries.elementAt(index);
+                        
+                        final String targetId = targetEntry["targetId"];
+                        final String? targetName = targetEntry["targetName"];
 
-                      
-                      final targetEntry = targetsWithIdListingsProvider.targetEntries.elementAt(index);
-                      
-                      final String targetId = targetEntry["targetId"];
-                      final String? targetName = targetEntry["targetName"];
+                        return FutureBuilder(
 
-                      return FutureBuilder(
-                        future: TargetLocationServices.getTargetDetails( targetId ), 
-                        builder: ( context, snapshot ) {
+                          future: TargetLocationServices.getTargetDetails( targetId ), 
+                          builder: ( context, targetDetailsFutureSnapshot ) {
 
-                          final targetDetailsSnapshot = snapshot.data; 
-                          Widget leadingIcon;
+                            final targetDetailsSnapshotData = targetDetailsFutureSnapshot.data; 
+                            Widget leadingIcon;
 
-                          switch ( snapshot.connectionState ){
+                            //Setting the leading icon of the entry.
+                            switch ( targetDetailsFutureSnapshot.connectionState ){
 
-                            case ConnectionState.waiting:
-                              leadingIcon = const CircularProgressIndicator ( strokeWidth: 0.1,);
-                              break;
+                              case ConnectionState.waiting:
+                                leadingIcon = const CircularProgressIndicator ( strokeWidth: 0.1,);
+                                break;
 
-                            case ConnectionState.done:
-                              if ( snapshot.hasData && targetDetailsSnapshot != null ){
+                              case ConnectionState.done:
 
-                                if ( targetDetailsSnapshot.hasErrorMessage() ){
-                                  leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
+                                if ( targetDetailsFutureSnapshot.hasData && targetDetailsSnapshotData != null ){
+
+                                  if ( targetDetailsSnapshotData.hasErrorMessage() ){
+                                    leadingIcon = const Icon( Icons.warning, color: Colors.yellow );
+                                  }
+                                  else{
+                                    leadingIcon = const Icon( Icons.done, color: Colors.green, );
+                                  }
+
                                 }
                                 else{
-                                  leadingIcon = const Icon( Icons.done, color: Colors.green, );
+                                  leadingIcon = const Icon ( Icons.error, color: Colors.red );
                                 }
                                 break;
 
-                              }
-                              else{
+                              default:
                                 leadingIcon = const Icon ( Icons.error, color: Colors.red );
                                 break;
-                              }
 
-                            default:
-                              leadingIcon = const Icon ( Icons.error, color: Colors.red );
-                              break;
-
-                          }
-
-
-                          // Updating the target provider's location whenever there is new data.
-                          if ( intervalStreamerSnapshot.connectionState == ConnectionState.active ){
-
-                            
-
-                            if ( 
-                              targetId == targetProvider.targetName
-                              && targetDetailsSnapshot != null
-                              && !targetDetailsSnapshot.hasErrorMessage()
-                            ){
-                              
-                              final targetLocationFromServer = targetDetailsSnapshot.getCoordinates();
-                              final targetLocationFromProvider = targetProvider.targetLocation;
-      
-
-                              if ( targetLocationFromServer != null 
-                                && targetLocationFromProvider != null
-                                && targetLocationFromServer.latitude != targetLocationFromProvider.latitude 
-                                && targetLocationFromServer.longitude != targetLocationFromProvider.longitude 
-                              ){
-
-                                WidgetsBinding.instance.addPostFrameCallback((duration) async { 
-                                  //the above ensures that it will run after 
-                                  //everything has been built
-                                  // *prevents exception*
-
-                                  //it will basically run BEFORE the interval stream
-                                  //to update the selected target inside the provider.
-
-                                  //we still need the stream to refetch the status 
-                                  //of the other targets.
-                                  targetProvider.setTargetLocation( targetLocationFromServer );
-                                });
-
-                              }
-                              
                             }
 
-                          }
 
+                            // Updating the target provider's location whenever there is new data.
+                            if ( targetId == targetProvider.targetName ){
 
-                          return Container ( 
-                            margin: const EdgeInsets.all( 8 ),
-                            decoration: targetProvider.targetName == targetId 
-                            ? BoxDecoration(
-                              border: Border.all(
-                                color: Theme.of( context ).highlightColor
-                              ),
-                              borderRadius: BorderRadius.circular( 4 ),
-                            )
-                            :null,
-                              child:ListTile(
-                              title: Flex( 
-                                direction: Axis.horizontal,
+                              if ( 
+                                targetDetailsFutureSnapshot.connectionState == ConnectionState.done
+                                && targetDetailsSnapshotData != null 
+                              ){
                                 
-                                children: [
-                                  Text( targetName ?? "#$targetId" ),
-                                  const SizedBox( width: 5 ),
-                                  targetName != null 
-                                  ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
-                                  : const SizedBox.shrink()
-                                ]
-                              ),
-                              leading: SizedBox( width: 32, height: 32, child: leadingIcon) ,
-                              trailing:  ( targetDetailsSnapshot != null && targetDetailsSnapshot.hasErrorMessage() )
-                                ? Text( targetDetailsSnapshot.getErrorMessage()! )
-                                : ( targetDetailsSnapshot == null && snapshot.connectionState == ConnectionState.done )
-                                  ? const Text("Network error") 
-                                  : const SizedBox.shrink(),
-                              onTap: () {
-                                if ( targetDetailsSnapshot != null 
-                                  && !targetDetailsSnapshot.hasErrorMessage() 
+                                final targetLocationFromServer = targetDetailsSnapshotData.getCoordinates();
+                                final targetLocationFromProvider = targetProvider.targetLocation;
+        
+                                //Updating the Target Provider in case
+                                //Our streamer has returned new data about them.
+                                //
+                                //this basically updates the "Your distance is: XX m" widget.
+                                if ( 
+                                  targetLocationFromServer != null 
+                                  && targetLocationFromServer.latitude != targetLocationFromProvider.latitude 
+                                  && targetLocationFromServer.longitude != targetLocationFromProvider.longitude 
                                 ){
 
-                                  targetProvider.setTargetName( targetId ) ;
-                                  targetProvider.setTargetLocation( targetDetailsSnapshot.getCoordinates()! ) ;
+                                  WidgetsBinding.instance.addPostFrameCallback((duration) { 
+                                    targetProvider.setTargetLocation( targetLocationFromServer );
+                                  });
 
                                 }
-                              },
-                              onLongPress: () {
-                                targetsWithIdListingsProvider.removeTargetWithIdEntry( targetId );
+                                
+                              }
 
-                              },
-                            )
-                          );
-                        }
-                      );
-                    },
-                  );
-                }
-                else{
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              } 
-            ); 
+                            }
 
-          }
-          else if ( snapshot.connectionState == ConnectionState.done ){
+
+                            return Container ( 
+                              margin: const EdgeInsets.all( 8 ),
+                              decoration: targetProvider.targetName == targetId 
+                                ? BoxDecoration( //target is selected
+                                  border: Border.all(
+                                    color: Theme.of( context ).highlightColor
+                                  ),
+                                  borderRadius: BorderRadius.circular( 4 ),
+                                )
+                                :null,
+                              child: ListTile(
+                                title: Flex( 
+                                  direction: Axis.horizontal,
+                                  children: [
+
+                                    Text( targetName ?? "#$targetId" ), 
+                                    //show targetName if exists
+                                    //else targetId
+
+                                    const SizedBox( width: 5 ),
+                                    
+                                    targetName != null 
+                                    //target name exists? show targetId
+                                    //else nothing
+                                    ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
+                                    : const SizedBox.shrink()
+
+                                  ]
+                                ),
+                                leading: SizedBox( 
+                                  width: 32, 
+                                  height: 32, 
+
+                                  child: leadingIcon
+                                
+                                ) ,
+                                trailing: targetDetailsSnapshotData != null 
+                                  ? targetDetailsSnapshotData.hasErrorMessage()
+                                    ? Text( targetDetailsSnapshotData.getErrorMessage()! )
+                                    : const Text( "User is sharing their location" )
+                                  : targetDetailsFutureSnapshot.connectionState == ConnectionState.done 
+                                    ? const Text("Network error") 
+                                    : const SizedBox.shrink(),
+                                onTap: () {
+                                  if ( targetDetailsSnapshotData != null 
+                                    && !targetDetailsSnapshotData.hasErrorMessage() 
+                                  ){
+
+                                    targetProvider.setTargetName( targetId ) ;
+                                    targetProvider.setTargetLocation( targetDetailsSnapshotData.getCoordinates()! ) ;
+
+                                  }
+                                },
+                                onLongPress: () {
+                                  targetsWithIdListingsProvider.removeTargetWithIdEntry( targetId );
+
+                                },
+                              )
+                            );
+                          }
+                        );
+                      },
+                    );
+                  }
+                  else{
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                } 
+              ); 
+
+            }
             return const Center( child: Text( "No friend entries." ) ); 
+          
           }
           else { 
             return const Center(

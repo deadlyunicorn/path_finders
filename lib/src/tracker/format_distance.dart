@@ -4,10 +4,6 @@ class DistanceFormatter {
 
     String distanceString = distanceInMeters.toString();
     int distanceStringLength = distanceString.length;
-
-
-    
-
     
     if ( distanceInMeters >= 1000 ){
 

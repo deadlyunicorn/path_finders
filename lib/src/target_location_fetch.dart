@@ -30,7 +30,6 @@ class TargetLocationServices {
       updatedAt = DateTime.tryParse( targetInfoBody["data"]["updatedAt"].toString() );
 
 
-
       if ( targetInfoBody["data"]["location"] != null ){
 
         final double longitude = targetInfoBody["data"]["location"]["coordinates"]["longitude"];
@@ -62,7 +61,7 @@ class TargetLocationServices {
       
       await Future.delayed( 
         const Duration(
-           minutes: 2,
+           seconds: 30
           //  seconds: 5
         ) 
       );

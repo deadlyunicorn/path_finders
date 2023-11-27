@@ -20,7 +20,7 @@ class TargetProvider with ChangeNotifier{
 
   }
 
-  Coordinates? get targetLocation => _targetLocation;
+  Coordinates get targetLocation => _targetLocation;
   String get targetName => _targetName;
 
 }

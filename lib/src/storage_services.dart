@@ -23,6 +23,19 @@ class LocalFiles {
     final path = await _localPath;
     return File( "$path/targetsWithCoordinates.json");
   }
+
+  static Future<List<dynamic>> getDecodedJsonFromFile( File file ) async{
+
+    if ( !await file.exists() ){ //file doesn't exist
+      await file.writeAsString("");
+    }
+    final String jsonString = await file.readAsString();
+
+    return jsonString.isEmpty
+      ?jsonDecode( "[]" )
+      :jsonDecode( jsonString );
+
+  }
   
 }
 
@@ -32,49 +45,23 @@ class TargetsFiles {
 
     final targetsFile = await LocalFiles.targetsWithIdFile;
 
+    final List<dynamic> targetMap = await LocalFiles.getDecodedJsonFromFile( targetsFile ); 
 
-    try{
-      final String jsonListString = await targetsFile.readAsString();
-
-      final List<dynamic> targetMap = jsonListString.isEmpty
-      ?jsonDecode( "[]" )
-      :jsonDecode( jsonListString );
-
-
-      if ( targetMap.where((element) => element["targetId"] == targetId).isEmpty ){
-        targetMap.add({
-          "targetId": targetId,
-          "targetName": targetName
-        });
-      }
-      
-      return await targetsFile.writeAsString( jsonEncode( targetMap ) );
-
+    if ( targetMap.where((element) => element["targetId"] == targetId).isEmpty ){
+      targetMap.add({
+        "targetId": targetId,
+        "targetName": targetName
+      });
     }
-    catch( error ){
-      if ( error is PathNotFoundException ){ //less maintainable..
-        await targetsFile.writeAsString("");
-        return await writeTargetWithId(targetId, targetName: targetName );
-      }
-      else{ 
-        throw "Uknown error.";
-      }
-    }
-    
+    return await targetsFile.writeAsString( jsonEncode( targetMap ) );
+   
   }
 
   static Future<void> writeTargetWithCoordinates( String targetName, Coordinates coordinates ) async{
       
     final targetsWithCoordinatesFile = await LocalFiles.targetsWithCoordinatesFile;
 
-    if ( !await targetsWithCoordinatesFile.exists() ){
-      await targetsWithCoordinatesFile.writeAsString("");
-    }
-    final String jsonListString = await targetsWithCoordinatesFile.readAsString();
-
-    final List<dynamic> targetMap = jsonListString.isEmpty
-    ?jsonDecode( "[]" )
-    :jsonDecode( jsonListString );
+    final List<dynamic> targetMap = await LocalFiles.getDecodedJsonFromFile( targetsWithCoordinatesFile );
 
     if ( targetMap.where((element) => element["targetName"] == targetName).isEmpty ){
       targetMap.add({
@@ -88,38 +75,27 @@ class TargetsFiles {
 
   }
 
-      // await targetsFile.writeAsString(""); used to delete for testing
+  // await targetsFile.writeAsString(""); used to delete for testing
   static Future<List> getTargetsWithIdFromFile() async{
 
       final targetsFile = await LocalFiles.targetsWithIdFile;
-      final contents = await targetsFile.readAsString();
-      final List targetsJson = json.decode(contents);
+      final List targetsJson = await LocalFiles.getDecodedJsonFromFile( targetsFile );
 
       return targetsJson;
-
-      // final Set<String> finalSet = {};
-
-      // for( var target in targetsJson ){
-      //   String? targetId = target["targetId"];
-      //   if ( targetId !=null && targetId.isNotEmpty ){
-      //     finalSet.add( targetId.toString() );
-      //   }
-      // }
   }
 
   static Future<List> getTargetsWithCoordinatesFromFile() async{
 
       final targetsWithCoordinatesFile = await LocalFiles.targetsWithCoordinatesFile;
-      final contents = await targetsWithCoordinatesFile.readAsString();
-      return json.decode(contents);
+      
+      return await LocalFiles.getDecodedJsonFromFile( targetsWithCoordinatesFile );
 
   }
 
   static Future<void> removeTargetWithIdFromFile( String targetId )async{
 
       final targetsFile = await LocalFiles.targetsWithIdFile;
-      final contents = await targetsFile.readAsString();
-      final List targetsJson = json.decode( contents );
+      final List targetsJson = await LocalFiles.getDecodedJsonFromFile( targetsFile );
 
       targetsJson.removeWhere(( jsonObject ) => jsonObject["targetId"] == targetId );
       await targetsFile.writeAsString( jsonEncode( targetsJson ));
@@ -128,8 +104,7 @@ class TargetsFiles {
     static Future<void> removeTargetWithCoordinatesFromFile( String targetName )async{
 
       final targetsWithCoordinatesFile = await LocalFiles.targetsWithCoordinatesFile;
-      final contents = await targetsWithCoordinatesFile.readAsString();
-      final List targetsJson = json.decode( contents );
+      final List targetsJson = await LocalFiles.getDecodedJsonFromFile( targetsWithCoordinatesFile );
 
       targetsJson.removeWhere(( jsonObject ) => jsonObject["targetName"] == targetName );
       await targetsWithCoordinatesFile.writeAsString( jsonEncode( targetsJson ));

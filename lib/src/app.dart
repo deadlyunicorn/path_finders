@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'sample_feature/sample_item_list_view.dart';
+import 'settings/settings_controller.dart';
+
 import 'package:path_finders/src/friends/friends_view.dart';
 import 'package:path_finders/src/location_services_checker_view.dart';
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
@@ -10,10 +15,6 @@ import 'package:path_finders/src/providers/target_with_id_listings_provider.dart
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
 import 'package:path_finders/src/tracker/tracker_view.dart';
-import 'package:provider/provider.dart';
-
-import 'sample_feature/sample_item_list_view.dart';
-import 'settings/settings_controller.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -149,7 +150,7 @@ class PageSelector extends StatelessWidget{
 
 class CurrentPageState extends ChangeNotifier {
 
-  int _currentPageIndex = 1;
+  int _currentPageIndex = 2;
 
   int get currentPageIndex => _currentPageIndex;
 
