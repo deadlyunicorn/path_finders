@@ -28,7 +28,7 @@ class LocationSharingWidget extends StatelessWidget{
 
       final updatedAt = await _uploadLocationFuture();
       yield updatedAt;
-      await Future.delayed( const Duration( minutes: 30 ) );
+      await Future.delayed( const Duration( seconds: 30 ) );
     }
   }
 
@@ -54,41 +54,44 @@ class LocationSharingWidget extends StatelessWidget{
                 stream: _locationUpdateStream(),
                 builder: (context, updatedAtStreamSnapshot) {
 
+                  if ( updatedAtStreamSnapshot.hasError ){
+                    return ErrorSharingLocationWidget( refresh: refresh);
+                  }
+
                   if ( updatedAtStreamSnapshot.connectionState == ConnectionState.active ){
                     //connection still open
 
-                        if ( updatedAtStreamSnapshot.hasError ){
-                          return ErrorSharingLocationWidget( refresh: refresh);
-                        }
-                        else{
-                          final updatedAt = updatedAtStreamSnapshot.data?.toLocal();
+                    final updatedAt = updatedAtStreamSnapshot.data?.toLocal();
 
-                          //this one switches the switch if the user
-                          //disables gps after the app thinks he has it enabled.
-                          locationServicesProvider.sensors
-                            .hasLocationPermission
-                            .then(
-                              ( hasGPS ) {
-                              if ( !hasGPS ){
-                                refresh();
-                              }
-                            }
-                          );
-
-                          return Column(
-                            children: [
-                              const Text(
-                                "Sharing Location",
-                                textScaler: TextScaler.linear(1.2)
-                              ),
-                              updatedAt != null
-                                ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
-                                : updatedAtStreamSnapshot.connectionState == ConnectionState.done
-                                  ? const Text("There was a network error.")
-                                  : const Text("Updating...")
-                            ]
-                          );
+                    //this one switches the switch if the user
+                    //disables gps after the app thinks he has it enabled.
+                    locationServicesProvider.sensors
+                      .hasLocationPermission
+                      .then(
+                        ( hasGPS ) {
+                        if ( !hasGPS ){
+                          refresh();
                         }
+                      }
+                    );
+
+                    return Column(
+                      children: [
+                        const Text(
+                          "Sharing Location",
+                          textScaler: TextScaler.linear(1.2)
+                        ),
+                        updatedAt != null
+                          ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
+                          : const Text("Updating...")
+                      ]
+                    );
+                  }
+                  else if (  updatedAtStreamSnapshot.connectionState == ConnectionState.active  ){
+                    return const Text( 
+                      "There was a network error", 
+                      textAlign: TextAlign.center
+                    );
                   }
                   else{
                     return const CircularProgressIndicator();
@@ -107,7 +110,11 @@ class LocationSharingWidget extends StatelessWidget{
           }
           else{
             //userHash wasn't checked yet.
-            return const SizedBox.shrink(); //const LinearProgressIndicator( borderRadius: BorderRadius.all( Radius.circular( 4 )),)
+            return const LinearProgressIndicator( 
+              borderRadius: BorderRadius.all( 
+                Radius.circular( 4 )
+              )
+            );
           }
             
         }
@@ -164,7 +171,12 @@ class LocationSharingWidget extends StatelessWidget{
         }) 
       );
       // await Future.delayed( Duration(seconds: 2)); //await to be updated
-      return DateTime.parse( jsonDecode( res.body )["data"]["updatedAt"] );
+      final decodedJson = jsonDecode( res.body );
+
+      if ( decodedJson["error"] != null ){
+        return Future.error( decodedJson["error"]["message"] );
+      }
+      return DateTime.parse( decodedJson["data"]["updatedAt"] );
 
     }
     catch(_){
@@ -182,19 +194,14 @@ class ErrorSharingLocationWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     
-    return Column ( 
-        children: [
-          const Text( "There was an error." ),
-          IconButton( 
-            icon: const Icon(Icons.refresh), 
-            tooltip: "Regenerate ID",
-            onPressed: ()async{
-              await AppVault.deleteUserHashFuture();
-              await UserFile.deleteUserIdFuture();
-              refresh();
-            }
-          ),
-        ]
+    return IconButton( 
+        icon: const Icon(Icons.refresh), 
+        tooltip: "Regenerate ID",
+        onPressed: ()async{
+          await AppVault.deleteUserHashFuture();
+          await UserFile.deleteUserIdFuture();
+          refresh();
+        }
       );
   }
 }

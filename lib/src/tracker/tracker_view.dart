@@ -58,9 +58,17 @@ class _TrackerViewState extends State<TrackerView> {
 
     return Center(
       child: StreamBuilder(
-        stream: Geolocator.getPositionStream(), 
+        //This might take too long to resolve!
+        //This is due to the accuracy --
+        stream: Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.best,
+            //don't use the "Time Limit" option 
+            //as you will need to add a 'retry' button
+            //to get out of the exception
+          )
+        ), 
         builder: (context, positionStreamSnapshot) {
-
 
           if ( positionStreamSnapshot.connectionState == ConnectionState.active ){
 
@@ -127,7 +135,7 @@ class _TrackerViewState extends State<TrackerView> {
               );
 
             }
-            else if ( positionStreamSnapshot.hasError ){
+            else{
               return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -143,13 +151,30 @@ class _TrackerViewState extends State<TrackerView> {
                   ],
               );
             }
-            else{
-              return const CircularProgressIndicator();
-            }
           }
           else{
             
-            return const CircularProgressIndicator();
+
+            return FutureBuilder(
+              future: Future.delayed( const Duration( seconds: 3)), 
+              builder: ( context, timerFutureSnapshot){
+                if ( timerFutureSnapshot.connectionState == ConnectionState.done ){
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox( height: 24 ),
+                      Text("This might take a while if you are not out in the open."),
+                      Text("You could try moving your device around."),
+                      Text("Or restarting the app."),
+                    ],
+                  );
+                }
+                else{
+                  return const CircularProgressIndicator(); 
+                }
+              }
+            );
 
           }
         }

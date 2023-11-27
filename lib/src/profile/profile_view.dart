@@ -26,12 +26,16 @@ class _ProfileViewState extends State<ProfileView> {
     return Center( 
 
       child: FutureBuilder(
-            future: UserFile.getUserId(), 
-            builder: (context, userIdSnapshot){
+        future: UserFile.getUserId(), 
+        builder: (context, userIdSnapshot){
 
-              if (  userIdSnapshot.hasData && userIdSnapshot.data != null ){
+          if ( userIdSnapshot.connectionState == ConnectionState.done ){
 
-                final String userId = userIdSnapshot.data!;
+            final userIdSnapshotData = userIdSnapshot.data;
+
+            if (  userIdSnapshot.hasData && userIdSnapshotData != null ){
+
+                final String userId = userIdSnapshotData;
 
                 return Column( 
                   children: [
@@ -71,7 +75,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ) 
                           ),
                           SizedBox(
-                            height: 42,
+                            height: 64,
                             child: Center(
                                 child: LocationSharingWidget(
                                   isSharing: isSharing,
@@ -86,30 +90,31 @@ class _ProfileViewState extends State<ProfileView> {
                     
                   ]
                 );
-              }
-              else{
-                
-                return Column(
-                  children: [
-                    const Text(
-                      "Session Error.",
-                      textScaler: TextScaler.linear( 1.1 ),
-                      textAlign: TextAlign.center,
-                    ),
-                    TextButton(
-                      onPressed: (){
-                        setState((){
-
-                        });
-                      }, 
-                      child: const Text("Retry")
-                    ),
-                  ],
-                ) ;
-              }
-              
             }
-          )
+            else if ( userIdSnapshot.hasError ){
+              return Column(
+                children: [
+                  const Text(
+                    "Session Error.",
+                    textScaler: TextScaler.linear( 1.1 ),
+                    textAlign: TextAlign.center,
+                  ),
+                  TextButton(
+                    onPressed: (){
+                      setState((){
+
+                      });
+                    }, 
+                    child: const Text("Retry")
+                  ),
+                ],
+              ) ;
+            }
+          }
+
+          return const CircularProgressIndicator();
+        }
+      )
     );
   }
 }
