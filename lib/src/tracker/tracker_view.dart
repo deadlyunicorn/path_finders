@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/tracker/compass/compass_view.dart';
 import 'package:path_finders/src/tracker/format_distance.dart';
@@ -29,23 +31,17 @@ class _TrackerViewState extends State<TrackerView> {
         .then((_){
           ScaffoldMessenger.of( context )
           .showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
+            CustomSnackBar(
+              textContent: "Go to 'Profile' Tab to enable/disable location sharing.",
               duration: const Duration( seconds: 5 ),
-              backgroundColor: Colors.blue.shade700 ,
-              content: 
-                Text( 
-                  "Go to 'Profile' Tab to enable/disable location sharing.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).indicatorColor
-                  ),
-                ),
-            )
+              context: context,
+            ),
           );
-        });
+        }
+      );
       
-    });
+    }
+  );
     
   }
 
@@ -122,12 +118,40 @@ class _TrackerViewState extends State<TrackerView> {
                       children: [
                         const SizedBox.square( dimension:  8),
                         CompassView( targetLocationRotationInRads: targetLocationRotationInRads ),
-                        Text( 
+                        TextButton(
+                          style: const ButtonStyle(
+                            shape: MaterialStatePropertyAll( 
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all( Radius.circular( 4 ) )
+                              )
+                            )
+                          ),
+                          onPressed: (){},
+                          onLongPress: ()async{
+                            
+                            ScaffoldMessenger
+                              .of(context)
+                              .showSnackBar(
+                                CustomSnackBar(
+                                  context: context,
+                                  duration: const Duration( seconds: 1 ),
+                                  textContent: "Copied",
+                                )
+                              );
+                            await Clipboard.setData( 
+                              ClipboardData(
+                                text: "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }"
+                              ) 
+                            );
+                          }, 
+                          child: Text( 
                           "Your current position is \n" 
                           "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
                           textScaler: const TextScaler.linear( 1.5 ),
                           textAlign: TextAlign.center,
+                          )
                         )
+                        
                       ]
                     )
                   )                
