@@ -39,6 +39,33 @@ class LocalFiles {
   
 }
 
+class AppearancesCounterFile {
+
+  static Future<File> get _snackBarCounterFile async{
+    final path = await LocalFiles._localPath;
+    return File( "$path/snackbarCounter.txt");
+  }
+
+  static Future<int> getSnackBarCounter()async{
+
+    final snackBarFile = await _snackBarCounterFile;
+    if ( ! await snackBarFile.exists() ){
+      await snackBarFile.writeAsString("1");
+      return 1;
+    }
+    else{
+      final counter = int.tryParse( await snackBarFile.readAsString() );
+      if ( counter != null && counter < 5 ){
+        await snackBarFile.writeAsString( "${counter + 1}" );
+        return counter;
+      }
+      return 0;
+    }
+
+  }
+
+}
+
 class TargetsFiles {
 
   static Future<File> writeTargetWithId( String targetId, { String? targetName} ) async{

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
+import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/tracker/compass/compass_view.dart';
 import 'package:path_finders/src/tracker/format_distance.dart';
 import 'package:path_finders/src/types/coordinates.dart';
@@ -27,18 +28,28 @@ class _TrackerViewState extends State<TrackerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 
-      await Future.delayed( const Duration( seconds: 3) )
-        .then((_){
-          ScaffoldMessenger.of( context )
-          .showSnackBar(
-            CustomSnackBar(
-              textContent: "Go to 'Profile' Tab to enable/disable location sharing.",
-              duration: const Duration( seconds: 5 ),
-              context: context,
-            ),
+          throw "Not yet tested";
+
+      await AppearancesCounterFile.getSnackBarCounter()
+        .then( (value) async {
+          print( value );
+          if ( value != 0 ){
+            await Future.delayed( const Duration( seconds: 3) )
+            .then((_){
+              ScaffoldMessenger.of( context )
+              .showSnackBar(
+                CustomSnackBar(
+                  textContent: "Go to 'Profile' Tab to enable/disable location sharing.",
+                  duration: const Duration( seconds: 5 ),
+                  context: context,
+                ),
+              );
+            }
           );
-        }
-      );
+
+          }
+        });
+      
       
     }
   );
