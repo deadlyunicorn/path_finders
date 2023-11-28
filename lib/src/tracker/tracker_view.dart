@@ -194,15 +194,24 @@ class _TrackerViewState extends State<TrackerView> {
               future: Future.delayed( const Duration( seconds: 3)), 
               builder: ( context, timerFutureSnapshot){
                 if ( timerFutureSnapshot.connectionState == ConnectionState.done ){
-                  return const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox( height: 24 ),
-                      Text("This might take a while if you are not out in the open."),
-                      Text("You could try moving your device around."),
-                      Text("Or restarting the app."),
-                    ],
+                  return const Center ( 
+                    child: Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
+                      children: [
+                        CircularProgressIndicator(),
+                        Positioned(
+                          bottom: -75,
+                          child: Column(
+                            children: [
+                              Text("This might take a while if you are not out in the open."),
+                              Text("You could try moving your device around."),
+                              Text("Or restarting the app."),
+                            ],
+                          )
+                        )
+                      ],
+                    )
                   );
                 }
                 else{
