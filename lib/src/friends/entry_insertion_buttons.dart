@@ -26,7 +26,7 @@ class EntryInsertionButtons extends StatelessWidget{
                     builder: (context) => 
                       StaticEntryDialog( staticListingsProvider: staticListingsProvider ),
                   ), 
-                  child: const Text("Add Coordinates"),
+                  child: const Text("Add Static Entry"),
                 ),
                 IconButton(
                   icon: const Icon ( Icons.refresh, ),
@@ -41,7 +41,7 @@ class EntryInsertionButtons extends StatelessWidget{
                     builder: (context) => 
                       LiveEntryDialog( listingsProvider: liveListingsProvider ),
                   ),
-                  child:const Text("Add ID") 
+                  child:const Text("Add Live Entry (ID)") 
                 )
                 
               ]

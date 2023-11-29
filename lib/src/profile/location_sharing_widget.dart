@@ -110,11 +110,7 @@ class LocationSharingWidget extends StatelessWidget{
           }
           else{
             //userHash wasn't checked yet.
-            return const LinearProgressIndicator( 
-              borderRadius: BorderRadius.all( 
-                Radius.circular( 4 )
-              )
-            );
+            return const CircularProgressIndicator();
           }
             
         }
