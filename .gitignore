@@ -57,6 +57,7 @@ app.*.map.json
 !/test
 !/assets
 !/android
+!privacy_policy.html
 android/.gitignore
 android/build.gradle
 android/gradle.properties
