@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
@@ -101,7 +102,7 @@ class _TrackerViewState extends State<TrackerView> {
                     children: [
                       RichText( 
                         text: 
-                        ( distanceToTarget < 7 )
+                        ( distanceToTarget < 15 )
                         ?const TextSpan( text:"Your friend is nearby!" )
                         :TextSpan(
                           text:"Your distance to ${appState.targetName} is \n",
@@ -136,22 +137,10 @@ class _TrackerViewState extends State<TrackerView> {
                           ),
                           onPressed: (){},
                           onLongPress: ()async{
-                            
-                            ScaffoldMessenger
-                              .of(context)
-                              .showSnackBar(
-                                CustomSnackBar(
-                                  context: context,
-                                  duration: const Duration( seconds: 1 ),
-                                  textContent: "Copied",
-                                )
-                              );
-                            await Clipboard.setData( 
-                              ClipboardData(
-                                text: "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }"
-                              ) 
+                            await CopyService.copyTextToClipboard( 
+                              context: context,
+                              "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }" 
                             );
-                            await HapticFeedback.heavyImpact();
                           }, 
                           child: Text( 
                           "Your current position is \n" 
