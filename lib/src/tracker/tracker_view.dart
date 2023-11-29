@@ -28,11 +28,8 @@ class _TrackerViewState extends State<TrackerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 
-          throw "Not yet tested";
-
       await AppearancesCounterFile.getSnackBarCounter()
         .then( (value) async {
-          print( value );
           if ( value != 0 ){
             await Future.delayed( const Duration( seconds: 3) )
             .then((_){

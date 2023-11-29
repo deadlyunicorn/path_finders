@@ -52,33 +52,7 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
           TextField(
             keyboardType: TextInputType.number,
             onChanged: (value){
-              final latitude = double.tryParse(value);
-              if ( latitude == null ){
-                ScaffoldMessenger
-                .of(context)
-                .showSnackBar(
-                  CustomSnackBar(
-                    duration: const Duration( milliseconds: 500),
-                    bgColor: Colors.red.shade700.withAlpha( 100 ),
-                    textContent: "Invalid latitude (Not a valid number)", 
-                    context: context
-                  )
-                );
-
-              }
-              else if (  latitude > 90 || latitude < -90  ){
-                ScaffoldMessenger
-                .of(context)
-                .showSnackBar(
-                  CustomSnackBar(
-                    duration: const Duration( milliseconds: 500),
-                    bgColor: Colors.red.shade700.withAlpha( 100 ),
-                    textContent: "Invalid latitude (Not a valid value)", 
-                    context: context
-                  )
-                );
-              }
-              _latitude = latitude;
+              _latitude = double.tryParse(value);
             },
             decoration: const InputDecoration(
               labelText: "Latitude",
@@ -95,35 +69,8 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
             keyboardType: TextInputType.number,
             onChanged: (value){
 
-              final longitude = double.tryParse(value);
-              if ( longitude == null ){
-                ScaffoldMessenger
-                .of(context)
-                .showSnackBar(
-                  CustomSnackBar(
-                    duration: const Duration( seconds: 1),
-                    bgColor: Colors.red.shade700.withAlpha( 100 ),
-                    textContent: "Invalid longitude (Not a valid number)", 
-                    context: context
-                  )
-                );
+              _longitude = double.tryParse(value);
 
-              }
-              else if (  longitude > 180 || longitude < -180  ){
-                ScaffoldMessenger
-                .of(context)
-                .showSnackBar(
-                  CustomSnackBar(
-                    duration: const Duration( seconds: 1),
-                    bgColor: Colors.red.shade700.withAlpha( 100 ),
-                    textContent: "Invalid longitude (Not a valid value)", 
-                    context: context
-                  )
-                );
-              }
-              _longitude = longitude;
-
-              
             },
             decoration: const InputDecoration(
               labelText: "Longitude",
@@ -156,6 +103,18 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
                   } 
                 })();
 
+              }
+              else{
+                ScaffoldMessenger
+                .of( context )
+                .showSnackBar(
+                  CustomSnackBar(
+                    duration: const Duration( seconds: 2),
+                    bgColor: Theme.of(context).colorScheme.error.withAlpha( 100 ),
+                    textContent: "Your data is not valid.",
+                    context: context
+                  )
+                );
               }
             }, 
             child: const Text("Submit")

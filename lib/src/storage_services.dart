@@ -57,7 +57,7 @@ class AppearancesCounterFile {
       final counter = int.tryParse( await snackBarFile.readAsString() );
       if ( counter != null && counter < 5 ){
         await snackBarFile.writeAsString( "${counter + 1}" );
-        return counter;
+        return counter + 1;
       }
       return 0;
     }
