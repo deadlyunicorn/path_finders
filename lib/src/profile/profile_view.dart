@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/profile/location_sharing_widget.dart';
 import 'package:path_finders/src/storage_services.dart';
 
@@ -39,8 +40,22 @@ class _ProfileViewState extends State<ProfileView> {
 
                 return Column( 
                   children: [
-                    Text("Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}", 
-                      textScaler: const TextScaler.linear(2)
+                    TextButton(
+                      style: const ButtonStyle( 
+                        shape: MaterialStatePropertyAll( 
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all( Radius.circular( 4 ) )
+                          )
+                        )
+                       ),
+                      onPressed: (){},
+                      onLongPress: (){
+                        CopyService.copyTextToClipboard( userId, context: context);
+                      },
+                      child: Text(
+                        "Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}",
+                        style: Theme.of(context).textTheme.headlineLarge
+                      ), 
                     ),
                     const SizedBox(
                       child: Text("App logo goes here"),
