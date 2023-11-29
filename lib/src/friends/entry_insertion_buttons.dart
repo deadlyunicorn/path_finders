@@ -28,6 +28,12 @@ class EntryInsertionButtons extends StatelessWidget{
                   ), 
                   child: const Text("Add Coordinates"),
                 ),
+                IconButton(
+                  icon: const Icon ( Icons.refresh, ),
+                  onPressed: (){
+                    liveListingsProvider.notifyConsumers();
+                  } 
+                ),
                 FilledButton.tonal(
 
                   onPressed: () => showDialog(

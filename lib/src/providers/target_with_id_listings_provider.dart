@@ -5,6 +5,10 @@ class TargetWithIdListingsProvider with ChangeNotifier{
 
   List _targetWithIdEntries = [];
 
+  void notifyConsumers(){
+    notifyListeners();
+  }
+
   void setTargetWithIdEntries( List targetWithIdEntries){
     _targetWithIdEntries = targetWithIdEntries;
     notifyListeners();
