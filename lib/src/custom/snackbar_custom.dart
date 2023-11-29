@@ -20,7 +20,7 @@ class CustomSnackBar extends SnackBar {
       )
     ),
     duration: duration,
-    backgroundColor: bgColor ?? Colors.blue.shade700.withAlpha( 100 ),
+    backgroundColor: bgColor ?? Theme.of(context).primaryColor.withAlpha( 100 ),
     behavior: SnackBarBehavior.floating,
   );
 

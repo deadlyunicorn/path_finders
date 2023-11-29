@@ -14,6 +14,7 @@ class CustomNavigationBar extends StatelessWidget{
     
     return(
       NavigationBar(
+        backgroundColor: Theme.of(context).primaryColor.withAlpha( 100 ),
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.group), 

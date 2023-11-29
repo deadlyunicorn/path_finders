@@ -47,6 +47,7 @@ class SelectionHeader extends StatelessWidget{
             textScaler: const TextScaler.linear( 1.5 ),
             textAlign: TextAlign.center,
             text: TextSpan(
+              style: Theme.of(context).textTheme.bodyLarge,
               text: "Current selection: ",
               children: [
                 TextSpan(

@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,10 +26,12 @@ class MyApp extends StatelessWidget {
 
   
   final SettingsController settingsController;
+  
+  static final _defaultLightColorScheme = ColorScheme.fromSwatch();
+  static final _defaultDarkColorScheme = ColorScheme.fromSwatch( brightness: Brightness.dark );
 
   @override
   Widget build(BuildContext context) {
-
 
     // Glue the SettingsController to the MaterialApp.
     //
@@ -37,52 +40,55 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_)=>CurrentPageState(),
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp( 
-          // Providing a restorationScopeId allows the Navigator built by the
-          // MaterialApp to restore the navigation stack when a user leaves and
-          // returns to the app after it has been killed while running in the
-          // background.
-          restorationScopeId: 'app',
+        return DynamicColorBuilder(
+          builder: ( lightColorScheme, darkColorScheme ) => MaterialApp( 
+            // Providing a restorationScopeId allows the Navigator built by the
+            // MaterialApp to restore the navigation stack when a user leaves and
+            // returns to the app after it has been killed while running in the
+            // background.
+            restorationScopeId: 'app',
 
-          // Provide the generated AppLocalizations to the MaterialApp. This
-          // allows descendant Widgets to display the correct translations
-          // depending on the user's locale.
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''), // English, no country code
-          ],
+            // Provide the generated AppLocalizations to the MaterialApp. This
+            // allows descendant Widgets to display the correct translations
+            // depending on the user's locale.
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''), // English, no country code
+            ],
 
-          // Use AppLocalizations to configure the correct application title
-          // depending on the user's locale.
-          //
-          // The appTitle is defined in .arb files found in the localization
-          // directory.
-          onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.appTitle,
+            // Use AppLocalizations to configure the correct application title
+            // depending on the user's locale.
+            //
+            // The appTitle is defined in .arb files found in the localization
+            // directory.
+            onGenerateTitle: (BuildContext context) =>
+                AppLocalizations.of(context)!.appTitle,
 
-          // Define a light and dark color theme. Then, read the user's
-          // preferred ThemeMode (light, dark, or system default) from the
-          // SettingsController to display the correct theme.
-          theme: ThemeData(
-            useMaterial3: true
-          ),
-          darkTheme: ThemeData.dark(
-            useMaterial3: true
-          ),
-          themeMode: settingsController.themeMode,
+            // Define a light and dark color theme. Then, read the user's
+            // preferred ThemeMode (light, dark, or system default) from the
+            // SettingsController to display the correct theme.
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: lightColorScheme ?? _defaultLightColorScheme 
+            ),
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              colorScheme: darkColorScheme ?? _defaultDarkColorScheme
+            ),
+            themeMode: settingsController.themeMode,
 
 
-          // Define a function to handle named routes in order to support
-          // Flutter web url navigation and deep linking.
-          home: Scaffold(
+            // Define a function to handle named routes in order to support
+            // Flutter web url navigation and deep linking.
+            home: Scaffold(
               appBar: AppBar(
                 elevation: 1,
-                foregroundColor: Colors.blue.shade600,
+                backgroundColor: Theme.of( context).primaryColor.withAlpha( 100 ),
                 title: const Text( "Path Finders" ),
                 actions: const [
                   Icon( Icons.settings )
@@ -101,7 +107,8 @@ class MyApp extends StatelessWidget {
               // ) ,
               bottomNavigationBar: const CustomNavigationBar() ,
             )
-        );
+          )
+        ); 
       },
 
     );
