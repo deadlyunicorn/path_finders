@@ -151,6 +151,7 @@ class _TrackerViewState extends State<TrackerView> {
                                 text: "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }"
                               ) 
                             );
+                            await HapticFeedback.heavyImpact();
                           }, 
                           child: Text( 
                           "Your current position is \n" 
