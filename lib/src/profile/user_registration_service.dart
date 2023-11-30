@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:path_finders/src/logger_instance.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -18,7 +17,7 @@ class AppVault {
     String? userHash = await _storage.read( key: 'userHash' );
 
     if ( userHash == null || userHash.isEmpty ){
-      LoggerInstance.log.i("There is no user hash in secure store.");
+      // print("There is no user hash in secure store.");
 
       final userHashResponse = await http.post( 
         Uri.parse( "https://path-finders-backend.vercel.app/api/users/register"),
@@ -36,7 +35,7 @@ class AppVault {
 
         final String hash = decodedJson["data"]["hash"];
         await _storage.write(key: "userHash", value: hash );
-        LoggerInstance.log.i("Saved new userHash");
+        // print("Saved new userHash");
         return await userHashExistsFuture( userId );
 
       }
