@@ -10,7 +10,7 @@ class CustomSnackBar extends SnackBar {
     super.key, required this.textContent,
     required this.context,
     this.bgColor,
-    Duration duration = const Duration( seconds: 4 ) })
+    super.duration = const Duration( seconds: 4 ) })
   :super(
     content: Text(
       textContent,
@@ -19,8 +19,7 @@ class CustomSnackBar extends SnackBar {
         color: Theme.of(context).indicatorColor
       )
     ),
-    duration: duration,
-    backgroundColor: bgColor ?? Theme.of(context).primaryColor.withAlpha( 100 ),
+    backgroundColor: bgColor ?? Theme.of(context).primaryColor.withAlpha( 220 ),
     behavior: SnackBarBehavior.floating,
   );
 

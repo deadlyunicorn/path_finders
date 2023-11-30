@@ -110,7 +110,7 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
                 .showSnackBar(
                   CustomSnackBar(
                     duration: const Duration( seconds: 2),
-                    bgColor: Theme.of(context).colorScheme.error.withAlpha( 100 ),
+                    bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
                     textContent: "Your data is not valid.",
                     context: context
                   )
