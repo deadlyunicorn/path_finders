@@ -57,8 +57,8 @@ class _TrackerViewState extends State<TrackerView> {
   @override
   Widget build(BuildContext context) {
 
-    TargetProvider appState = context.watch<TargetProvider>();
-    Coordinates targetLocation = appState.targetLocation;
+    final TargetProvider appState = context.watch<TargetProvider>();
+    final Coordinates targetLocation = appState.targetLocation;
 
 
     return Center(
@@ -126,7 +126,10 @@ class _TrackerViewState extends State<TrackerView> {
 
                       children: [
                         const SizedBox.square( dimension:  8),
-                        CompassView( targetLocationRotationInRads: targetLocationRotationInRads ),
+                        CompassView( 
+                          targetLocationRotationInRads: targetLocationRotationInRads, 
+                          targetLocation: targetLocation 
+                        ),
                         TextButton(
                           style: const ButtonStyle(
                             shape: MaterialStatePropertyAll( 
