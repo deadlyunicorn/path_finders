@@ -40,6 +40,7 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - assets/compass/
 
 flutter_launcher_icons:
   android: "launcher_icon"
