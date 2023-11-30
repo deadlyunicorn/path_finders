@@ -72,6 +72,7 @@ class _ProfileViewState extends State<ProfileView> {
                               Image(
                                 image: AssetImage('assets/images/deadlyunicorn.png'),
                                 height: 24,
+                                width: 24,
                               ),
                             ]
                           ),
