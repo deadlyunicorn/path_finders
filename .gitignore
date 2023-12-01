@@ -42,8 +42,9 @@ app.*.map.json
 /android/app/src/debug
 /android/app/src/profile
 /android/app/src/release
-/android/app/src/main/*
+# /android/app/src/main/*
 !/android/app/src/main/AndroidManifest.xml
+
 
 
 
@@ -61,9 +62,8 @@ app.*.map.json
 android/.gitignore
 android/build.gradle
 android/gradle.properties
-.gitignore
 android/settings.gradle
 android/gradle/wrapper/gradle-wrapper.properties
-.gitignore
 android/app/build.gradle
 test/widget_test.dart
+
