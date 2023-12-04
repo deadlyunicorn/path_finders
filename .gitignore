@@ -53,6 +53,7 @@ app.*.map.json
 
 !.gitignore
 !pubspec.yaml
+!l10n.yaml
 !README.md
 !/lib
 !/test
