@@ -61,10 +61,5 @@ app.*.map.json
 !/android
 !privacy_policy.html
 android/.gitignore
-android/build.gradle
-android/gradle.properties
-android/settings.gradle
-android/gradle/wrapper/gradle-wrapper.properties
-android/app/build.gradle
 test/widget_test.dart
 
