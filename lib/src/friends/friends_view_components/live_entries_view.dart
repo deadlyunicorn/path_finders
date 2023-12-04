@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 
 class LiveEntriesView extends StatelessWidget{
 
-  const LiveEntriesView({ 
-    Key? key, 
-  }):super(key:key);
+  const LiveEntriesView({
+    super.key,
+  });
 
   
 

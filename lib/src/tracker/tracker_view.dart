@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';

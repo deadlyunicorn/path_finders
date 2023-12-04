@@ -57,9 +57,6 @@ class _ProfileViewState extends State<ProfileView> {
                         style: Theme.of(context).textTheme.headlineLarge
                       ), 
                     ),
-                    const SizedBox(
-                      child: Text("App logo goes here"),
-                    ),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,

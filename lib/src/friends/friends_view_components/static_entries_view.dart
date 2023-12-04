@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 class StaticEntriesView extends StatelessWidget{
 
   const StaticEntriesView({ 
-    Key? key, 
-  }):super(key:key);
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
