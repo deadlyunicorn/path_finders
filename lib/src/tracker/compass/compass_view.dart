@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:path_finders/notifications/distance_notification.dart';
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/types/coordinates.dart';
@@ -19,6 +20,7 @@ class CompassView extends StatelessWidget {
 
   @override
   Widget build( BuildContext context){
+    
 
     return StreamBuilder<CompassEvent>(
       stream: FlutterCompass.events, 
@@ -37,7 +39,8 @@ class CompassView extends StatelessWidget {
 
             return GestureDetector(
               
-              onTap: (){
+              onTap: ()async{
+                
                 ScaffoldMessenger.of(context)
                   .showSnackBar(
                     CustomSnackBar(
@@ -47,6 +50,8 @@ class CompassView extends StatelessWidget {
                       context: context
                     )
                   );
+                // NotificationAbstractions.displayTest();
+
               },
               onLongPress: (){
                 CopyService.copyTextToClipboard( targetLocation.toString(), context: context);
