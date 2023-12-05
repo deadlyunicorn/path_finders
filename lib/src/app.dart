@@ -1,5 +1,6 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:path_finders/notifications/notification_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,7 +19,9 @@ import 'package:path_finders/src/providers/targets_with_coordinates_provider.dar
 import 'package:path_finders/src/tracker/tracker_view.dart';
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+
+  
   const MyApp({
     super.key,
     required this.settingsController,
@@ -29,6 +32,18 @@ class MyApp extends StatelessWidget {
   
   static final _defaultLightColorScheme = ColorScheme.fromSwatch();
   static final _defaultDarkColorScheme = ColorScheme.fromSwatch( brightness: Brightness.dark );
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  
+  @override
+  void initState() {
+    NotificationController.startListeningNotificationEvents();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +89,13 @@ class MyApp extends StatelessWidget {
             // SettingsController to display the correct theme.
             theme: ThemeData(
               useMaterial3: true,
-              colorScheme: lightColorScheme ?? _defaultLightColorScheme 
+              colorScheme: lightColorScheme ?? MyApp._defaultLightColorScheme 
             ),
             darkTheme: ThemeData(
               useMaterial3: true,
-              colorScheme: darkColorScheme ?? _defaultDarkColorScheme
+              colorScheme: darkColorScheme ?? MyApp._defaultDarkColorScheme
             ),
-            themeMode: settingsController.themeMode,
+            themeMode: widget.settingsController.themeMode,
 
 
             // Define a function to handle named routes in order to support

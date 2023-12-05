@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_finders/notifications/notification_controller.dart';
 import 'package:path_finders/src/friends/entry_insertion_buttons.dart';
 import 'package:path_finders/src/friends/friends_view_components/live_entries_view.dart';
 import 'package:path_finders/src/friends/friends_view_components/static_entries_view.dart';
@@ -30,6 +31,7 @@ class _FriendsViewState extends State<FriendsView> {
           ListHeader(text: "Live Entries"),
           LiveEntriesView(),
           EntryInsertionButtons(),
+          TestingWidget()
         ],
       )
     );
@@ -83,4 +85,20 @@ class ListHeader extends StatelessWidget{
       ),
     );
   }  
+}
+
+
+class TestingWidget extends StatelessWidget{
+  
+  const TestingWidget( { super.key } );
+  
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(onPressed: (){
+      NotificationController.createNewNotification( context );
+    }, icon: const Icon(Icons.umbrella) , label:const  Text("Send"));
+  }
+
+
+  
 }
