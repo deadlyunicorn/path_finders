@@ -6,7 +6,7 @@ import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
-class CompassView extends StatelessWidget {
+class CompassView extends StatefulWidget {
   
   final double targetLocationRotationInRads;
   final Coordinates targetLocation;
@@ -18,7 +18,16 @@ class CompassView extends StatelessWidget {
   });
 
   @override
+  State<CompassView> createState() => _CompassViewState();
+}
+
+class _CompassViewState extends State<CompassView> {
+
+  bool targetNorth = true;
+
+  @override
   Widget build( BuildContext context){
+
     
 
     return StreamBuilder<CompassEvent>(
@@ -27,8 +36,9 @@ class CompassView extends StatelessWidget {
 
         if ( snapshot.connectionState == ConnectionState.active ){
 
-          final double? direction = snapshot.data?.heading;
+          final double? direction = snapshot.data?.heading ;
           final double? accuracy  = snapshot.data?.accuracy;
+
 
           if ( direction == null || snapshot.hasError ){
             return const Center(
@@ -40,28 +50,39 @@ class CompassView extends StatelessWidget {
             return GestureDetector(
               
               onTap: ()async{
-                
+
                 ScaffoldMessenger.of(context)
                   .showSnackBar(
                     CustomSnackBar(
                       textContent: 
-                      "Showing distance as a notification"
+                      "Switched to ${ targetNorth? 'compass' :'arrow'} mode.\n" 
+                      "Double Tap to show distance as a notification.\n"
                       "Long Press to copy target's coordinates.", 
                       context: context
                     )
                   );
-                // NotificationAbstractions.displayTest();
+                
+                setState(() {
+                  targetNorth = !targetNorth;
+                });
+
 
               },
+              onDoubleTap: (){
+                
+                
+                // NotificationAbstractions.displayTest();
+              },
               onLongPress: (){
-                CopyService.copyTextToClipboard( targetLocation.toString(), context: context);
+                CopyService.copyTextToClipboard( widget.targetLocation.toString(), context: context);
               },
               child: 
                 Column(
                   children: [
                     Compass(
-                      direction: direction, 
-                      additionalRotation: targetLocationRotationInRads,
+                      targetNorth: targetNorth,
+                      direction: direction,
+                      additionalRotation: widget.targetLocationRotationInRads,
                     ),
                     const SizedBox(
                       height: 15,
@@ -80,11 +101,12 @@ class CompassView extends StatelessWidget {
                         Text(" = Target")
                       ]),
                     ),
-                    Text( "Accuracy: ${accuracy != null 
-                      ? accuracy < 15 
-                        ? "Low"
-                        : accuracy.toString()
-                      :"Very Low"}"),
+                    Text( "Accuracy: ${ 
+                        accuracy != null
+                          ? accuracy < 15 
+                            ? "Very Low"
+                            : accuracy < 30? "Low" :"Good"
+                          :"Calibration Needed"}"),
 
                   ],
                 )
@@ -103,18 +125,17 @@ class CompassView extends StatelessWidget {
 
     
   }
-
-
-    
 }
 
 class Compass extends StatelessWidget {
 
   final double direction;
   final double additionalRotation;
+  final bool targetNorth;
 
   const Compass( {
     super.key, 
+    required this.targetNorth,
     required this.direction, 
     required this.additionalRotation
   } );
@@ -124,7 +145,7 @@ class Compass extends StatelessWidget {
 
     final compassWidth = MediaQuery.of(context).size.width * 0.8;
     final compassHeight = MediaQuery.of(context).size.height * 0.3;
-    final rotationToNorth = direction * ( math.pi / 180 ) * -1;
+    final rotationToNorth = direction * ( math.pi / 180 );
 
     return SizedBox(
       width: compassWidth,
@@ -160,13 +181,16 @@ class Compass extends StatelessWidget {
               borderRadius: BorderRadius.all( Radius.circular( compassWidth ))
             ),         
           ), 
-          Image.asset( "assets/compass/inner.png", height: compassHeight * 0.852 ), 
           Transform.rotate(
-            angle: rotationToNorth,
+            angle: targetNorth? 0 :rotationToNorth,
+            child: Image.asset( "assets/compass/inner.png", height: compassHeight * 0.852 )
+          ), 
+          Transform.rotate(
+            angle: targetNorth? rotationToNorth: 0,
             child: Image.asset("assets/compass/arrow.png", height: compassHeight * 0.75 )
           ),
           Transform.rotate(
-            angle: rotationToNorth + additionalRotation,
+            angle: targetNorth? additionalRotation : rotationToNorth + additionalRotation,
             child: Image.asset("assets/compass/dot.png", height: compassHeight * 0.75 )
           )
         ],
