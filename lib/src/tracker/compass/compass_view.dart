@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
-import 'package:path_finders/notifications/distance_notification.dart';
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/types/coordinates.dart';
@@ -29,6 +28,7 @@ class CompassView extends StatelessWidget {
         if ( snapshot.connectionState == ConnectionState.active ){
 
           final double? direction = snapshot.data?.heading;
+          final double? accuracy  = snapshot.data?.accuracy;
 
           if ( direction == null || snapshot.hasError ){
             return const Center(
@@ -45,7 +45,7 @@ class CompassView extends StatelessWidget {
                   .showSnackBar(
                     CustomSnackBar(
                       textContent: 
-                      "Red arrow side is pointing towards your target.\n"
+                      "Showing distance as a notification"
                       "Long Press to copy target's coordinates.", 
                       context: context
                     )
@@ -57,10 +57,38 @@ class CompassView extends StatelessWidget {
                 CopyService.copyTextToClipboard( targetLocation.toString(), context: context);
               },
               child: 
-                Compass(
-                  direction: direction, 
-                  additionalRotation: targetLocationRotationInRads,
+                Column(
+                  children: [
+                    Compass(
+                      direction: direction, 
+                      additionalRotation: targetLocationRotationInRads,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Transform.translate(
+                      offset: Offset( MediaQuery.of(context).size.width * 0.2, 0),
+                      child: const Flex(
+                      direction: Axis.horizontal,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon( 
+                          Icons.circle_sharp, 
+                          color: Colors.green,
+                          size: 8
+                        ),
+                        Text(" = Target")
+                      ]),
+                    ),
+                    Text( "Accuracy: ${accuracy != null 
+                      ? accuracy < 15 
+                        ? "Low"
+                        : accuracy.toString()
+                      :"Very Low"}"),
+
+                  ],
                 )
+                
             );
 
           }
@@ -132,12 +160,14 @@ class Compass extends StatelessWidget {
               borderRadius: BorderRadius.all( Radius.circular( compassWidth ))
             ),         
           ), 
-          Transform.rotate( 
+          Image.asset( "assets/compass/inner.png", height: compassHeight * 0.852 ), 
+          Transform.rotate(
             angle: rotationToNorth,
-            child: Image.asset( "assets/compass/inner.png", height: compassHeight * 0.852 ) ), 
+            child: Image.asset("assets/compass/arrow.png", height: compassHeight * 0.75 )
+          ),
           Transform.rotate(
             angle: rotationToNorth + additionalRotation,
-            child: Image.asset("assets/compass/arrow.png", height: compassHeight * 0.75,  )
+            child: Image.asset("assets/compass/dot.png", height: compassHeight * 0.75 )
           )
         ],
       ) 
