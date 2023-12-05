@@ -1,3 +1,5 @@
 {
-  "helloWorld": "Γειά σου κόσμε!"
+  "helloWorld": "Γειά σου κόσμε!",
+  "appTitle": "Path Finders"
+
 }
