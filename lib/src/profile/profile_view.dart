@@ -32,6 +32,7 @@ class _ProfileViewState extends State<ProfileView> {
 
           if ( userIdSnapshot.connectionState == ConnectionState.done ){
 
+
             final userIdSnapshotData = userIdSnapshot.data;
 
             if (  userIdSnapshot.hasData && userIdSnapshotData != null ){
@@ -125,7 +126,35 @@ class _ProfileViewState extends State<ProfileView> {
             }
           }
 
-          return const CircularProgressIndicator();
+          return Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              FutureBuilder(
+                future: Future.delayed( const Duration( seconds: 4) ), 
+                builder: ( context, delaySnapshot ){
+
+                  if ( delaySnapshot.connectionState == ConnectionState.done ){
+                    return const Positioned(
+                      bottom: -75,
+                      child: Text( 
+                        "This is taking a while..\n"
+                        "Are you connected to the internet?",
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+
+                  
+                } 
+              )
+              
+
+            ],
+          );
         }
       )
     );
