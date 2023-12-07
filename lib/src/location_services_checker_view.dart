@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:provider/provider.dart';
 
-class LocationServicesCheckerView extends StatelessWidget{
+class LocationServicesCheckerView extends StatefulWidget{
   
   final Widget child;
   const LocationServicesCheckerView( {super.key, required this.child});
 
+  @override
+  State<LocationServicesCheckerView> createState() => _LocationServicesCheckerViewState();
+}
+
+class _LocationServicesCheckerViewState extends State<LocationServicesCheckerView> {
   @override
   Widget build(BuildContext context) {
 
@@ -20,7 +25,7 @@ class LocationServicesCheckerView extends StatelessWidget{
           if ( snapshot.connectionState == ConnectionState.done ){
 
             if ( snapshot.hasData && snapshot.data == true ){
-              return child;
+              return widget.child;
             }
             // else if( snapshot.hasError ){
             //   return (
@@ -46,7 +51,12 @@ class LocationServicesCheckerView extends StatelessWidget{
               builder: (_, timerSnapshot ){
                 if ( timerSnapshot.connectionState == ConnectionState.done ){
                   return TextButton(
-                    onPressed: locationServicesProvider.reinvokeGeolocator, 
+                    onPressed: (){
+                      locationServicesProvider.reinvokeGeolocator();
+                      setState(() {
+                        
+                      });
+                    }, 
                     child:  const Text( "Load Compass") );
                 }
                 else{

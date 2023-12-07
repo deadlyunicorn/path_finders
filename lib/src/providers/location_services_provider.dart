@@ -8,7 +8,7 @@ class LocationServicesProvider with ChangeNotifier{
   GeolocatorController _sensors = GeolocatorController();
 
 
-  void reinvokeGeolocator ()async{
+  Future<void> reinvokeGeolocator ()async{
     try{
       await Geolocator.requestPermission();
       await Geolocator.getCurrentPosition();
