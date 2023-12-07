@@ -172,7 +172,7 @@ class PageSelector extends StatelessWidget{
 
 class CurrentPageState extends ChangeNotifier {
 
-  int _currentPageIndex = 2;
+  int _currentPageIndex = 1;
 
   int get currentPageIndex => _currentPageIndex;
 
