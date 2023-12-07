@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -54,11 +55,7 @@ class LocationSharingWidget extends StatelessWidget{
                 stream: _locationUpdateStream(),
                 builder: (context, updatedAtStreamSnapshot) {
 
-                  if ( updatedAtStreamSnapshot.hasError ){
-                    return ErrorSharingLocationWidget( refresh: refresh);
-                  }
-
-                  if ( updatedAtStreamSnapshot.connectionState == ConnectionState.active ){
+                  if ( updatedAtStreamSnapshot.hasData ){
                     //connection still open
 
                     final updatedAt = updatedAtStreamSnapshot.data?.toLocal();
@@ -87,11 +84,14 @@ class LocationSharingWidget extends StatelessWidget{
                       ]
                     );
                   }
-                  else if (  updatedAtStreamSnapshot.connectionState == ConnectionState.active  ){
-                    return const Text( 
-                      "There was a network error", 
-                      textAlign: TextAlign.center
-                    );
+                  else if (  updatedAtStreamSnapshot.hasError  ){
+
+                    final error = updatedAtStreamSnapshot.error;
+                    
+                      return Text( 
+                        "${ error??'Uknown Error.'}", 
+                        textAlign: TextAlign.center
+                      );
                   }
                   else{
                     return const CircularProgressIndicator();
@@ -175,8 +175,9 @@ class LocationSharingWidget extends StatelessWidget{
       return DateTime.parse( decodedJson["data"]["updatedAt"] );
 
     }
-    catch(_){
-      return null;
+    catch( error ){
+      if ( error is SocketException ) return Future.error("Network Error.");
+      return Future.error("Uknown Error.");
     }
     
   }

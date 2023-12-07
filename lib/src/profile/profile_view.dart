@@ -107,10 +107,11 @@ class _ProfileViewState extends State<ProfileView> {
             }
             else if ( userIdSnapshot.hasError ){
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Session Error.",
-                    textScaler: TextScaler.linear( 1.1 ),
+                  Text(
+                    "${userIdSnapshot.error}",
+                    textScaler: const TextScaler.linear( 1.1 ),
                     textAlign: TextAlign.center,
                   ),
                   TextButton(

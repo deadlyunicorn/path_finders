@@ -147,7 +147,7 @@ class UserFile {
   }
 
   /// Returns a valid userId else null.
-  static Future<String?> getUserId ()async{
+  static Future getUserId ()async{
 
     final userIdFile = await _userIdFile;
 
@@ -155,13 +155,23 @@ class UserFile {
       final String content = await userIdFile.readAsString();
 
       if ( content.isEmpty ){
-        await setRandomUserIdFuture();
-        return await getUserId();
+        return await setRandomUserIdFuture()
+          .then(
+            ( value ) => value,
+            onError: ( error ){
+              return Future.error( error );
+            }
+          );
       }
       else if( content.length != 6 ){
         await userIdFile.writeAsString('');
-        await setRandomUserIdFuture();
-        return await getUserId();
+        return await setRandomUserIdFuture()
+          .then(
+            ( value ) => value,
+            onError: ( error ){
+              return Future.error(error);
+            }
+          );
       }
       else{
         return content;
@@ -171,11 +181,17 @@ class UserFile {
     catch( error ){
       if ( error is PathNotFoundException ){
         await userIdFile.writeAsString("");
-        return await getUserId();
+        return await setRandomUserIdFuture()
+          .then(
+            ( value ) => value,
+            onError: ( error ){
+              return Future.error(error);
+            }
+          );
       }
-      else {
-        return null;
-      }
+      
+      if ( error is SocketException ) return Future.error("Network Error.\n( Network is needed to generate a valid userID )");
+      return Future.error("Uknown error.");
     }
   }
 
@@ -191,7 +207,7 @@ class UserFile {
     await userIdFile.delete();
   }
 
-  static Future<void> setRandomUserIdFuture() async{
+  static Future<String?> setRandomUserIdFuture() async{
     
     final res =  await http.get(
       Uri.parse('https://path-finders-backend.vercel.app/api/users/generateId')
@@ -203,13 +219,15 @@ class UserFile {
 
       final String userId = decodedJson["data"]["userId"].toString();
       await UserFile.writeUserId( userId );
+      return userId;
     } 
     else if( decodedJson["error"] != null){
-      throw( decodedJson["error"]["message"] );
+      return Future.error( decodedJson["error"]["message"] );
     }
     else{
-      throw( "Network error." );
+      return Future.error("Network error.");
     }
+
     
   }
 }
