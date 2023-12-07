@@ -145,7 +145,7 @@ class Compass extends StatelessWidget {
 
     final compassWidth = MediaQuery.of(context).size.width * 0.8;
     final compassHeight = MediaQuery.of(context).size.height * 0.3;
-    final rotationToNorth = direction * ( math.pi / 180 );
+    final rotationToNorth = -direction * ( math.pi / 180 );
 
     return SizedBox(
       width: compassWidth,
