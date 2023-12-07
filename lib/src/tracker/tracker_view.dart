@@ -102,9 +102,13 @@ class _TrackerViewState extends State<TrackerView> {
                       RichText( 
                         text: 
                         ( distanceToTarget < 15 )
-                        ?const TextSpan( text:"Your friend is nearby!" )
+                        ?TextSpan( 
+                          text:"Your friend is nearby!",
+                          style: TextStyle( color: Theme.of(context).colorScheme.primary ),
+                        )
                         :TextSpan(
                           text:"Your distance to ${appState.targetName} is \n",
+                          style: TextStyle( color: Theme.of(context).colorScheme.primary ),
                           children: [ 
                             TextSpan( 
                               style: const TextStyle( fontSize: 24 ),
