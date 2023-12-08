@@ -108,7 +108,7 @@ class _TrackerViewState extends State<TrackerView> {
                         )
                         :TextSpan(
                           text:"Your distance to ${appState.targetName} is \n",
-                          style: TextStyle( color: Theme.of(context).colorScheme.primary ),
+                          style: TextStyle( color: Theme.of(context).colorScheme.onBackground ),
                           children: [ 
                             TextSpan( 
                               style: const TextStyle( fontSize: 24 ),
