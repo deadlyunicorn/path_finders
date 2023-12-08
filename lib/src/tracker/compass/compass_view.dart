@@ -23,7 +23,7 @@ class CompassView extends StatefulWidget {
 
 class _CompassViewState extends State<CompassView> {
 
-  bool targetNorth = true;
+  bool isBehavingLikeRealCompass = true;
 
   @override
   Widget build( BuildContext context){
@@ -55,7 +55,7 @@ class _CompassViewState extends State<CompassView> {
                   .showSnackBar(
                     CustomSnackBar(
                       textContent: 
-                      "Switched to ${ targetNorth? 'compass' :'arrow'} mode.\n" 
+                      "${ isBehavingLikeRealCompass? 'Compass behaves realistically now' :'Compass shows you actual entity direction now'}.\n" 
                       "Double Tap to show distance as a notification.\n"
                       "Long Press to copy target's coordinates.", 
                       context: context
@@ -63,7 +63,7 @@ class _CompassViewState extends State<CompassView> {
                   );
                 
                 setState(() {
-                  targetNorth = !targetNorth;
+                  isBehavingLikeRealCompass = !isBehavingLikeRealCompass;
                 });
 
 
@@ -80,7 +80,7 @@ class _CompassViewState extends State<CompassView> {
                 Column(
                   children: [
                     Compass(
-                      targetNorth: targetNorth,
+                      isBehavingLikeRealCompass: isBehavingLikeRealCompass,
                       direction: direction,
                       additionalRotation: widget.targetLocationRotationInRads,
                     ),
@@ -131,11 +131,11 @@ class Compass extends StatelessWidget {
 
   final double direction;
   final double additionalRotation;
-  final bool targetNorth;
+  final bool isBehavingLikeRealCompass;
 
   const Compass( {
     super.key, 
-    required this.targetNorth,
+    required this.isBehavingLikeRealCompass,
     required this.direction, 
     required this.additionalRotation
   } );
@@ -182,16 +182,16 @@ class Compass extends StatelessWidget {
             ),         
           ), 
           Transform.rotate(
-            angle: targetNorth? 0 :rotationToNorth,
+            angle: isBehavingLikeRealCompass? rotationToNorth :0,
             child: Image.asset( "assets/compass/inner.png", height: compassHeight * 0.852 )
           ), 
           Transform.rotate(
-            angle: targetNorth? rotationToNorth: 0,
+            angle: isBehavingLikeRealCompass? 0: rotationToNorth,
             child: Image.asset("assets/compass/arrow.png", height: compassHeight * 0.75 )
           ),
           Transform.rotate(
-            angle: targetNorth? additionalRotation : rotationToNorth + additionalRotation,
-            child: Image.asset("assets/compass/dot.png", height: compassHeight * 0.75 )
+            angle: isBehavingLikeRealCompass? rotationToNorth + additionalRotation :additionalRotation ,
+            child: Image.asset("assets/compass/dot.png", height: compassHeight * 0.75,color: Colors.green, )
           )
         ],
       ) 
