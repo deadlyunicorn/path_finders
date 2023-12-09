@@ -81,9 +81,37 @@ class _ProfileViewState extends State<ProfileView> {
                               child: Switch(
                                 value: isSharing, 
                                 onChanged: ( newValue ){
-                                  setState(() {
-                                    isSharing = newValue;
-                                  });
+
+                                  showDialog(
+                                    context: context, 
+                                    builder: ( context )=> Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular( 4 )
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all( 8.0 ),
+                                        child: Column(
+                                          children: [
+                                            const Text("Hello world!!"),
+                                            TextButton(
+                                              onPressed: (){
+                                                Navigator.pop(context);
+                                              }, 
+                                              child: Text("Nevermind", style: TextStyle( color: Theme.of(context).colorScheme.error,selec),)
+                                            )
+
+                                          ],
+                                        ) 
+                                      )
+                                    )
+                                  );
+
+                                  if ( false ){
+                                    setState(() {
+                                     isSharing = newValue;
+                                    });
+                                  } 
+                                  
                                 }
                               ),
                             ) 
