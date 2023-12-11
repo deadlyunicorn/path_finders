@@ -69,7 +69,8 @@ class _LiveEntryDialogState extends State<LiveEntryDialog> {
         }, child: const Text("Cancel")),
         TextButton(
             onPressed: () async{
-              targetId.length < 5 ? null 
+              //Return maybe causes bugs here??
+              return targetId.length < 5 ? null 
               : (() async{
                 await listingsProvider.addTargetWithIdEntry( targetId, targetName: targetName );
                 if ( context.mounted ){
