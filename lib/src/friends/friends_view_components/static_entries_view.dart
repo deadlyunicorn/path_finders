@@ -5,6 +5,7 @@ import 'package:path_finders/src/providers/targets_with_coordinates_provider.dar
 import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StaticEntriesView extends StatelessWidget{
 
@@ -40,6 +41,7 @@ class StaticEntriesView extends StatelessWidget{
     final listingsProvider = context.watch<TargetWithCoordinatesListingsProvider>(); 
     final targetProvider = context.watch<TargetProvider>();
 
+
     return Expanded(
       flex: 3,
       child: FutureBuilder(
@@ -55,6 +57,33 @@ class StaticEntriesView extends StatelessWidget{
               //has no notifyListeners(), it is used to disappear entries on removal.
               listingsProvider.initializeTargetWithCoordinatesEntries( targetData );
               sampleData.addAll(  [ ...targetData ] ); 
+            }
+
+            if ( targetProvider.targetName == "North Pole" ){ //North Pole is the default at launch
+
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_)async { 
+                  //We will set the selected entry at launch to be the last selected static entry
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  final lastStaticTarget = prefs.getString( 'staticTarget');
+                  if ( lastStaticTarget != null && lastStaticTarget.isNotEmpty && lastStaticTarget != "North Pole" ){
+
+                    sampleData
+                      .forEach(
+                        (element) {
+                          if ( element["targetName"] == lastStaticTarget ){
+                            final coordinates = Coordinates( element["latitude"], element["longitude"] );
+                            targetProvider.setTargetName(lastStaticTarget);
+                            targetProvider.setTargetLocation( coordinates );
+                          } 
+                        }
+                      );
+                      
+                  }
+                  
+                }
+              );
+
             }
 
             return ListView.builder(
@@ -79,9 +108,15 @@ class StaticEntriesView extends StatelessWidget{
                       :null,
                       child: ListTile(
                         title: Text( targetName ),
-                        onTap: () {
+                        onTap: () async{
+                          
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.setString( 'staticTarget', targetName );
+
                           targetProvider.setTargetLocation( targetCoordinates );
                           targetProvider.setTargetName( targetName );
+
+
                         },
                         onLongPress: (){
                           listingsProvider.removeTargetWithCoordinatesEntry(targetName);

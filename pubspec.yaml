@@ -42,6 +42,7 @@ dependencies:
   intl: any
   path_provider: ^2.1.1
   provider: ^6.0.5
+  shared_preferences: ^2.2.2
 
 
 
