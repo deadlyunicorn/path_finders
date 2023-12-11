@@ -45,6 +45,7 @@ app.*.map.json
 # /android/app/src/main/*
 !/android/app/src/main/AndroidManifest.xml
 
+/android/.gradle
 
 
 
@@ -63,3 +64,8 @@ app.*.map.json
 android/.gitignore
 test/widget_test.dart
 
+android/gradle/wrapper/gradle-wrapper.jar
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
