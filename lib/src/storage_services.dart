@@ -231,3 +231,22 @@ class UserFile {
     
   }
 }
+
+class DisclaimerAcceptionFile{
+
+    static Future<File> get _disclaimerAcceptionFile async{
+      final path = await LocalFiles._localPath;
+      return File( "$path/disclaimer_record.txt");
+    }
+
+    static Future<bool> disclaimerIsAccepted() async{
+      final disclaimerFile = await _disclaimerAcceptionFile;
+      return await disclaimerFile.exists();
+    }
+
+    static Future<void> acceptDisclaimer() async{
+      final disclaimerFile = await _disclaimerAcceptionFile;
+      await disclaimerFile.writeAsString( "DISCLAIMER HAS BEEN ACCEPTED. \n${ DateTime.now().toString()}");
+    } 
+
+}

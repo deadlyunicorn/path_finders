@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/copying_service.dart';
+import 'package:path_finders/src/custom/styles.dart';
 import 'package:path_finders/src/profile/location_sharing_widget.dart';
 import 'package:path_finders/src/storage_services.dart';
 
@@ -55,7 +56,7 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                       child: Text(
                         "Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}",
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith( color: Theme.of(context).primaryColor)
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith( color: Theme.of(context).colorScheme.onBackground )
                       ), 
                     ),
                     Expanded(
@@ -80,37 +81,31 @@ class _ProfileViewState extends State<ProfileView> {
                               fit: BoxFit.fill,
                               child: Switch(
                                 value: isSharing, 
-                                onChanged: ( newValue ){
+                                onChanged: ( wantsToShareLocation )async{
 
-                                  showDialog(
-                                    context: context, 
-                                    builder: ( context )=> Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular( 4 )
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all( 8.0 ),
-                                        child: Column(
-                                          children: [
-                                            const Text("Hello world!!"),
-                                            TextButton(
-                                              onPressed: (){
-                                                Navigator.pop(context);
-                                              }, 
-                                              child: Text("Nevermind", style: TextStyle( color: Theme.of(context).colorScheme.error,selec),)
-                                            )
+                                  if ( wantsToShareLocation ){
+                                    if ( await DisclaimerAcceptionFile.disclaimerIsAccepted() ){
+                                      setState(() {
+                                          isSharing = wantsToShareLocation;
+                                        });
+                                    }
+                                    else{
+                                      await showDisclaimerDialog(context);
+                                      if ( await DisclaimerAcceptionFile.disclaimerIsAccepted() ){
+                                        setState(() {
+                                          isSharing = wantsToShareLocation;
+                                        });
+                                      }
 
-                                          ],
-                                        ) 
-                                      )
-                                    )
-                                  );
-
-                                  if ( false ){
+                                    }
+                                  }
+                                  else{
                                     setState(() {
-                                     isSharing = newValue;
+                                      isSharing = wantsToShareLocation;
                                     });
-                                  } 
+                                  }
+
+                                    
                                   
                                 }
                               ),
@@ -188,4 +183,70 @@ class _ProfileViewState extends State<ProfileView> {
       )
     );
   }
+}
+
+showDisclaimerDialog( BuildContext context ){
+
+  return showDialog(
+    context: context, 
+    builder: ( context )=> Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular( 4 )
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all( 8.0 ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Icon( Icons.warning, color: Colors.yellow),
+              SizedBox.square( dimension: 12 ),
+              Text( "Disclaimer", 
+                style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              SizedBox.square( dimension: 12 ),
+              Icon( Icons.warning, color: Colors.yellow),
+              ],
+            ),
+            SizedBox.square( dimension: 12 ),
+            const Text(
+              "You are about to share your location to the internet.\n"
+              "Anyone will be able to see your coordinates, alongside your in-app ID.\n"
+              "\nPlease proceed with caution - and only if you know what the above means.",
+              textAlign: TextAlign.center),
+            
+            Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  }, 
+                  style: squaredButtonStyle,
+                  child: Text("Nevermind", style: TextStyle( color: Theme.of(context).colorScheme.error ),)
+                ),
+                TextButton(
+                  style: squaredButtonStyle,
+                  onPressed: ()async{
+                    await DisclaimerAcceptionFile.acceptDisclaimer();
+                    Navigator.pop(context);
+                  }, 
+                  child: Text("Proceed")
+                )
+
+              ],
+            )
+            
+
+
+          ],
+        ) 
+      )
+    )
+  );
+
 }
