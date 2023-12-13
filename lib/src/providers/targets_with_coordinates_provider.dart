@@ -1,26 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:path_finders/src/providers/target_listings_abstract.dart';
 import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
-class TargetWithCoordinatesListingsProvider with ChangeNotifier{
+class TargetWithCoordinatesListingsProvider extends TargetListingsProviderAbstract{
 
-  List _targetWithCoordinatesEntries = [];
 
-  void initializeTargetWithCoordinatesEntries( List initialEntriesFromFile){
-
-    _targetWithCoordinatesEntries = initialEntriesFromFile;
-  }
-
-  Future<void> addTargetWithCoordinatesEntry( String targetName, Coordinates coordinates ) async{
-
+  Future<void> add( String targetName, Coordinates coordinates ) async{
     await TargetsFiles.writeTargetWithCoordinates( targetName, coordinates );
     notifyListeners();
   }
 
-  Future<void> removeTargetWithCoordinatesEntry( String targetName ) async{
+  Future<void> remove( String targetName ) async{
 
-    if ( _targetWithCoordinatesEntries.where((element) => element["targetName"] == targetName ).isNotEmpty ){
-      
+    if (super.targetEntries.where((element) => element["targetName"] == targetName ).isNotEmpty ){
       await TargetsFiles.removeTargetWithCoordinatesFromFile( targetName );
       // _targetWithCoordinatesEntries.removeWhere((element) => element["targetName"] == targetName );
       notifyListeners();
@@ -29,6 +21,5 @@ class TargetWithCoordinatesListingsProvider with ChangeNotifier{
 
   }
 
-  List get targetEntries => _targetWithCoordinatesEntries;
  
 }
