@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/static_entry_dialog_view.dart';
 
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
@@ -55,7 +56,10 @@ class StaticEntriesView extends StatelessWidget{
 
             if ( targetData != null ){
               //has no notifyListeners(), it is used to disappear entries on removal.
-              listingsProvider.initializeTargetWithCoordinatesEntries( targetData );
+              listingsProvider.initialize( targetData );
+
+              //If the user has added an entry named "China" it will remove it.
+              sampleData.removeWhere((element) => targetData.map((e) => e ["targetName"]).contains(element["targetName"]));
               sampleData.addAll(  [ ...targetData ] ); 
             }
 
@@ -92,7 +96,7 @@ class StaticEntriesView extends StatelessWidget{
                 itemBuilder: (context, index) {
                   
                   final currentElement = sampleData[index];
-                  final targetName = currentElement["targetName"];//listItems.keys.elementAt(index);
+                  final String targetName = currentElement["targetName"];//listItems.keys.elementAt(index);
                   final Coordinates targetCoordinates = Coordinates( currentElement["latitude"], currentElement["longitude"]); //listItems[targetName];
 
                   return  Container ( 
@@ -119,8 +123,18 @@ class StaticEntriesView extends StatelessWidget{
 
                         },
                         onLongPress: (){
-                          listingsProvider.removeTargetWithCoordinatesEntry(targetName);
-                        },
+                          showDialog(
+                            context: context, 
+                            builder: (context) => 
+                              StaticEntryDialog( 
+                                staticListingsProvider: listingsProvider,
+                                coordinates: targetCoordinates,
+                                targetName: targetName,
+                              )
+                          );
+                          // listingsProvider.removeTargetWithCoordinatesEntry(targetName);
+                        }
+                        ,
                     )
                   );
 

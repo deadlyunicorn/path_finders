@@ -1,45 +1,50 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/deletion_prompt.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/dialog_actions.dart';
 import 'package:path_finders/src/friends/id_formatter.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 
-class LiveEntryDialog extends StatefulWidget{
+class LiveEntryDialog extends StatelessWidget{
 
   final TargetWithIdListingsProvider listingsProvider;
 
-  const LiveEntryDialog({super.key, required this.listingsProvider});
+  final String? _targetId; 
+  final String? _targetName;
 
-  @override
-  State<LiveEntryDialog> createState() => _LiveEntryDialogState();
-}
+  const LiveEntryDialog(
+    {
+      super.key, 
+      required this.listingsProvider,
+      String? targetId,
+      String? targetName,
+    }) : _targetName = targetName, _targetId = targetId;
 
-class _LiveEntryDialogState extends State<LiveEntryDialog> {
 
-  String targetId="";
-  String? targetName;
 
   @override
   Widget build(BuildContext context) {
 
-    final listingsProvider = widget.listingsProvider;
+    String? targetId = _targetId;
+    String? targetName = _targetName;
+
+    final targetListingsWithId = listingsProvider;
 
     return AlertDialog(
       title: const Text("Enter user ID"),
-
       content: Column( 
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
+            controller: TextEditingController( text: targetId ),
             keyboardType: TextInputType.number,
             inputFormatters: [
               CustomInputFormatter(),
               LengthLimitingTextInputFormatter(7),
             ],
             onChanged: (value) {
-              setState(() {
                 targetId = value;
-              });
             },
             decoration: const InputDecoration(
               labelText: "ID",
@@ -52,9 +57,9 @@ class _LiveEntryDialogState extends State<LiveEntryDialog> {
           ),
 
           TextField(
+            controller: TextEditingController( text: targetName ),
             onChanged: (value){
               targetName = value;
-
             },
             decoration: const InputDecoration(
               labelText: "Friendly Name",
@@ -62,25 +67,30 @@ class _LiveEntryDialogState extends State<LiveEntryDialog> {
             ),
 
           )
-        ]), 
-      actions: [
-        TextButton(onPressed: (){
+      ]), 
+      actionsAlignment: MainAxisAlignment.spaceAround,
+      actions: dialogActions(
+        deletionHandler: (){
+          showDeletionConfirmationDialog(context, targetListingsWithId, _targetId);
+        },
+        cancellationHandler: (){
           Navigator.pop(context,"Cancel");
-        }, child: const Text("Cancel")),
-        TextButton(
-            onPressed: () async{
-              //Return maybe causes bugs here??
-              return targetId.length < 5 ? null 
-              : (() async{
-                await listingsProvider.addTargetWithIdEntry( targetId, targetName: targetName );
-                if ( context.mounted ){
-                  Navigator.pop(context, "Submit");
-                } 
-              })();
-            }, 
-            child: const Text("Submit")
-        )
-      ],
+        },
+        submissionHandler: () async{
+          
+          final finalTargetId = targetId;
+
+          //Return maybe causes bugs here??
+          if( finalTargetId != null && finalTargetId.length == 7 ){ 
+            await targetListingsWithId.remove(finalTargetId);
+            if ( _targetId != null ) await targetListingsWithId.remove(_targetId);
+            await targetListingsWithId.add( finalTargetId, targetName: targetName );
+            if ( context.mounted ){
+              Navigator.pop(context, "Submit");
+            } 
+          }
+        }, 
+      )
     );
 
   }

@@ -1,30 +1,45 @@
 
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/deletion_prompt.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/dialog_actions.dart';
 
 import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
-class StaticEntryDialog extends StatefulWidget{
+class StaticEntryDialog extends StatelessWidget{
 
   final TargetWithCoordinatesListingsProvider staticListingsProvider;
 
-  const StaticEntryDialog({super.key, required this.staticListingsProvider});
+  final Coordinates? _coordinates;
+  final String? _targetName;
 
-  @override
-  State<StaticEntryDialog> createState() => _StaticEntryDialogState();
-}
+  const StaticEntryDialog(
+    { 
+      super.key,
+      required this.staticListingsProvider,
+      String? targetName,
+      Coordinates? coordinates
+    }
+  ) : _targetName = targetName, _coordinates = coordinates;
 
-class _StaticEntryDialogState extends State<StaticEntryDialog> {
-
-  String _targetName="";
-  double? _latitude;
-  double? _longitude;
+  
 
   @override
   Widget build(BuildContext context) {
 
-    final listingsProvider = widget.staticListingsProvider;
+    String? targetName = _targetName;
+    double? latitude;
+    double? longitude;
+
+    if ( _coordinates != null ){
+
+      latitude = _coordinates.latitude;
+      longitude = _coordinates.longitude;
+
+    }
+
+    final targetListingsWithCoordinates = staticListingsProvider;
 
     return AlertDialog(
       title: const Text("Enter location coordinates"),
@@ -33,11 +48,10 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
+            controller: TextEditingController( text: targetName),
             keyboardType: TextInputType.name,
             onChanged: (value) {
-              setState(() {
-                _targetName = value;
-              });
+                targetName = value;
             },
             decoration: const InputDecoration(
               labelText: "Friendly Name",
@@ -50,9 +64,14 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
           ),
 
           TextField(
+            controller: TextEditingController(
+              text: latitude?.toString()
+            ),
             keyboardType: TextInputType.number,
             onChanged: (value){
-              _latitude = double.tryParse(value);
+
+                latitude = double.tryParse(value);
+            
             },
             decoration: const InputDecoration(
               labelText: "Latitude",
@@ -66,44 +85,82 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
           ),
 
           TextField(
+            controller: TextEditingController(
+              text: longitude?.toString()
+            ),
             keyboardType: TextInputType.number,
             onChanged: (value){
 
-              _longitude = double.tryParse(value);
+              longitude = double.tryParse(value);
 
             },
             decoration: const InputDecoration(
               labelText: "Longitude",
               hintText: "A cool number like 73.141",
             ),
+            
           )
 
-        ]), 
-      actions: [
-        TextButton(onPressed: (){
+        ]
+      ), 
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actions: dialogActions(
+        submissionHandler: ()async{
+          await submissionHandler( 
+            latitude: latitude,
+            longitude: longitude,
+            targetName: targetName,
+            initialTargetName: _targetName,
+            context: context,
+            targetListingsWithCoordinates: targetListingsWithCoordinates
+          );
+        }, 
+        cancellationHandler:  (){
           Navigator.pop(context,"Cancel");
-        }, child: const Text("Cancel")),
-        TextButton(
-            onPressed: () async{
+        },
+        deletionHandler: (){
+            showDeletionConfirmationDialog(context, targetListingsWithCoordinates, _targetName);
+        }
 
-              final longitude = _longitude;
-              final latitude  = _latitude;
+      )
+    );
 
-              if( _targetName.isNotEmpty 
+  }
+}
+
+Future<void> submissionHandler(  
+  { 
+    required double? longitude, 
+    required double? latitude, 
+    required String? targetName,
+    required String? initialTargetName,
+    required TargetWithCoordinatesListingsProvider targetListingsWithCoordinates,
+    required BuildContext context
+  } ) async{
+
+              if( 
+              targetName != null && targetName.isNotEmpty
                && latitude != null
                && longitude != null 
                && ( latitude < 90 && latitude > -90 )
                && ( longitude < 180 && longitude > -180  )){
 
+
                 (() async{
-                
-                  await listingsProvider.addTargetWithCoordinatesEntry( _targetName, Coordinates(_latitude!, _longitude!) );
+                  
+
+                  if ( initialTargetName != null ){
+                    await targetListingsWithCoordinates.remove( initialTargetName );
+                  }
+                  await targetListingsWithCoordinates.remove(targetName);
+                  await targetListingsWithCoordinates.add( targetName, Coordinates( latitude, longitude) );
                   if ( context.mounted ){
                     Navigator.pop(context, "Submit");
                   } 
                 })();
 
               }
+
               else{
                 ScaffoldMessenger
                 .of( context )
@@ -116,11 +173,4 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
                   )
                 );
               }
-            }, 
-            child: const Text("Submit")
-        )
-      ],
-    );
-
-  }
-}
+            }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/friends/entry_insertion_views/live_entry_dialog_view.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
@@ -40,7 +41,7 @@ class LiveEntriesView extends StatelessWidget{
               //We have ID entries in our file.
               if( targetsWithIdListingsProvider.targetEntries != targetsMapListSnapshot ){
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  targetsWithIdListingsProvider.setTargetWithIdEntries( targetsMapListSnapshot );
+                  targetsWithIdListingsProvider.set( targetsMapListSnapshot );
                 });
               } 
 
@@ -147,13 +148,13 @@ class LiveEntriesView extends StatelessWidget{
                                   direction: Axis.horizontal,
                                   children: [
 
-                                    Text( targetName ?? "#$targetId" ), 
+                                    Text( ( targetName != null && targetName.isNotEmpty ) ? targetName :"#$targetId" ), 
                                     //show targetName if exists
                                     //else targetId
 
                                     const SizedBox( width: 5 ),
                                     
-                                    targetName != null 
+                                    targetName != null && targetName.isNotEmpty
                                     //target name exists? show targetId
                                     //else nothing
                                     ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
@@ -186,7 +187,14 @@ class LiveEntriesView extends StatelessWidget{
                                   }
                                 },
                                 onLongPress: () {
-                                  targetsWithIdListingsProvider.removeTargetWithIdEntry( targetId );
+                                  showDialog(
+                                    context: context, 
+                                    builder: ( context ) => LiveEntryDialog(
+                                      listingsProvider: targetsWithIdListingsProvider,
+                                      targetId: targetId,
+                                      targetName: targetName,
+                                    )
+                                  );
 
                                 },
                               )
