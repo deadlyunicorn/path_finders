@@ -1,6 +1,8 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:path_finders/notifications/notification_controller.dart';
+import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/using_the_app_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -102,12 +104,12 @@ class _MyAppState extends State<MyApp> {
             // Flutter web url navigation and deep linking.
             home: Scaffold(
               appBar: AppBar(
-                elevation: 1,
-                backgroundColor: Theme.of( context).primaryColor.withAlpha( 100 ),
-                title: const Text( "Path Finders" ),
-                actions: const [
-                  Icon( Icons.settings )
-                ],
+                 elevation: 1,
+                 backgroundColor: Theme.of( context).primaryColor.withAlpha( 100 ),
+                 title: const Text( "Path Finders" ),
+                 actions: const [
+                   Icon( Icons.settings )
+                 ],
               ),
               body: Container(
                 padding: const EdgeInsets.only( bottom: 20, top: 20 ),
@@ -136,6 +138,30 @@ class PageSelector extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+
+    //Future that reads if it has been displayed.
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) { 
+
+      IntroFinishFile
+        .introHasBeenFinished()
+        .then(
+          ( isTrue ) {
+            if ( isTrue ){
+
+            }
+            else{
+
+              showDialog(
+                context: context, 
+                builder: ( context ) => UsingTheAppDialog()
+              );
+
+            }
+          }
+        );
+      
+    });
 
 
 

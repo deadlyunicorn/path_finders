@@ -250,3 +250,22 @@ class DisclaimerAcceptionFile{
     } 
 
 }
+
+class IntroFinishFile{
+
+    static Future<File> get _introFinishFile async{
+      final path = await LocalFiles._localPath;
+      return File( "$path/intro_finish_record.txt");
+    }
+
+    static Future<bool> introHasBeenFinished() async{
+      final introFile = await _introFinishFile;
+      return await introFile.exists();
+    }
+
+    static Future<void> finishIntro() async{
+      final introFile = await _introFinishFile;
+      await introFile.writeAsString( "Intro has been completed.");
+    } 
+
+}
