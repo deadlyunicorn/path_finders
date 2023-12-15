@@ -75,6 +75,7 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - assets/images/intro/
     - assets/compass/
 
   # To add assets to your application, add an assets section, like this:
