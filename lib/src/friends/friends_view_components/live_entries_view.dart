@@ -144,11 +144,17 @@ class LiveEntriesView extends StatelessWidget{
                                 )
                                 :null,
                               child: ListTile(
-                                title: Flex( 
+                                title:  Flex( 
                                   direction: Axis.horizontal,
                                   children: [
-
-                                    Text( ( targetName != null && targetName.isNotEmpty ) ? targetName :"#$targetId" ), 
+                                    Flexible(
+                                      child: Text( 
+                                        ( targetName != null && targetName.isNotEmpty ) ? targetName :"#$targetId",
+                                        overflow: TextOverflow.fade, 
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    ), 
                                     //show targetName if exists
                                     //else targetId
 
