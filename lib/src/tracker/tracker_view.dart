@@ -102,25 +102,28 @@ class _TrackerViewState extends State<TrackerView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RichText( 
-                        text: 
-                        ( distanceToTarget < 15 )
-                        ?TextSpan( 
-                          text:"Your friend is nearby!",
-                          style: TextStyle( color: Theme.of(context).colorScheme.primary ),
+                      Padding(
+                        padding: EdgeInsets.only( top: 8 ),
+                        child: RichText( 
+                          text: 
+                          ( distanceToTarget < 15 )
+                          ?TextSpan( 
+                            text:"Your friend is nearby!",
+                            style: TextStyle( color: Theme.of(context).colorScheme.primary ),
+                          )
+                          :TextSpan(
+                            text:"Your distance to ${appState.targetName} is \n",
+                            style: TextStyle( color: Theme.of(context).colorScheme.onBackground ),
+                            children: [ 
+                              TextSpan( 
+                                style: const TextStyle( fontSize: 24 ),
+                                text: DistanceFormatter.metersFormatter( distanceToTarget )
+                              )
+                            ]
+                          ),
+                          textAlign: TextAlign.center,
+                          textScaler: const TextScaler.linear(1.5),
                         )
-                        :TextSpan(
-                          text:"Your distance to ${appState.targetName} is \n",
-                          style: TextStyle( color: Theme.of(context).colorScheme.onBackground ),
-                          children: [ 
-                            TextSpan( 
-                              style: const TextStyle( fontSize: 24 ),
-                              text: DistanceFormatter.metersFormatter( distanceToTarget )
-                            )
-                          ]
-                        ),
-                        textAlign: TextAlign.center,
-                        textScaler: const TextScaler.linear(1.5),
                       ),
                       isLandscape(context)
                         ?SizedBox.shrink()
