@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/copying_service.dart';
+import 'package:path_finders/src/custom/isLandscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
@@ -93,11 +94,13 @@ class _TrackerViewState extends State<TrackerView> {
                     .toStringAsFixed(7) 
               );
 
-              return Column( 
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
+                  Column( 
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       RichText( 
                         text: 
@@ -119,48 +122,47 @@ class _TrackerViewState extends State<TrackerView> {
                         textAlign: TextAlign.center,
                         textScaler: const TextScaler.linear(1.5),
                       ),
-                      const SizedBox( height: 5 ),
-                    ],
-                  ),
-                  Expanded(
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                      children: [
-                        const SizedBox.square( dimension:  8),
-                        CompassView( 
+                      isLandscape(context)
+                        ?SizedBox.shrink()
+                        :CompassView( 
                           targetLocationRotationInRads: targetLocationRotationInRads, 
                           targetLocation: targetLocation 
                         ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            shape: MaterialStatePropertyAll( 
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all( Radius.circular( 4 ) )
-                              )
+                      TextButton(
+                        style: const ButtonStyle(
+                          shape: MaterialStatePropertyAll( 
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all( Radius.circular( 4 ) )
                             )
-                          ),
-                          onPressed: (){},
-                          onLongPress: ()async{
-                            await CopyService.copyTextToClipboard( 
-                              context: context,
-                              "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }" 
-                            );
-                          }, 
-                          child: Text( 
-                          "Your current position is \n" 
-                          "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
-                          textScaler: const TextScaler.linear( 1.5 ),
-                          textAlign: TextAlign.center,
                           )
+                        ),
+                        onPressed: (){},
+                        onLongPress: ()async{
+                          await CopyService.copyTextToClipboard( 
+                            context: context,
+                            "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }" 
+                          );
+                        }, 
+                        child: Text( 
+                        "Your current position is \n" 
+                        "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
+                        textScaler: const TextScaler.linear( 1.5 ),
+                        textAlign: TextAlign.center,
                         )
-                        
-                      ]
+                      )
+                  ],
+                ),
+                isLandscape(context)
+                  ?Expanded(
+                    child: CompassView(
+                      targetLocationRotationInRads: targetLocationRotationInRads, 
+                      targetLocation: targetLocation
                     )
-                  )                
+                  ) 
+                  :SizedBox.shrink()
+
                 ],
-              );
+              ) ;
 
             }
             else{

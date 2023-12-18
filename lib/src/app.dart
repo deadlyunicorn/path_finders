@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:path_finders/notifications/notification_controller.dart';
+import 'package:path_finders/src/custom/isLandscape.dart';
 import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/using_the_app_dialog.dart';
 import 'package:provider/provider.dart';
@@ -103,7 +104,9 @@ class _MyAppState extends State<MyApp> {
             // Define a function to handle named routes in order to support
             // Flutter web url navigation and deep linking.
             home: Scaffold(
-              appBar: AppBar(
+              appBar: isLandscape(context)
+              ? null
+              : AppBar(
                  elevation: 1,
                  backgroundColor: Theme.of( context).primaryColor.withAlpha( 100 ),
                  title: const Text( "Path Finders" ),

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:path_finders/src/copying_service.dart';
+import 'package:path_finders/src/custom/isLandscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
@@ -78,6 +79,8 @@ class _CompassViewState extends State<CompassView> {
               },
               child: 
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Compass(
                       isBehavingLikeRealCompass: isBehavingLikeRealCompass,
@@ -144,54 +147,56 @@ class Compass extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final compassWidth = MediaQuery.of(context).size.width * 0.8;
-    final compassHeight = MediaQuery.of(context).size.height * 0.3;
+    final compassHeight = isLandscape(context)? MediaQuery.of(context).size.height * 0.5 :MediaQuery.of(context).size.height * 0.3;
+    final compassRadius = math.min( compassHeight, compassWidth);
+
     final rotationToNorth = -direction * ( math.pi / 180 );
 
     return SizedBox(
-      width: compassWidth,
-      height: compassHeight,
+      width: compassRadius,
+      height: compassRadius,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
-            width: compassWidth * 0.8,
-            height: compassHeight,
+            width: compassRadius * 0.8,
+            height: compassRadius,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all( Radius.circular( compassWidth )) ,
+              borderRadius: BorderRadius.all( Radius.circular( compassRadius )) ,
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context).colorScheme.onBackground.withAlpha( 100 ),
-                  blurRadius: 24
+                  blurRadius: 4
                 )
               ]
             )
           ),
-          Image.asset( "assets/compass/body.png", height: compassHeight,  ),
+          Image.asset( "assets/compass/body.png", height: compassRadius,  ),
           //need to *scale* the images based on the available space, 
           //else they will try to get all of it as they are larger.
           Container(
-            width: compassWidth * 0.8,
-            height: compassHeight * 0.8,
+            width: compassRadius,
+            height: compassRadius,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withAlpha( 100 ),
-                  blurRadius: 24
+                  blurRadius: 8
               )],
-              borderRadius: BorderRadius.all( Radius.circular( compassWidth ))
+              borderRadius: BorderRadius.all( Radius.circular( compassRadius ))
             ),         
           ), 
           Transform.rotate(
             angle: isBehavingLikeRealCompass? rotationToNorth :0,
-            child: Image.asset( "assets/compass/inner.png", height: compassHeight * 0.852 )
+            child: Image.asset( "assets/compass/inner.png", height: compassRadius * 0.852 )
           ), 
           Transform.rotate(
             angle: isBehavingLikeRealCompass? 0: rotationToNorth,
-            child: Image.asset("assets/compass/arrow.png", height: compassHeight * 0.75 )
+            child: Image.asset("assets/compass/arrow.png", height: compassRadius * 0.75 )
           ),
           Transform.rotate(
             angle: isBehavingLikeRealCompass? rotationToNorth + additionalRotation :additionalRotation ,
-            child: Image.asset("assets/compass/dot.png", height: compassHeight * 0.75,color: Colors.green, )
+            child: Image.asset("assets/compass/dot.png", height: compassRadius * 0.75,color: Colors.green, )
           )
         ],
       ) 

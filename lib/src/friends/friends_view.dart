@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_finders/notifications/notification_controller.dart';
+import 'package:path_finders/src/custom/isLandscape.dart';
 import 'package:path_finders/src/friends/entry_insertion_buttons.dart';
 import 'package:path_finders/src/friends/friends_view_components/live_entries_view.dart';
 import 'package:path_finders/src/friends/friends_view_components/static_entries_view.dart';
@@ -22,16 +23,42 @@ class _FriendsViewState extends State<FriendsView> {
   @override
   Widget build(BuildContext context) {
 
+    double listHeight = isLandscape(context)? MediaQuery.of(context).size.height * 0.35 :MediaQuery.of(context).size.height * 0.2 ;
+    double listWidth = isLandscape(context)? MediaQuery.of(context).size.width / 2 :MediaQuery.of(context).size.width;
+
     return (
-      const Column(
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SelectionHeader(),
-          ListHeader(text: "Static Entries"),
-          StaticEntriesView(),
-          ListHeader(text: "Live Entries"),
-          LiveEntriesView(),
+          Flex(
+            direction: isLandscape(context)? Axis.horizontal :Axis.vertical,
+            children: [
+              Column(
+                children: [
+                  ListHeader(text: "Static Entries"),
+                  SizedBox(
+                    height: listHeight,
+                    width: listWidth,
+                    child: StaticEntriesView(),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  ListHeader(text: "Live Entries"),
+                  SizedBox(
+                    height: listHeight,
+                    width: listWidth,
+                    child: LiveEntriesView(),
+                  )
+                ],
+              )
+            ],
+          ),
+          
           EntryInsertionButtons(),
-          TestingWidget()
+          // TestingWidget()
         ],
       )
     );
