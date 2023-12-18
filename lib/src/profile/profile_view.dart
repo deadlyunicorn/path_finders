@@ -202,13 +202,31 @@ showDisclaimerDialog( BuildContext context ){
               direction: Axis.horizontal,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              Icon( Icons.warning, color: Colors.yellow),
-              SizedBox.square( dimension: 12 ),
-              Text( "Disclaimer", 
-                style: Theme.of(context).textTheme.headlineSmall,
+                Icon( 
+                  shadows: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 4,
+                    )
+                  ],
+                  Icons.warning, 
+                  color: Colors.yellow,
                 ),
-              SizedBox.square( dimension: 12 ),
-              Icon( Icons.warning, color: Colors.yellow),
+                SizedBox.square( dimension: 12 ),
+                Text( "Disclaimer", 
+                  style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                SizedBox.square( dimension: 12 ),
+                Icon( 
+                  shadows: [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 4,
+                        )
+                      ],
+                  Icons.warning, 
+                  color: Colors.yellow
+                ),
               ],
             ),
             SizedBox.square( dimension: 12 ),

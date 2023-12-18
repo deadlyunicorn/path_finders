@@ -14,6 +14,7 @@ class CustomNavigationBar extends StatelessWidget{
     
     return(
       NavigationBar(
+        height: 64,
         backgroundColor: Theme.of(context).primaryColor.withAlpha( 100 ),
         destinations: const [
           NavigationDestination(

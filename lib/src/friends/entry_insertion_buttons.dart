@@ -41,7 +41,7 @@ class EntryInsertionButtons extends StatelessWidget{
                     builder: (context) => 
                       LiveEntryDialog( listingsProvider: liveListingsProvider ),
                   ),
-                  child:const Text("Add Live Entry (ID)") 
+                  child:const Text("Add Live Entry") 
                 )
                 
               ]

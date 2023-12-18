@@ -44,64 +44,69 @@ class StaticEntryDialog extends StatelessWidget{
     return AlertDialog(
       title: const Text("Enter location coordinates"),
 
-      content: Column( 
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: TextEditingController( text: targetName),
-            keyboardType: TextInputType.name,
-            onChanged: (value) {
-                targetName = value;
-            },
-            decoration: const InputDecoration(
-              labelText: "Friendly Name",
-              hintText: "A wonderful location",
-            ),
+      content: Container(
+        width: MediaQuery.of(context).size.width - 100,
+        child: SingleChildScrollView(
+          child: Column( 
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: TextEditingController( text: targetName),
+                keyboardType: TextInputType.name,
+                onChanged: (value) {
+                    targetName = value;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Friendly Name",
+                  hintText: "A wonderful location",
+                ),
+              ),
+
+              const SizedBox(
+                height: 20,
+              ),
+
+              TextField(
+                controller: TextEditingController(
+                  text: latitude?.toString()
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value){
+
+                    latitude = double.tryParse(value);
+                
+                },
+                decoration: const InputDecoration(
+                  labelText: "Latitude",
+                  hintText: "A cool number like 11.04124",
+                ),
+
+              ),
+
+              const SizedBox(
+                height: 20,
+              ),
+
+              TextField(
+                controller: TextEditingController(
+                  text: longitude?.toString()
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value){
+
+                  longitude = double.tryParse(value);
+
+                },
+                decoration: const InputDecoration(
+                  labelText: "Longitude",
+                  hintText: "A cool number like 73.141",
+                ),
+                
+              )
+
+            ]
           ),
-
-          const SizedBox(
-            height: 20,
-          ),
-
-          TextField(
-            controller: TextEditingController(
-              text: latitude?.toString()
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value){
-
-                latitude = double.tryParse(value);
-            
-            },
-            decoration: const InputDecoration(
-              labelText: "Latitude",
-              hintText: "A cool number like 11.04124",
-            ),
-
-          ),
-
-          const SizedBox(
-            height: 20,
-          ),
-
-          TextField(
-            controller: TextEditingController(
-              text: longitude?.toString()
-            ),
-            keyboardType: TextInputType.number,
-            onChanged: (value){
-
-              longitude = double.tryParse(value);
-
-            },
-            decoration: const InputDecoration(
-              labelText: "Longitude",
-              hintText: "A cool number like 73.141",
-            ),
-            
-          )
-
-        ]
+        ) ,
       ), 
       actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: dialogActions(

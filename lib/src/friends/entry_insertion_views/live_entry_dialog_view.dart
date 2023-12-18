@@ -33,41 +33,47 @@ class LiveEntryDialog extends StatelessWidget{
 
     return AlertDialog(
       title: const Text("Enter user ID"),
-      content: Column( 
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: TextEditingController( text: targetId ),
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              CustomInputFormatter(),
-              LengthLimitingTextInputFormatter(7),
-            ],
-            onChanged: (value) {
-                targetId = value;
-            },
-            decoration: const InputDecoration(
-              labelText: "ID",
-              hintText: "###-###",
-            ),
-          ),
+      content: Container(
+        width: MediaQuery.of(context).size.width - 100,
+        child: SingleChildScrollView(
+          child: Column( 
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: TextEditingController( text: targetId ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  CustomInputFormatter(),
+                  LengthLimitingTextInputFormatter(7),
+                ],
+                onChanged: (value) {
+                    targetId = value;
+                },
+                decoration: const InputDecoration(
+                  labelText: "ID",
+                  hintText: "###-###",
+                ),
+              ),
 
-          const SizedBox(
-            height: 20,
-          ),
+              const SizedBox(
+                height: 20,
+              ),
 
-          TextField(
-            controller: TextEditingController( text: targetName ),
-            onChanged: (value){
-              targetName = value;
-            },
-            decoration: const InputDecoration(
-              labelText: "Friendly Name",
-              hintText: "A fellow lost soul",
-            ),
+              TextField(
+                controller: TextEditingController( text: targetName ),
+                onChanged: (value){
+                  targetName = value;
+                },
+                decoration: const InputDecoration(
+                  labelText: "Friendly Name",
+                  hintText: "A fellow lost soul",
+                ),
 
-          )
-      ]), 
+              )
+            ]
+          ) 
+        )
+      ),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: dialogActions(
         deletionHandler: (){

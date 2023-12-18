@@ -18,10 +18,7 @@ class LiveEntriesView extends StatelessWidget{
   Widget build(BuildContext context) {
 
 
-    return Expanded(
-      flex: 3,
-      child:
-        FutureBuilder(
+    return FutureBuilder(
           future: TargetsFiles.getTargetsWithIdFromFile(), 
           builder: (context, snapshot) {
 
@@ -228,7 +225,6 @@ class LiveEntriesView extends StatelessWidget{
             );
           }
         },
-      )
     );
   }
 }

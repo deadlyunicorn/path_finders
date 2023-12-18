@@ -43,9 +43,7 @@ class StaticEntriesView extends StatelessWidget{
     final targetProvider = context.watch<TargetProvider>();
 
 
-    return Expanded(
-      flex: 3,
-      child: FutureBuilder(
+    return FutureBuilder(
         future: TargetsFiles.getTargetsWithCoordinatesFromFile(), 
         builder: ( context, targetsSnapshot ) {
 
@@ -151,7 +149,6 @@ class StaticEntriesView extends StatelessWidget{
 
           
         }
-      )
     );
   }
 }
