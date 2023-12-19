@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:path_finders/src/app.dart';
 import 'package:provider/provider.dart';
+
+import 'package:path_finders/src/page_selector.dart';
 
 class CustomNavigationBar extends StatelessWidget{
 
