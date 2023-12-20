@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsService {
   /// Loads the User's preferred ThemeMode from local or remote storage.
-  Future<ThemeMode> themeMode() async {
+  Future<ThemeMode> readThemeMode() async {
     
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final themeMode = prefs.getString( 'themeMode' );
@@ -20,10 +20,24 @@ class SettingsService {
       }
   }
 
-  Future<void> updateThemeMode(ThemeMode theme) async {
+  Future<void> writeThemeMode(ThemeMode theme) async {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString( 'themeMode', theme.name );
 
   }
+
+  Future<String> readLocaleSetting() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final locale = prefs.getString('locale');
+
+    return locale ?? "en";
+  }
+
+  Future<void> writeLocaleSetting( String locale )async{
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString( "locale" , locale);
+  }
+  
 }

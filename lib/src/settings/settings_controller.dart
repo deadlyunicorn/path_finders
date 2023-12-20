@@ -13,29 +13,50 @@ class SettingsController with ChangeNotifier {
 
   final SettingsService _settingsService;
 
-  ThemeMode _themeMode = ThemeMode.system;
+  //THEME
 
-  // Allow Widgets to read the user's preferred ThemeMode.
+  ThemeMode _themeMode = ThemeMode.system;
   ThemeMode get themeMode => _themeMode;
 
-  Future<void> loadSettings() async {
-    _themeMode = await _settingsService.themeMode();
-    notifyListeners();
-  }
+ 
 
   /// Update and persist the ThemeMode based on the user's selection.
   Future<void> updateThemeMode(ThemeMode? newThemeMode) async {
     if (newThemeMode == null) return;
     if (newThemeMode == _themeMode) return;
 
-    // Otherwise, store the new ThemeMode in memory
     _themeMode = newThemeMode;
-
-    // Important! Inform listeners a change has occurred.
+    await _settingsService.writeThemeMode(newThemeMode);
     notifyListeners();
-
-    // Persist the changes to a local database or the internet using the
-    // SettingService.
-    await _settingsService.updateThemeMode(newThemeMode);
   }
+
+  //Locale Settings
+
+  String _locale = "en";
+
+  Future<void> updateLocaleSetting( String locale )async{
+    if ( locale == _locale ) return;
+
+
+    if ( locale == "en" || locale == "el" ){
+
+      _locale = locale;
+      await _settingsService.writeLocaleSetting( locale );
+      notifyListeners();
+
+    }
+
+  }
+
+  String get locale => _locale;
+
+
+   Future<void> loadSettings() async {
+
+    _themeMode = await _settingsService.readThemeMode();
+    _locale    = await _settingsService.readLocaleSetting();
+    notifyListeners();
+  }
+
+
 }
