@@ -52,7 +52,9 @@
 
   "errors_locationService": "There was an error with the location service.",
   "errors_retry": "Retry",
+  "errors_gpsFailed": "Can't get location.. Is GPS enabled?",
   "errors_uknown": "Uknown Error.",
+  "errors_compassLoad": "Load Compass",
   "errors_geolocatorTimeout": "This might take a while if you are not out in the open.\nYou could try moving your device around.\nOr restarting the app.",
   "errors_sensors": "Your device doesn't have the required sensors"
 

@@ -1,3 +1,5 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ class _LocationServicesCheckerViewState extends State<LocationServicesCheckerVie
   @override
   Widget build(BuildContext context) {
 
+    final appLocalizations = AppLocalizations.of( context );
     final locationServicesProvider = context.watch<LocationServicesProvider>();
 
     return Center ( 
@@ -38,10 +41,10 @@ class _LocationServicesCheckerViewState extends State<LocationServicesCheckerVie
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Can't get location.. Is GPS enabled?"),
+                  Text( appLocalizations!.errors_gpsFailed ),
                   TextButton(
                     onPressed: locationServicesProvider.reinvokeGeolocator, 
-                    child:  const Text( "Retry") )
+                    child:  Text( appLocalizations.errors_retry ) )
                 ],
               );
           }
@@ -57,7 +60,7 @@ class _LocationServicesCheckerViewState extends State<LocationServicesCheckerVie
                         
                       });
                     }, 
-                    child:  const Text( "Load Compass") );
+                    child:  Text( appLocalizations!.errors_compassLoad ) );
                 }
                 else{
                   return const CircularProgressIndicator();
