@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,13 +27,15 @@ class LiveEntryDialog extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
+    final appLocalizations = AppLocalizations.of( context );
+
     String? targetId = _targetId;
     String? targetName = _targetName;
 
     final targetListingsWithId = listingsProvider;
 
     return AlertDialog(
-      title: const Text("Enter user ID"),
+      title: Text( appLocalizations!.entry_live_insertion ),
       content: Container(
         width: MediaQuery.of(context).size.width - 100,
         child: SingleChildScrollView(
@@ -64,9 +67,9 @@ class LiveEntryDialog extends StatelessWidget{
                 onChanged: (value){
                   targetName = value;
                 },
-                decoration: const InputDecoration(
-                  labelText: "Friendly Name",
-                  hintText: "A fellow lost soul",
+                decoration: InputDecoration(
+                  labelText: appLocalizations.entry_friendlyName,
+                  hintText: appLocalizations.entry_friendlyNameHint,
                 ),
 
               )
@@ -76,6 +79,7 @@ class LiveEntryDialog extends StatelessWidget{
       ),
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: dialogActions(
+        context: context,
         deletionHandler: (){
           showDeletionConfirmationDialog(context, targetListingsWithId, _targetId);
         },

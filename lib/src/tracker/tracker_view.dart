@@ -216,7 +216,10 @@ class _TrackerViewState extends State<TrackerView> {
                           bottom: -75,
                           child: Column(
                             children: [
-                              Text( appLocalizations!.errors_geolocatorTimeout ),
+                              Text( 
+                                appLocalizations!.errors_geolocatorTimeout,
+                                textAlign: TextAlign.center
+                              ),
                             ],
                           )
                         )

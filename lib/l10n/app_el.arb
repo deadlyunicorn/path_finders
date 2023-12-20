@@ -30,8 +30,27 @@
   "friends_static" : "Στατικές Εγγραφές",
   "friends_live" : "Ζωντανές Εγγραφές",
   "friends_currentSelection": "Τρέχουσα επιλογή: ",
-  "friends_addLive" : "Προσθήκη Ζών.",
-  "friends_addStatic" : "Προσθήκη Στατ.",
+  "friends_addLive" : "Νέα Ζων.",
+  "friends_addStatic" : "Νέα Στατ.",
+
+  "entry_static_insertion": "Εισαγωγή συντεταγμένων",
+  "entry_live_insertion": "Εισαγωγή ID χρήστη",
+
+  "entry_friendlyName": "Φιλικό Όνομα",
+  "entry_friendlyNameHint": "Ένα υπέροχο μέρος",
+
+  "dialog_delete_confirmation" : "Επιβεβαίωση διαγραφής",
+  "dialog_delete" : "Διαγραφή",
+  "dialog_nevermind" : "Άκυρο",
+  "dialog_confirm" : "Επιβεβαίωση",
+
+  "dialog_liveSharing_disclaimer" : "Πρόκειται να κοινοποιήσετε την τοποθεσία σας στο ίντερνετ.\nΟποιοσδήποτε θα μπορεί να δει τις συντεταγμένες σας, συνοδευόμενες από το ID της εφαρμογής σας.\n\nΠαρακαλείσθε να προχωρήσετε με προσοχή και μόνο μα μόνο αν γνωρίζεται τι σημαίνουν τα παραπάνω.",
+
+
+  "latitude": "Γεω. Πλάτος",
+  "latitudeHint": "Ένας ωραίος αριθμός π.χ. 11.04124",
+  "longitude": "Γεω. Μήκος",
+  "longitudeHint": "Ένας ωραίος αριθμός π.χ. 73.141",
 
   "profile_stopping": "Τερματισμός..",
   "profile_updating": "Ενημέρωση..",
@@ -57,6 +76,7 @@
   "errors_uknown": "Άγνωστο Σφάλμα.",
   "errors_compassLoad": "Εμφάνιση Πυξίδας",
   "errors_geolocatorTimeout": "Αυτό μπορεί να πάρει λίγη ώρα αν δεν είστε σε ανοιχτό χώρο.\nΜπορείτε να δοκιμάσετε να κινήσετε την συσκευή σας.\nΉ να επανεκκινήσετε την εφαρμογή.",
+  "errors_locationSharingTimeout": "Έχει περάσει αρκετή ώρα..\nΕίστε συνδεδεμένος στο ίντερνετ;",
   "errors_sensors": "Η συσκευή σας δεν κατέχει τους απαιτούμενους αισθητήρες."
 
 

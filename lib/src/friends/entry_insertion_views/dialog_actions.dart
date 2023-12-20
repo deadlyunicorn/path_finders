@@ -1,16 +1,22 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> dialogActions( 
   {
     void Function()? deletionHandler, 
     required Future<void> Function() submissionHandler,
-    required void Function() cancellationHandler
-  }  ) => [
+    required void Function() cancellationHandler,
+    required BuildContext context
+  }  ) {
+
+    final appLocalizations = AppLocalizations.of(context);
+
+    return [
 
         deletionHandler != null 
           ?TextButton(
             onPressed: deletionHandler, 
-            child: Text( "Delete" ,style: TextStyle( color: Colors.red) )
+            child: Text( appLocalizations!.dialog_delete ,style: TextStyle( color: Colors.red) )
           )
           :SizedBox.shrink(),
 
@@ -20,14 +26,15 @@ List<Widget> dialogActions(
           children: [
             TextButton(
               onPressed: cancellationHandler, 
-              child: const Text("Cancel")
+              child: Text( appLocalizations!.dialog_nevermind )
             ),
        
             TextButton(
                 onPressed: submissionHandler,
-                child: const Text("Submit")
+                child: Text(  appLocalizations!.dialog_confirm )
             )
 
           ]
         )
     ];
+  } 

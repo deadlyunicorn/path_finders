@@ -29,6 +29,8 @@ class StaticEntryDialog extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
+    final appLocalizations = AppLocalizations.of(context);
+
     String? targetName = _targetName;
     double? latitude;
     double? longitude;
@@ -43,7 +45,7 @@ class StaticEntryDialog extends StatelessWidget{
     final targetListingsWithCoordinates = staticListingsProvider;
 
     return AlertDialog(
-      title: const Text("Enter location coordinates"),
+      title: Text( appLocalizations!.entry_static_insertion ),
 
       content: Container(
         width: MediaQuery.of(context).size.width - 100,
@@ -57,9 +59,9 @@ class StaticEntryDialog extends StatelessWidget{
                 onChanged: (value) {
                     targetName = value;
                 },
-                decoration: const InputDecoration(
-                  labelText: "Friendly Name",
-                  hintText: "A wonderful location",
+                decoration: InputDecoration(
+                  labelText: appLocalizations.entry_friendlyName,
+                  hintText: appLocalizations.entry_friendlyNameHint,
                 ),
               ),
 
@@ -77,9 +79,9 @@ class StaticEntryDialog extends StatelessWidget{
                     latitude = double.tryParse(value);
                 
                 },
-                decoration: const InputDecoration(
-                  labelText: "Latitude",
-                  hintText: "A cool number like 11.04124",
+                decoration: InputDecoration(
+                  labelText: appLocalizations.latitude,
+                  hintText: appLocalizations.latitudeHint,
                 ),
 
               ),
@@ -98,9 +100,9 @@ class StaticEntryDialog extends StatelessWidget{
                   longitude = double.tryParse(value);
 
                 },
-                decoration: const InputDecoration(
-                  labelText: "Longitude",
-                  hintText: "A cool number like 73.141",
+                decoration: InputDecoration(
+                  labelText: appLocalizations.longitude,
+                  hintText: appLocalizations.longitudeHint,
                 ),
                 
               )
@@ -111,6 +113,7 @@ class StaticEntryDialog extends StatelessWidget{
       ), 
       actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: dialogActions(
+        context: context,
         submissionHandler: ()async{
           await submissionHandler( 
             latitude: latitude,

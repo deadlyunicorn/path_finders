@@ -1,12 +1,18 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/providers/target_listings_abstract.dart';
 
 showDeletionConfirmationDialog( BuildContext context, TargetListingsProviderAbstract provider, String? initialTargetName ){
+
+  final appLocalizations = AppLocalizations.of( context );
+
   showDialog(
     context: context, 
     builder: (context)
       =>AlertDialog(
-        title: Text("Confirm deletion"),
+        title: Text( appLocalizations!.dialog_delete_confirmation ),
         actionsAlignment: MainAxisAlignment.center,
         actions: [
 
@@ -14,7 +20,7 @@ showDeletionConfirmationDialog( BuildContext context, TargetListingsProviderAbst
             onPressed: (){
                 Navigator.pop(context);
             }, 
-            child: const Text("Nevermind")
+            child: Text( appLocalizations.dialog_nevermind )
           ),
 
           TextButton(
@@ -28,7 +34,7 @@ showDeletionConfirmationDialog( BuildContext context, TargetListingsProviderAbst
                 Navigator.pop(context);
               }
             }, 
-            child: Text("Confirm")
+            child: Text( appLocalizations.dialog_confirm )
           ),
         ],
       )

@@ -148,7 +148,7 @@ class _ProfileViewState extends State<ProfileView> {
 
                       });
                     }, 
-                    child: const Text("Retry")
+                    child: Text( appLocalizations!.errors_retry )
                   ),
                 ],
               ) ;
@@ -165,11 +165,10 @@ class _ProfileViewState extends State<ProfileView> {
                 builder: ( context, delaySnapshot ){
 
                   if ( delaySnapshot.connectionState == ConnectionState.done ){
-                    return const Positioned(
+                    return Positioned(
                       bottom: -75,
                       child: Text( 
-                        "This is taking a while..\n"
-                        "Are you connected to the internet?",
+                        appLocalizations!.errors_locationSharingTimeout,
                         textAlign: TextAlign.center,
                       ),
                     );
@@ -191,6 +190,8 @@ class _ProfileViewState extends State<ProfileView> {
 }
 
 showDisclaimerDialog( BuildContext context ){
+
+  final appLocalizations = AppLocalizations.of( context );
 
   return showDialog(
     context: context, 
@@ -235,10 +236,8 @@ showDisclaimerDialog( BuildContext context ){
               ],
             ),
             SizedBox.square( dimension: 12 ),
-            const Text(
-              "You are about to share your location to the internet.\n"
-              "Anyone will be able to see your coordinates, alongside your in-app ID.\n"
-              "\nPlease proceed with caution - and only if you know what the above means.",
+            Text(
+              appLocalizations!.dialog_liveSharing_disclaimer,
               textAlign: TextAlign.center),
             
             Flex(
@@ -250,7 +249,7 @@ showDisclaimerDialog( BuildContext context ){
                     Navigator.pop(context);
                   }, 
                   style: squaredButtonStyle,
-                  child: Text("Nevermind", style: TextStyle( color: Theme.of(context).colorScheme.error ),)
+                  child: Text( appLocalizations.dialog_nevermind, style: TextStyle( color: Theme.of(context).colorScheme.error ),)
                 ),
                 TextButton(
                   style: squaredButtonStyle,
@@ -258,7 +257,7 @@ showDisclaimerDialog( BuildContext context ){
                     await DisclaimerAcceptionFile.acceptDisclaimer();
                     Navigator.pop(context);
                   }, 
-                  child: Text("Proceed")
+                  child: Text( appLocalizations.dialog_confirm )
                 )
 
               ],

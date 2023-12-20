@@ -28,11 +28,11 @@ class CustomNavigationBar extends StatelessWidget{
           ),
           NavigationDestination(
             icon: Icon(Icons.gps_fixed), 
-            label: appLocalizations!.navigation_track,
+            label: appLocalizations.navigation_track,
           ),
           NavigationDestination(
             icon: Icon(Icons.person), 
-            label: appLocalizations!.navigation_profile,
+            label: appLocalizations.navigation_profile,
           )],
         selectedIndex: selectedIndex,
         onDestinationSelected: ( value ){
