@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
                   
                 ),
                 body: Container(
-                  padding: const EdgeInsets.only( bottom: 20, top: 20 ),
+                  padding: const EdgeInsets.all( 20 ),
                   alignment: Alignment.center,
                   child: const PageSelector(),
                 ),

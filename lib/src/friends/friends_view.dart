@@ -29,7 +29,7 @@ class _FriendsViewState extends State<FriendsView> {
     final appLocalizations = AppLocalizations.of(context);
 
     double listHeight = isLandscape(context)? MediaQuery.of(context).size.height * 0.35 :MediaQuery.of(context).size.height * 0.2 ;
-    double listWidth = isLandscape(context)? MediaQuery.of(context).size.width / 2 :MediaQuery.of(context).size.width;
+    double listWidth = isLandscape(context)? MediaQuery.of(context).size.width / 2.5 :MediaQuery.of(context).size.width;
 
 
     return (
@@ -40,6 +40,7 @@ class _FriendsViewState extends State<FriendsView> {
             ?SizedBox.shrink()
             :SelectionHeader(),
           Flex(
+            mainAxisAlignment: MainAxisAlignment.center,
             direction: isLandscape(context)? Axis.horizontal :Axis.vertical,
             children: [
               Column(
