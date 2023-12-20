@@ -122,6 +122,16 @@ class SettingsView extends StatelessWidget {
                   }, 
                   child: Text( appLocalizations.reviewText )
                 ),
+                TextButton(
+                  style: squaredButtonStyle,
+                  onPressed: (){
+                    showDialog(
+                      context: context, 
+                      builder: (context) => BugReportDialog()
+                    );
+                  }, 
+                  child: Text( appLocalizations.bugReport )
+                )
                 
 
               ],
