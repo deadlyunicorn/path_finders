@@ -71,6 +71,9 @@
   "lang_greek": "Greek",
   "lang_english": "English",
 
+  "bugReport": "Report a bug",
+  "reviewText": "Leave a Review",
+
 
 
   "errors_locationService": "There was an error with the location service.",

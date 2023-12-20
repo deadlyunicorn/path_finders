@@ -69,6 +69,10 @@
 
   "lang_greek": "Ελληνικά",
   "lang_english": "Αγγλικά",
+  
+  "bugReport": "Αναφορά Τεχνικού Προβλήματος",
+  "reviewText": "Αφήστε Κρητική",
+
 
   "errors_locationService": "Υπήρξε κάποιο σφάλμα με την υπηρεσία GPS.",
   "errors_retry": "Επανάληψη",
