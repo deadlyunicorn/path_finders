@@ -1,7 +1,61 @@
 {
-  "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
-  "appTitle": "Path Finders"
+  "@@locale": "en",
+  
+  "navigation_friends" : "Friends",
+  "navigation_track" : "Track",
+  "navigation_profile" : "Profile",
+
+  "tracking_currentPositionIs": "Your current position is",
+  "tracking_nearby": "Your target is nearby",
+  "tracking_distanceToIs": "Your distance to {point} is",
+
+  "snackbar_copied" : "Copied",
+  "snackbar_invalidData" : "Your data is not valid.",
+  "snackbar_tip1" : "Go to 'Profile' Tab to enable/disable location sharing.",
+  "snackbar_compass_realistic": "Compass behaves realistically now",
+  "snackbar_compass_targetMode": "Compass shows you actual entity direction now",
+  "snackbar_compass_doubleTap": "Double Tap to show distance as a notification.",
+  "snackbar_compass_longPress": "Long Press to copy target's coordinates.",
+
+  "compass_target" : " = Target",
+  "compass_accuracy" : "Accuracy: ",
+  "compass_accuracy_calibrationNeeded" : "Calibration Needed",
+  "compass_accuracy_veryLow" : "Very Low",
+  "compass_accuracy_low" : "Low",
+  "compass_accuracy_great" : "Great",
+
+  "friends_static" : "Static Entries",
+  "friends_live" : "Live Entries",
+  "friends_currentSelection": "Current selection: ",
+  "friends_addLive" : "Add Live Entry",
+  "friends_addStatic" : "Add Static Entry",
+
+  "profile_stopping": "Stopping..",
+  "profile_updating": "Updating...",
+  "profile_updatedAt": "Updated at:",
+  "profile_yourIdIs": "Your ID is:",
+  "profile_toggleVis": "Toggle Visibility",
+  "profile_sharingLocation": "Sharing location",
+  "profile_notSharing": "Location is not being shared.",
+
+  "settings": "Settings",
+  "settings_theme": "Theme",
+  "settings_systemTheme": "System Theme",
+  "settings_darkMode": "Dark Mode",
+  "settings_lightMode": "Light Mode",
+  "settings_language": "Language",
+  
+  "lang_greek": "Greek",
+  "lang_english": "English",
+
+
+
+  "errors_locationService": "There was an error with the location service.",
+  "errors_retry": "Retry",
+  "errors_uknown": "Uknown Error.",
+  "errors_geolocatorTimeout": "This might take a while if you are not out in the open.\nYou could try moving your device around.\nOr restarting the app.",
+  "errors_sensors": "Your device doesn't have the required sensors"
+
+
+
 }

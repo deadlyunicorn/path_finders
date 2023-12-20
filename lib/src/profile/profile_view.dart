@@ -1,3 +1,5 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/styles.dart';
@@ -24,6 +26,8 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+
+    final appLocalizations = AppLocalizations.of( context );
     
     return Center( 
 
@@ -55,20 +59,21 @@ class _ProfileViewState extends State<ProfileView> {
                         CopyService.copyTextToClipboard( userId, context: context);
                       },
                       child: Text(
-                        "Your ID is: #${userId.substring(0,3)}-${userId.substring(3)}",
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith( color: Theme.of(context).colorScheme.onBackground )
+                        "${appLocalizations!.profile_yourIdIs} #${userId.substring(0,3)}-${userId.substring(3)}",
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith( color: Theme.of(context).colorScheme.onBackground ),
+                        textAlign: TextAlign.center,
                       ), 
                     ),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text( "Toggle Visibility", textScaler: TextScaler.linear( 2 ) ),
-                              SizedBox( width: 5 ),
-                              Image(
+                              Text( appLocalizations.profile_toggleVis, textScaler: TextScaler.linear( 2 ) ),
+                              const SizedBox( width: 5 ),
+                              const Image(
                                 image: AssetImage('assets/images/deadlyunicorn.png'),
                                 height: 24,
                                 width: 24,

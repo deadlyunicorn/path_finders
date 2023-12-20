@@ -1,3 +1,4 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
@@ -173,7 +174,7 @@ Future<void> submissionHandler(
                   CustomSnackBar(
                     duration: const Duration( seconds: 2),
                     bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
-                    textContent: "Your data is not valid.",
+                    textContent: AppLocalizations.of(context)!.snackbar_invalidData,
                     context: context
                   )
                 );

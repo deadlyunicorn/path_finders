@@ -1,3 +1,5 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/friends/entry_insertion_views/live_entry_dialog_view.dart';
 import 'package:path_finders/src/friends/entry_insertion_views/static_entry_dialog_view.dart';
@@ -13,6 +15,8 @@ class EntryInsertionButtons extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
+    final appLocalizations = AppLocalizations.of(context);
+
     final liveListingsProvider = context.watch<TargetWithIdListingsProvider>();
     final staticListingsProvider = context.watch<TargetWithCoordinatesListingsProvider>();
 
@@ -26,7 +30,7 @@ class EntryInsertionButtons extends StatelessWidget{
                     builder: (context) => 
                       StaticEntryDialog( staticListingsProvider: staticListingsProvider ),
                   ), 
-                  child: const Text("Add Static Entry"),
+                  child: Text( appLocalizations!.friends_addStatic),
                 ),
                 IconButton(
                   icon: const Icon ( Icons.refresh, ),
@@ -41,7 +45,7 @@ class EntryInsertionButtons extends StatelessWidget{
                     builder: (context) => 
                       LiveEntryDialog( listingsProvider: liveListingsProvider ),
                   ),
-                  child:const Text("Add Live Entry") 
+                  child: Text( appLocalizations.friends_addLive ) 
                 )
                 
               ]

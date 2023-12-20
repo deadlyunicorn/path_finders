@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -37,7 +39,8 @@ class LocationSharingWidget extends StatelessWidget{
   Widget build(BuildContext context) {
 
     final locationServicesProvider = context.watch<LocationServicesProvider>();
-    
+    final appLocalizations = AppLocalizations.of(context);
+
     if ( isSharing ){
 
       return FutureBuilder(
@@ -74,13 +77,13 @@ class LocationSharingWidget extends StatelessWidget{
 
                     return Column(
                       children: [
-                        const Text(
-                          "Sharing Location",
+                        Text(
+                          appLocalizations!.profile_sharingLocation,
                           textScaler: TextScaler.linear(1.2)
                         ),
                         updatedAt != null
-                          ? Text("Updated at ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
-                          : const Text("Updating...")
+                          ? Text("${appLocalizations.profile_updatedAt} ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")
+                          : Text( appLocalizations.profile_updating )
                       ]
                     );
                   }
@@ -89,7 +92,7 @@ class LocationSharingWidget extends StatelessWidget{
                     final error = updatedAtStreamSnapshot.error;
                     
                       return Text( 
-                        "${ error??'Uknown Error.'}", 
+                        "${ error?? appLocalizations!.errors_uknown}", 
                         textAlign: TextAlign.center
                       );
                   }
@@ -122,8 +125,8 @@ class LocationSharingWidget extends StatelessWidget{
         future: _stopLocationSharingFuture(), 
         builder: (context, snapshot) =>
           ( snapshot.connectionState == ConnectionState.done )
-            ?const Text("Location is not being shared.")
-            :const Text("Stopping..")
+            ?Text( appLocalizations!.profile_notSharing)
+            :Text( appLocalizations!.profile_stopping)
         );
     }
     

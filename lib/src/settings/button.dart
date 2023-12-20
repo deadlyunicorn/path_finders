@@ -16,7 +16,7 @@ class SettingsDialogButton extends StatelessWidget {
                       showDialog(
                         context: context, 
                         builder: ( context ) =>  Dialog.fullscreen(
-                          child: SettingsView(controller: settingsController)
+                          child: SettingsView(settingsController: settingsController)
                         ),
                       );
                     },  

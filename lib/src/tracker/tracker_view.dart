@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/isLandscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
@@ -8,7 +11,6 @@ import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/tracker/compass/compass_view.dart';
 import 'package:path_finders/src/tracker/format_distance.dart';
 import 'package:path_finders/src/types/coordinates.dart';
-import 'package:provider/provider.dart';
 
 class TrackerView extends StatefulWidget{
 
@@ -29,6 +31,7 @@ class _TrackerViewState extends State<TrackerView> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
 
+
       await AppearancesCounterFile.getSnackBarCounter()
         .then( (value) async {
           if ( value != 0 ){
@@ -37,7 +40,7 @@ class _TrackerViewState extends State<TrackerView> {
               ScaffoldMessenger.of( context )
               .showSnackBar(
                 CustomSnackBar(
-                  textContent: "Go to 'Profile' Tab to enable/disable location sharing.",
+                  textContent: AppLocalizations.of(context)!.snackbar_tip1,
                   duration: const Duration( seconds: 5 ),
                   context: context,
                 ),
@@ -59,6 +62,8 @@ class _TrackerViewState extends State<TrackerView> {
 
     final TargetProvider appState = context.watch<TargetProvider>();
     final Coordinates targetLocation = appState.targetLocation;
+    final appLocalizations = AppLocalizations.of(context);
+
 
 
     return Center(
@@ -108,11 +113,11 @@ class _TrackerViewState extends State<TrackerView> {
                           text: 
                           ( distanceToTarget < 15 )
                           ?TextSpan( 
-                            text:"Your friend is nearby!",
+                            text: appLocalizations!.tracking_nearby ,
                             style: TextStyle( color: Theme.of(context).colorScheme.primary ),
                           )
                           :TextSpan(
-                            text:"Your distance to ${appState.targetName} is \n",
+                            text: " ${ appLocalizations!.tracking_distanceToIs(appState.targetName)}\n",
                             style: TextStyle( color: Theme.of(context).colorScheme.onBackground ),
                             children: [ 
                               TextSpan( 
@@ -131,28 +136,37 @@ class _TrackerViewState extends State<TrackerView> {
                           targetLocationRotationInRads: targetLocationRotationInRads, 
                           targetLocation: targetLocation 
                         ),
-                      TextButton(
-                        style: const ButtonStyle(
-                          shape: MaterialStatePropertyAll( 
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all( Radius.circular( 4 ) )
+                      Column(
+                        children: [
+
+                           Text(
+                              "${appLocalizations.tracking_currentPositionIs}"
+                            ),
+                            TextButton(
+                              style: const ButtonStyle(
+                                shape: MaterialStatePropertyAll( 
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all( Radius.circular( 4 ) )
+                                  )
+                                )
+                              ),
+                              onPressed: (){},
+                              onLongPress: ()async{
+                                await CopyService.copyTextToClipboard( 
+                                  context: context,
+                                  "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }" 
+                                );
+                              }, 
+                              child: Text(  
+                              "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
+                              textScaler: const TextScaler.linear( 1.5 ),
+                              textAlign: TextAlign.center,
+                              )
                             )
-                          )
-                        ),
-                        onPressed: (){},
-                        onLongPress: ()async{
-                          await CopyService.copyTextToClipboard( 
-                            context: context,
-                            "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }" 
-                          );
-                        }, 
-                        child: Text( 
-                        "Your current position is \n" 
-                        "${ currentLocation.latitude.toStringAsFixed(7)}, ${ currentLocation.longitude.toStringAsFixed(7) }",
-                        textScaler: const TextScaler.linear( 1.5 ),
-                        textAlign: TextAlign.center,
-                        )
+
+                        ],
                       )
+                     
                   ],
                 ),
                 isLandscape(context)
@@ -172,14 +186,14 @@ class _TrackerViewState extends State<TrackerView> {
               return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text( "There was an error with the location service." ),
+                    Text( appLocalizations!.errors_locationService ),
                     TextButton(
                       onPressed: ()async{
                         await Geolocator.getCurrentPosition();
                         setState(() {
                         });
                       }, 
-                      child: const Text("Retry")
+                      child: Text( appLocalizations.errors_retry )
                     )                  
                   ],
               );
@@ -192,19 +206,17 @@ class _TrackerViewState extends State<TrackerView> {
               future: Future.delayed( const Duration( seconds: 3)), 
               builder: ( context, timerFutureSnapshot){
                 if ( timerFutureSnapshot.connectionState == ConnectionState.done ){
-                  return const Center ( 
+                  return Center ( 
                     child: Stack(
                       alignment: Alignment.center,
                       clipBehavior: Clip.none,
                       children: [
-                        CircularProgressIndicator(),
+                        const CircularProgressIndicator(),
                         Positioned(
                           bottom: -75,
                           child: Column(
                             children: [
-                              Text("This might take a while if you are not out in the open."),
-                              Text("You could try moving your device around."),
-                              Text("Or restarting the app."),
+                              Text( appLocalizations!.errors_geolocatorTimeout ),
                             ],
                           )
                         )

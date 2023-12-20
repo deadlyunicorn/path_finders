@@ -1,5 +1,64 @@
-{
-  "helloWorld": "Γειά σου κόσμε!",
-  "appTitle": "Path Finders"
+{ 
+  "@@locale": "el",
+
+   
+  "navigation_friends" : "Φίλοι",
+  "navigation_track" : "Ανίχνευση",
+  "navigation_profile" : "Προφίλ",
+
+
+  "tracking_currentPositionIs": "Οι τρέχουσες συντεταγμένες σας είναι",
+  "tracking_nearby": "Ο στόχος σας βρίσκεται τριγύρω",
+  "tracking_distanceToIs": "{point} απέχει από εσάς",
+
+  "snackbar_copied" : "Έγινε Αντιγραφή",
+  "snackbar_invalidData" : "Μη έγκυρα δεδομένα.",
+  "snackbar_tip1" : "Πηγαίνετε στο μενού 'Προφίλ' για να κοινοποιήσετε την τοποθεσία σας.",
+  "snackbar_compass_realistic": "Λειτουργία αληθινής πυξίδας",
+  "snackbar_compass_targetMode": "Λειτουργία κινητών στόχων",
+  "snackbar_compass_doubleTap": "Εμφάνιση ειδοποίησης απόστασης με διπλό κλίκ.",
+  "snackbar_compass_longPress": "Πατήστε παρατεταμένα για να αντιγράψετε τις συντεταγμένες του στόχου.",
+
+
+  "compass_target" : " = Στόχος",
+  "compass_accuracy" : "Ακρίβεια: ",
+  "compass_accuracy_calibrationNeeded" : "Απαιτείται Βαθμονόμηση",
+  "compass_accuracy_veryLow" : "Πολύ Χαμηλή",
+  "compass_accuracy_low" : "Χαμηλή",
+  "compass_accuracy_great" : "Αποδεκτή",
+
+  "friends_static" : "Στατικές Εγγραφές",
+  "friends_live" : "Ζωντανές Εγγραφές",
+  "friends_currentSelection": "Τρέχουσα επιλογή: ",
+  "friends_addLive" : "Προσθήκη Ζών.",
+  "friends_addStatic" : "Προσθήκη Στατ.",
+
+  "profile_stopping": "Τερματισμός..",
+  "profile_updating": "Ενημέρωση..",
+  "profile_updatedAt": "Τελευταία ενημέρωση:",
+  "profile_sharingLocation": "Η τοποθεσία σας κοινοποιείται",
+  "profile_toggleVis": "Αλλαγή Ορατότητας",
+  "profile_yourIdIs": "Το ID σας είναι:",
+  "profile_notSharing": "Δεν γίνεται κοινοποίηση τοποθεσίας.",
+
+  "settings": "Ρυθμίσεις",
+  "settings_theme": "Θέμα",
+  "settings_systemTheme": "Θέμα Συστήματος",
+  "settings_darkMode": "Σκοτεινή Λειτουργία",
+  "settings_lightMode": "Φωτεινή Λειτουργία",
+  "settings_language": "Γλώσσα",
+
+  "lang_greek": "Ελληνικά",
+  "lang_english": "Αγγλικά",
+
+  "errors_locationService": "Υπήρξε κάποιο σφάλμα με την υπηρεσία GPS.",
+  "errors_retry": "Επανάληψη",
+  "errors_uknown": "Άγνωστο Σφάλμα.",
+  "errors_geolocatorTimeout": "Αυτό μπορεί να πάρει λίγη ώρα αν δεν είστε σε ανοιχτό χώρο.\nΜπορείτε να δοκιμάσετε να κινήσετε την συσκευή σας.\nΉ να επανεκκινήσετε την εφαρμογή.",
+  "errors_sensors": "Η συσκευή σας δεν κατέχει τους απαιτούμενους αισθητήρες."
+
+
+
+
 
 }

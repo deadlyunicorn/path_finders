@@ -1,5 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:path_finders/src/copying_service.dart';
@@ -30,6 +33,8 @@ class _CompassViewState extends State<CompassView> {
   Widget build( BuildContext context){
 
     
+    final appLocalizations = AppLocalizations.of( context );
+    
 
     return StreamBuilder<CompassEvent>(
       stream: FlutterCompass.events, 
@@ -42,8 +47,8 @@ class _CompassViewState extends State<CompassView> {
 
 
           if ( direction == null || snapshot.hasError ){
-            return const Center(
-              child: Text("Your device doesn't have the required sensors")
+            return Center(
+              child: Text( appLocalizations!.errors_sensors )
             );
           }
           else{
@@ -56,9 +61,9 @@ class _CompassViewState extends State<CompassView> {
                   .showSnackBar(
                     CustomSnackBar(
                       textContent: 
-                      "${ isBehavingLikeRealCompass? 'Compass behaves realistically now' :'Compass shows you actual entity direction now'}.\n" 
-                      "Double Tap to show distance as a notification.\n"
-                      "Long Press to copy target's coordinates.", 
+                      "${ isBehavingLikeRealCompass? appLocalizations.snackbar_compass_realistic :appLocalizations.snackbar_compass_targetMode}.\n" 
+                      "${ appLocalizations.snackbar_compass_doubleTap }\n"
+                      "${appLocalizations.snackbar_compass_longPress}", 
                       context: context
                     )
                   );
@@ -92,24 +97,24 @@ class _CompassViewState extends State<CompassView> {
                     ),
                     Transform.translate(
                       offset: Offset( MediaQuery.of(context).size.width * 0.2, 0),
-                      child: const Flex(
+                      child: Flex(
                       direction: Axis.horizontal,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon( 
+                        const Icon( 
                           Icons.circle_sharp, 
                           color: Colors.green,
                           size: 8
                         ),
-                        Text(" = Target")
+                        Text( appLocalizations!.compass_target )
                       ]),
                     ),
-                    Text( "Accuracy: ${ 
+                    Text( "${appLocalizations.compass_accuracy} ${ 
                         accuracy != null
                           ? accuracy < 15 
-                            ? "Very Low"
-                            : accuracy < 30? "Low" :"Good"
-                          :"Calibration Needed"}"),
+                            ? appLocalizations.compass_accuracy_veryLow
+                            : accuracy < 30? appLocalizations.compass_accuracy_low :appLocalizations.compass_accuracy_great
+                          :appLocalizations.compass_accuracy_calibrationNeeded}"),
 
                   ],
                 )

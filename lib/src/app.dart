@@ -60,6 +60,7 @@ class _MyAppState extends State<MyApp> {
             builder: ( lightColorScheme, darkColorScheme ) => MaterialApp( 
 
               restorationScopeId: 'path-finders',
+              locale: Locale( widget.settingsController.locale ), 
 
               localizationsDelegates: const [
                 AppLocalizations.delegate,
@@ -69,10 +70,9 @@ class _MyAppState extends State<MyApp> {
               ],
               supportedLocales: const [
                 Locale('en', ''), // English, no country code
-                Locale('el', 'GR'), // English, no country code
+                Locale('el', 'GR'),
               ],
-              onGenerateTitle: (BuildContext context) =>
-                  AppLocalizations.of(context)!.appTitle,
+              onGenerateTitle: (BuildContext context) => "Path Finders",
 
               theme: ThemeData(
                 useMaterial3: true,

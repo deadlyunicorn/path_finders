@@ -1,3 +1,6 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:path_finders/notifications/notification_controller.dart';
 import 'package:path_finders/src/custom/isLandscape.dart';
@@ -23,8 +26,11 @@ class _FriendsViewState extends State<FriendsView> {
   @override
   Widget build(BuildContext context) {
 
+    final appLocalizations = AppLocalizations.of(context);
+
     double listHeight = isLandscape(context)? MediaQuery.of(context).size.height * 0.35 :MediaQuery.of(context).size.height * 0.2 ;
     double listWidth = isLandscape(context)? MediaQuery.of(context).size.width / 2 :MediaQuery.of(context).size.width;
+
 
     return (
       Column(
@@ -38,7 +44,7 @@ class _FriendsViewState extends State<FriendsView> {
             children: [
               Column(
                 children: [
-                  ListHeader(text: "Static Entries"),
+                  ListHeader(text: appLocalizations!.friends_static),
                   SizedBox(
                     height: listHeight,
                     width: listWidth,
@@ -48,7 +54,7 @@ class _FriendsViewState extends State<FriendsView> {
               ),
               Column(
                 children: [
-                  ListHeader(text: "Live Entries"),
+                  ListHeader(text: appLocalizations.friends_live ),
                   SizedBox(
                     height: listHeight,
                     width: listWidth,
@@ -73,13 +79,15 @@ class SelectionHeader extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+    final appLocalizations = AppLocalizations.of( context );
     
     return RichText(
             textScaler: const TextScaler.linear( 1.5 ),
             textAlign: TextAlign.center,
             text: TextSpan(
               style: Theme.of(context).textTheme.bodyLarge,
-              text: "Current selection: ",
+              text: appLocalizations!.friends_currentSelection,
               children: [
                 TextSpan(
                   text: context.watch<TargetProvider>().targetName,
