@@ -25,7 +25,7 @@ class UknownException implements Exception {
 
   static String getLocalizedMessage( BuildContext context ){
 
-    return AppLocalizations.of(context)!.exception_invalidInput;
+    return AppLocalizations.of(context)!.exception_uknownError;
   
   }
 
