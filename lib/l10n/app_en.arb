@@ -76,8 +76,6 @@
   "bug_description": "Detailed Description",
   "reviewText": "Leave a Review",
 
-
-
   "errors_locationService": "There was an error with the location service.",
   "errors_retry": "Retry",
   "errors_gpsFailed": "Can't get location.. Is GPS enabled?",
@@ -85,7 +83,11 @@
   "errors_compassLoad": "Load Compass",
   "errors_geolocatorTimeout": "This might take a while if you are not out in the open. \nYou could try moving your device around. \nOr restarting the app.",
   "errors_locationSharingTimeout": "This is taking a while..\nAre you connected to the internet?",
-  "errors_sensors": "Your device doesn't have the required sensors"
+  "errors_sensors": "Your device doesn't have the required sensors",
+
+  "exception_invalidInput" : "There is an invalid input field.",
+  "exception_networkError" : "There is a Network Issue.",
+  "exception_uknownError" : "There is an uknown error."
 
 
 
