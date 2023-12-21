@@ -79,7 +79,7 @@ class LocationSharingWidget extends StatelessWidget{
                       children: [
                         Text(
                           appLocalizations!.profile_sharingLocation,
-                          textScaler: TextScaler.linear(1.2)
+                          textScaler: const TextScaler.linear(1.2)
                         ),
                         updatedAt != null
                           ? Text("${appLocalizations.profile_updatedAt} ${updatedAt.hour.toString().padLeft(2,'0')} : ${updatedAt.minute.toString().padLeft(2,'0')}")

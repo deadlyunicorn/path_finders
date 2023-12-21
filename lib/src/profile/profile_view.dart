@@ -71,7 +71,10 @@ class _ProfileViewState extends State<ProfileView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text( appLocalizations.profile_toggleVis, textScaler: TextScaler.linear( 2 ) ),
+                              Text(
+                                appLocalizations.profile_toggleVis, 
+                                textScaler: const TextScaler.linear( 2 )
+                                ),
                               const SizedBox( width: 5 ),
                               const Image(
                                 image: AssetImage('assets/images/deadlyunicorn.png'),
@@ -89,13 +92,15 @@ class _ProfileViewState extends State<ProfileView> {
                                 onChanged: ( wantsToShareLocation )async{
 
                                   if ( wantsToShareLocation ){
+
                                     if ( await DisclaimerAcceptionFile.disclaimerIsAccepted() ){
                                       setState(() {
                                           isSharing = wantsToShareLocation;
                                         });
                                     }
                                     else{
-                                      await showDisclaimerDialog(context);
+                                      if ( !mounted ) return;
+                                      showDisclaimerDialog(context);
                                       if ( await DisclaimerAcceptionFile.disclaimerIsAccepted() ){
                                         setState(() {
                                           isSharing = wantsToShareLocation;
@@ -208,7 +213,7 @@ showDisclaimerDialog( BuildContext context ){
               direction: Axis.horizontal,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon( 
+                const Icon( 
                   shadows: [
                     BoxShadow(
                       color: Colors.black,
@@ -218,12 +223,12 @@ showDisclaimerDialog( BuildContext context ){
                   Icons.warning, 
                   color: Colors.yellow,
                 ),
-                SizedBox.square( dimension: 12 ),
+                const SizedBox.square( dimension: 12 ),
                 Text( "Disclaimer", 
                   style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                SizedBox.square( dimension: 12 ),
-                Icon( 
+                const SizedBox.square( dimension: 12 ),
+                const Icon( 
                   shadows: [
                         BoxShadow(
                           color: Colors.black,
@@ -235,7 +240,7 @@ showDisclaimerDialog( BuildContext context ){
                 ),
               ],
             ),
-            SizedBox.square( dimension: 12 ),
+            const SizedBox.square( dimension: 12 ),
             Text(
               appLocalizations!.dialog_liveSharing_disclaimer,
               textAlign: TextAlign.center),
@@ -255,7 +260,10 @@ showDisclaimerDialog( BuildContext context ){
                   style: squaredButtonStyle,
                   onPressed: ()async{
                     await DisclaimerAcceptionFile.acceptDisclaimer();
-                    Navigator.pop(context);
+                    
+                    if ( context.mounted ){
+                      Navigator.pop(context);
+                    }
                   }, 
                   child: Text( appLocalizations.dialog_confirm )
                 )

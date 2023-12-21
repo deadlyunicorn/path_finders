@@ -5,7 +5,7 @@ import 'package:path_finders/src/settings/settings_view.dart';
 class SettingsDialogButton extends StatelessWidget {
             
   final SettingsController settingsController;
-  SettingsDialogButton({ super.key, required this.settingsController });
+  const SettingsDialogButton({ super.key, required this.settingsController });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class SettingsDialogButton extends StatelessWidget {
                         ),
                       );
                     },  
-                    icon: Icon( Icons.settings )
+                    icon:const Icon( Icons.settings )
                   );
   }
 }

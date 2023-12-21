@@ -70,16 +70,15 @@ class StaticEntriesView extends StatelessWidget{
                   final lastStaticTarget = prefs.getString( 'staticTarget');
                   if ( lastStaticTarget != null && lastStaticTarget.isNotEmpty && lastStaticTarget != "North Pole" ){
 
-                    sampleData
-                      .forEach(
-                        (element) {
+                    for (final element in sampleData) {
                           if ( element["targetName"] == lastStaticTarget ){
+
                             final coordinates = Coordinates( element["latitude"], element["longitude"] );
                             targetProvider.setTargetName(lastStaticTarget);
                             targetProvider.setTargetLocation( coordinates );
+                            
                           } 
                         }
-                      );
                       
                   }
                   

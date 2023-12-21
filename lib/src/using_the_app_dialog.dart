@@ -3,6 +3,8 @@ import 'package:path_finders/src/storage_services.dart';
 
 class UsingTheAppDialog extends StatefulWidget{
 
+  const UsingTheAppDialog({ super.key });
+
   static const List<String> _descriptions = [
     "View the compass at the 'Target' menu. \nThe app has two compass modes. \nThe default one works like a normal compass.",
     "The second one keeps the magnet stable, thus the magnet points towards the moving elements of the compass. \nTap on the magnet to toggle modes.",
@@ -11,7 +13,7 @@ class UsingTheAppDialog extends StatefulWidget{
   ];
 
 
-  static List<String> _imageSources = [
+  static const List<String> _imageSources = [
     "assets/images/intro/compass_1.jpg",
     "assets/images/intro/compass_2.jpg",
     "assets/images/intro/entries.jpg",
@@ -31,7 +33,7 @@ class _UsingTheAppDialogState extends State<UsingTheAppDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-          title: Text( "Using the App"),
+          title: const Text( "Using the App"),
           children: [
 
             Image.asset(
@@ -40,12 +42,12 @@ class _UsingTheAppDialogState extends State<UsingTheAppDialog> {
               height: MediaQuery.of(context).size.height/2,
             ),
             Padding(  
-              padding: EdgeInsets.all( 8 ),
+              padding: const EdgeInsets.all( 8 ),
               child: Container(
                 alignment: Alignment.center,
                 height: 128,
                 child: Text(
-                  "${ UsingTheAppDialog._descriptions[i] }",
+                  UsingTheAppDialog._descriptions[i],
                   textAlign: TextAlign.center,
                 )
               ) 
@@ -68,10 +70,10 @@ class _UsingTheAppDialogState extends State<UsingTheAppDialog> {
                             i--;
                           });
                         },
-                        icon: Icon(Icons.arrow_back)
+                        icon: const Icon(Icons.arrow_back)
                       )
                     ],) 
-                  : SizedBox.shrink()
+                  : const SizedBox.shrink()
                 ),
                 Expanded(
                   child: Flex(
@@ -85,14 +87,14 @@ class _UsingTheAppDialogState extends State<UsingTheAppDialog> {
                               i++;
                             });
                           }, 
-                          icon: Icon(Icons.arrow_forward)
+                          icon: const Icon(Icons.arrow_forward)
                         )
                         :TextButton(
                           onPressed: ()async{
-                            await IntroFinishFile.finishIntro();
                             Navigator.pop(context);
+                            await IntroFinishFile.finishIntro();
                           }, 
-                          child: Text( "Let's go!" )
+                          child: const Text( "Let's go!" )
                         )
                     ],
                   ) 

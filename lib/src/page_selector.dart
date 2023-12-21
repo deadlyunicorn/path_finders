@@ -36,7 +36,7 @@ class PageSelector extends StatelessWidget{
               showDialog(
                 barrierDismissible: false,
                 context: context, 
-                builder: ( context ) => UsingTheAppDialog()
+                builder: ( context ) => const UsingTheAppDialog()
               );
 
             }

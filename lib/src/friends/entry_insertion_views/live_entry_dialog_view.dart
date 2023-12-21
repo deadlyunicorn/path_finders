@@ -36,7 +36,7 @@ class LiveEntryDialog extends StatelessWidget{
 
     return AlertDialog(
       title: Text( appLocalizations!.entry_live_insertion ),
-      content: Container(
+      content: SizedBox(
         width: MediaQuery.of(context).size.width - 100,
         child: SingleChildScrollView(
           child: Column( 

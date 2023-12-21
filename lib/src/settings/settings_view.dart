@@ -13,8 +13,8 @@ import 'settings_controller.dart';
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatelessWidget {
-  const SettingsView({super.key, required this.settingsController});
 
+  const SettingsView({super.key, required this.settingsController});
   final SettingsController settingsController;
 
   @override
@@ -73,12 +73,12 @@ class SettingsView extends StatelessWidget {
                       value: settingsController.locale,
                       items: [
                         DropdownMenuItem(
-                          child: Text( "🇺🇸 English - ${appLocalizations.lang_english}" ),
                           value: "en",
+                          child: Text( "🇺🇸 English - ${appLocalizations.lang_english}" ),
                         ),
                         DropdownMenuItem(
-                          child: Text( "🇬🇷 Greek - ${appLocalizations.lang_greek}" ),
                           value: "el",
+                          child: Text( "🇬🇷 Greek - ${appLocalizations.lang_greek}" ),
                         ),
                       ], 
                       onChanged: (value) {
@@ -101,7 +101,7 @@ class SettingsView extends StatelessWidget {
                     ScaffoldMessenger.of(context)
                     .showSnackBar( CustomSnackBar(textContent: "Not yet Implmented - Contact Dev", context: context));
                     
-                    final appId = ""; //To be implemented
+                    const appId = ""; //To be implemented
 
                     try{
 
@@ -125,7 +125,7 @@ class SettingsView extends StatelessWidget {
                   onPressed: (){
                     showDialog(
                       context: context, 
-                      builder: (context) => BugReportDialog()
+                      builder: (context) => const BugReportDialog()
                     );
                   }, 
                   child: Text( appLocalizations.bugReport )

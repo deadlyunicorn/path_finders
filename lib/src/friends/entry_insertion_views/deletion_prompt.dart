@@ -25,14 +25,16 @@ showDeletionConfirmationDialog( BuildContext context, TargetListingsProviderAbst
 
           TextButton(
             onPressed: ()async{
+              
               if ( initialTargetName != null ){
 
                 await provider.remove( initialTargetName );
               }
+              if( !context.mounted ) return;
               while ( Navigator.canPop(context) ){
-                
                 Navigator.pop(context);
               }
+              
             }, 
             child: Text( appLocalizations.dialog_confirm )
           ),

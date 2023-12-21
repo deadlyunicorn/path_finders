@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path_finders/notifications/notification_controller.dart';
-import 'package:path_finders/src/custom/isLandscape.dart';
+import 'package:path_finders/src/custom/is_landscape.dart';
 import 'package:path_finders/src/friends/entry_insertion_buttons.dart';
 import 'package:path_finders/src/friends/friends_view_components/live_entries_view.dart';
 import 'package:path_finders/src/friends/friends_view_components/static_entries_view.dart';
@@ -37,8 +37,8 @@ class _FriendsViewState extends State<FriendsView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           isLandscape(context)
-            ?SizedBox.shrink()
-            :SelectionHeader(),
+            ?const SizedBox.shrink()
+            :const SelectionHeader(),
           Flex(
             mainAxisAlignment: MainAxisAlignment.center,
             direction: isLandscape(context)? Axis.horizontal :Axis.vertical,
@@ -49,7 +49,7 @@ class _FriendsViewState extends State<FriendsView> {
                   SizedBox(
                     height: listHeight,
                     width: listWidth,
-                    child: StaticEntriesView(),
+                    child: const StaticEntriesView(),
                   )
                 ],
               ),
@@ -59,14 +59,13 @@ class _FriendsViewState extends State<FriendsView> {
                   SizedBox(
                     height: listHeight,
                     width: listWidth,
-                    child: LiveEntriesView(),
+                    child: const LiveEntriesView(),
                   )
                 ],
               )
             ],
           ),
-          
-          EntryInsertionButtons(),
+          const EntryInsertionButtons(),
           // TestingWidget()
         ],
       )

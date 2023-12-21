@@ -9,7 +9,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:path_finders/src/navigation_bar/navigation_bar.dart';
 import 'package:path_finders/notifications/notification_controller.dart';
-import 'package:path_finders/src/custom/isLandscape.dart';
+import 'package:path_finders/src/custom/is_landscape.dart';
 import 'package:path_finders/src/settings/button.dart';
 
 

@@ -10,6 +10,7 @@ class TargetWithCoordinatesListingsProvider extends TargetListingsProviderAbstra
     notifyListeners();
   }
 
+  @override
   Future<void> remove( String targetName ) async{
 
     if (super.targetEntries.where((element) => element["targetName"] == targetName ).isNotEmpty ){

@@ -14,6 +14,8 @@ class TargetWithIdListingsProvider extends TargetListingsProviderAbstract{
     notifyListeners();
   }
 
+  @override
+  // ignore: avoid_renaming_method_parameters
   Future<void> remove( String targetId ) async{
 
     await TargetsFiles.removeTargetWithIdFromFile( targetId );

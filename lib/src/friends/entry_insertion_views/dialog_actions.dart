@@ -10,15 +10,14 @@ List<Widget> dialogActions(
   }  ) {
 
     final appLocalizations = AppLocalizations.of(context);
-
     return [
 
         deletionHandler != null 
           ?TextButton(
             onPressed: deletionHandler, 
-            child: Text( appLocalizations!.dialog_delete ,style: TextStyle( color: Colors.red) )
+            child: Text( appLocalizations!.dialog_delete ,style:const TextStyle( color: Colors.red) )
           )
-          :SizedBox.shrink(),
+          :const SizedBox.shrink(),
 
         Flex(
           direction: Axis.horizontal,
@@ -31,7 +30,7 @@ List<Widget> dialogActions(
        
             TextButton(
                 onPressed: submissionHandler,
-                child: Text(  appLocalizations!.dialog_confirm )
+                child: Text(  appLocalizations.dialog_confirm )
             )
 
           ]

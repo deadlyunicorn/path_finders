@@ -23,15 +23,15 @@ class CustomNavigationBar extends StatelessWidget{
         backgroundColor: Theme.of(context).primaryColor.withAlpha( 100 ),
         destinations:  [
           NavigationDestination(
-            icon: Icon(Icons.group), 
+            icon:const Icon(Icons.group), 
             label: appLocalizations!.navigation_friends
           ),
           NavigationDestination(
-            icon: Icon(Icons.gps_fixed), 
+            icon:const Icon(Icons.gps_fixed), 
             label: appLocalizations.navigation_track,
           ),
           NavigationDestination(
-            icon: Icon(Icons.person), 
+            icon:const Icon(Icons.person), 
             label: appLocalizations.navigation_profile,
           )],
         selectedIndex: selectedIndex,

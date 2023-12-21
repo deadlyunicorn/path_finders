@@ -10,6 +10,7 @@ class CustomSnackBar extends SnackBar {
     super.key, required this.textContent,
     required this.context,
     this.bgColor,
+    super.elevation,
     super.duration = const Duration( seconds: 4 ) })
   :super(
     content: Text(

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:path_finders/src/copying_service.dart';
-import 'package:path_finders/src/custom/isLandscape.dart';
+import 'package:path_finders/src/custom/is_landscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
@@ -108,7 +108,7 @@ class _TrackerViewState extends State<TrackerView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only( top: 8 ),
+                        padding: const EdgeInsets.only( top: 8 ),
                         child: RichText( 
                           text: 
                           ( distanceToTarget < 15 )
@@ -131,7 +131,7 @@ class _TrackerViewState extends State<TrackerView> {
                         )
                       ),
                       isLandscape(context)
-                        ?SizedBox.shrink()
+                        ?const SizedBox.shrink()
                         :CompassView( 
                           targetLocationRotationInRads: targetLocationRotationInRads, 
                           targetLocation: targetLocation 
@@ -140,7 +140,7 @@ class _TrackerViewState extends State<TrackerView> {
                         children: [
 
                            Text(
-                              "${appLocalizations.tracking_currentPositionIs}"
+                              appLocalizations.tracking_currentPositionIs
                             ),
                             TextButton(
                               style: const ButtonStyle(
@@ -176,7 +176,7 @@ class _TrackerViewState extends State<TrackerView> {
                       targetLocation: targetLocation
                     )
                   ) 
-                  :SizedBox.shrink()
+                  :const SizedBox.shrink()
 
                 ],
               ) ;
