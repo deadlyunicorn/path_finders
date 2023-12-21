@@ -71,7 +71,9 @@
   "lang_greek": "Greek",
   "lang_english": "English",
 
-  "bugReport": "Report a bug",
+  "bugReport": "Bug Report",
+  "bug_summary": "Problem Summary",
+  "bug_description": "Detailed Description",
   "reviewText": "Leave a Review",
 
 

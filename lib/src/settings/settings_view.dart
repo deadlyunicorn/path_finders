@@ -107,14 +107,12 @@ class SettingsView extends StatelessWidget {
 
                        await launchUrl( 
                         Uri.parse("market://details?id=$appId"),
-                        mode: LaunchMode.externalApplication 
                        );
 
                     }
                     catch( error ){ //no playstore installed?!
                       await launchUrl( 
                         Uri.parse("https://play.google.com/store/apps/details?id=$appId"),
-                        mode: LaunchMode.externalApplication 
                        );
 
                     }
