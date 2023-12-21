@@ -148,6 +148,7 @@ class _ProfileViewState extends State<ProfileView> {
                     textAlign: TextAlign.center,
                   ),
                   TextButton(
+                    style: squaredButtonStyle,
                     onPressed: (){
                       setState((){
 

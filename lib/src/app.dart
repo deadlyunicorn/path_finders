@@ -86,7 +86,7 @@ class _MyAppState extends State<MyApp> {
 
 
               home:  Scaffold(
-                appBar: isLandscape(context)
+                appBar: heightIsSmall(context)
                 ? null
                 : AppBar(
                   elevation: 1,

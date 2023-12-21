@@ -1,6 +1,7 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/custom/styles.dart';
 import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,7 @@ class _LocationServicesCheckerViewState extends State<LocationServicesCheckerVie
                 children: [
                   Text( appLocalizations!.errors_gpsFailed ),
                   TextButton(
+                    style: squaredButtonStyle,
                     onPressed: locationServicesProvider.reinvokeGeolocator, 
                     child:  Text( appLocalizations.errors_retry ) )
                 ],
@@ -54,6 +56,7 @@ class _LocationServicesCheckerViewState extends State<LocationServicesCheckerVie
               builder: (_, timerSnapshot ){
                 if ( timerSnapshot.connectionState == ConnectionState.done ){
                   return TextButton(
+                    style: squaredButtonStyle,
                     onPressed: (){
                       locationServicesProvider.reinvokeGeolocator();
                       setState(() {

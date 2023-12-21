@@ -36,7 +36,7 @@ class _FriendsViewState extends State<FriendsView> {
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          isLandscape(context)
+          heightIsSmall(context)
             ?const SizedBox.shrink()
             :const SelectionHeader(),
           Flex(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_finders/src/custom/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -188,6 +189,7 @@ class _TrackerViewState extends State<TrackerView> {
                   children: [
                     Text( appLocalizations!.errors_locationService ),
                     TextButton(
+                      style: squaredButtonStyle,
                       onPressed: ()async{
                         await Geolocator.getCurrentPosition();
                         setState(() {

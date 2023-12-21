@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -48,7 +50,7 @@ class StaticEntryDialog extends StatelessWidget{
       title: Text( appLocalizations!.entry_static_insertion ),
 
       content: SizedBox(
-        width: MediaQuery.of(context).size.width - 100,
+        width: min(MediaQuery.of(context).size.width - 100, 500) ,
         child: SingleChildScrollView(
           child: Column( 
             mainAxisSize: MainAxisSize.min,

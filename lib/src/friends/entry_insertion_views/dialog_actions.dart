@@ -1,5 +1,6 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/custom/styles.dart';
 
 List<Widget> dialogActions( 
   {
@@ -14,6 +15,7 @@ List<Widget> dialogActions(
 
         deletionHandler != null 
           ?TextButton(
+            style: squaredButtonStyle,
             onPressed: deletionHandler, 
             child: Text( appLocalizations!.dialog_delete ,style:const TextStyle( color: Colors.red) )
           )
@@ -24,11 +26,13 @@ List<Widget> dialogActions(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
+              style: squaredButtonStyle,
               onPressed: cancellationHandler, 
               child: Text( appLocalizations!.dialog_nevermind )
             ),
        
             TextButton(
+                style: squaredButtonStyle,
                 onPressed: submissionHandler,
                 child: Text(  appLocalizations.dialog_confirm )
             )
