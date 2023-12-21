@@ -14,7 +14,7 @@ showDeletionConfirmationDialog( BuildContext context, TargetListingsProviderAbst
     builder: (context)
       =>AlertDialog(
         title: Text( appLocalizations!.dialog_delete_confirmation ),
-        actionsAlignment: MainAxisAlignment.center,
+        actionsAlignment: MainAxisAlignment.spaceBetween,
         actions: [
 
           TextButton(

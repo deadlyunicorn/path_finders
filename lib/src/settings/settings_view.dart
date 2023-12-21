@@ -42,6 +42,7 @@ class SettingsView extends StatelessWidget {
             Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text( "${appLocalizations.settings_theme}: ", style: Theme.of(context).textTheme.bodyLarge ),
                     DropdownButton<ThemeMode>(
@@ -67,6 +68,7 @@ class SettingsView extends StatelessWidget {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text( "${appLocalizations.settings_language}: ", style: Theme.of(context).textTheme.bodyLarge ),
                     DropdownButton(

@@ -180,6 +180,7 @@ Future<void> submissionHandler(
                     duration: const Duration( seconds: 2),
                     bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
                     textContent: AppLocalizations.of(context)!.snackbar_invalidData,
+                    textStyle: TextStyle( color: Theme.of(context).colorScheme.onError ),
                     context: context
                   )
                 );
