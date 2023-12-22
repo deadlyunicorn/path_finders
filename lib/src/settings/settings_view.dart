@@ -100,8 +100,15 @@ class SettingsView extends StatelessWidget {
                   style: squaredButtonStyle,
                   onPressed: ()async{
                     
+                    
+                    print( "this must be implemented!");
                     ScaffoldMessenger.of(context)
-                    .showSnackBar( CustomSnackBar(textContent: "Not yet Implmented - Contact Dev", context: context));
+                    .showSnackBar( 
+                      CustomSnackBar(
+                        textContent: "Not yet Implmented - Contact Dev", 
+                        context: context
+                      )
+                    );
                     
                     const appId = ""; //To be implemented
 
