@@ -167,9 +167,9 @@ class _StaticEntryDialogState extends State<StaticEntryDialog> {
         cancellationHandler:  (){
           Navigator.pop(context,"Cancel");
         },
-        deletionHandler: (){
+        deletionHandler: widget._targetName != null ?(){
             showDeletionConfirmationDialog(context, targetListingsWithCoordinates, widget._targetName);
-        }
+        }:null
 
       )
     );
