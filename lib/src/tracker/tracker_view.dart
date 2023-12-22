@@ -38,6 +38,7 @@ class _TrackerViewState extends State<TrackerView> {
           if ( value != 0 ){
             await Future.delayed( const Duration( seconds: 3) )
             .then((_){
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
               ScaffoldMessenger.of( context )
               .showSnackBar(
                 CustomSnackBar(
