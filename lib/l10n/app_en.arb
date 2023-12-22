@@ -85,6 +85,11 @@
   "errors_geolocatorTimeout": "This might take a while if you are not out in the open. \nYou could try moving your device around. \nOr restarting the app.",
   "errors_locationSharingTimeout": "This is taking a while..\nAre you connected to the internet?",
   "errors_sensors": "Your device doesn't have the required sensors",
+  "errors_invalidUserId": "Please type a valid ID.",
+  "errors_invalidTargetName": "Please type a valid friendly name.",
+  "errors_invalidLatitude": "Please type a valid latitude\n( -90 > y < 90 )",
+  "errors_invalidLongitude": "Please type a valid longitude\n( -180 > x < 180 )",
+
 
   "exception_invalidInput" : "There is an invalid input field.",
   "exception_networkError" : "There is a Network Issue.",
