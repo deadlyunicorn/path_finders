@@ -13,17 +13,23 @@ List<Widget> dialogActions(
     final appLocalizations = AppLocalizations.of(context);
     return [
 
-        deletionHandler != null 
-          ?TextButton(
-            style: squaredButtonStyle,
-            onPressed: deletionHandler, 
-            child: Text( appLocalizations!.dialog_delete ,style:const TextStyle( color: Colors.red) )
-          )
-          :const SizedBox.shrink(),
+        Row(
+          children: [
 
+            deletionHandler != null 
+            ?TextButton(
+              style: squaredButtonStyle,
+              onPressed: deletionHandler, 
+              child: Text( appLocalizations!.dialog_delete ,style:const TextStyle( color: Colors.red) )
+            )
+            :const SizedBox.shrink()
+            
+          ],
+        ),
         Flex(
           direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
               style: squaredButtonStyle,
