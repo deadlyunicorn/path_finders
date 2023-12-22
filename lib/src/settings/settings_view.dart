@@ -101,16 +101,7 @@ class SettingsView extends StatelessWidget {
                   onPressed: ()async{
                     
                     
-                    print( "this must be implemented!");
-                    ScaffoldMessenger.of(context)
-                    .showSnackBar( 
-                      CustomSnackBar(
-                        textContent: "Not yet Implmented - Contact Dev", 
-                        context: context
-                      )
-                    );
-                    
-                    const appId = ""; //To be implemented
+                    const appId = "com.example.path_finders";  //edit inside gradle
 
                     try{
 
