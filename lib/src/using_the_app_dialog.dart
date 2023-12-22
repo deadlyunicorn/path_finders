@@ -10,8 +10,8 @@ class UsingTheAppDialog extends StatefulWidget{
   static const List<String> _descriptions = [
     "View the compass at the 'Target' menu. \nThe app has two compass modes. \nThe default one works like a normal compass.",
     "The second one keeps the magnet stable, thus the magnet points towards the moving elements of the compass. \nTap on the magnet to toggle modes.",
-    "Add Static ( using coordinates ) \nor Live entries to track, on the 'Friends' menu. \n( 'Live' requires internet connection )",
-    "Share your location on the 'Profile' menu. ( requires an internet connection )"
+    "Add Static (\u{00A0}using coordinates\u{00A0}) \nor Live entries to track, on the 'Friends' menu. \n(\u{00A0}'Live' requires internet connection\u{00A0})",
+    "Share your location on the 'Profile' menu. (\u{00A0}requires an internet connection\u{00A0})"
   ];
 
 
