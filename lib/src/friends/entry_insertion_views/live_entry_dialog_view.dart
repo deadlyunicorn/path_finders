@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/friends/entry_insertion_views/deletion_prompt.dart';
 import 'package:path_finders/src/friends/entry_insertion_views/dialog_actions.dart';
 import 'package:path_finders/src/friends/id_formatter.dart';
@@ -113,6 +114,7 @@ class _LiveEntryDialogState extends State<LiveEntryDialog> {
           Navigator.pop(context,"Cancel");
         },
         submissionHandler: () async{
+
           
           if( targetId.isNotEmpty && targetId.length == 7 ){ 
             await targetListingsWithId.remove( targetId );
@@ -126,6 +128,20 @@ class _LiveEntryDialogState extends State<LiveEntryDialog> {
             setState( (){
               errorMessage = appLocalizations.errors_invalidUserId;
             });
+
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+            ScaffoldMessenger
+            .of( context )
+            .showSnackBar(
+              CustomSnackBar(
+                duration: const Duration( seconds: 2),
+                bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
+                textContent: errorMessage,
+                textStyle: TextStyle( color: Theme.of(context).colorScheme.onError ),
+                context: context
+              )
+            );
           }
         }, 
       )

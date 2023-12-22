@@ -7,6 +7,9 @@ import 'package:path_finders/src/custom/snackbar_custom.dart';
 class CopyService {
 
   static Future<void> copyTextToClipboard( String text, { required BuildContext context } ) async{
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
     ScaffoldMessenger
     .of(context)
     .showSnackBar(

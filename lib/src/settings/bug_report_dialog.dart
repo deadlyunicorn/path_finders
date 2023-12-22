@@ -100,6 +100,7 @@ class _BugReportDialogState extends State<BugReportDialog> {
                         errorMessage = message;
                       }); 
 
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context)
                       .showSnackBar( 
                         CustomSnackBar(

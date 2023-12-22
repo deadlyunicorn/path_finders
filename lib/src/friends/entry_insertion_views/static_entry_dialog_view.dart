@@ -190,7 +190,6 @@ Future<String> submitChangesOrReturnErrorMessage(
       String errorMessage = "";
       final appLocalizations = AppLocalizations.of(context)!;
 
-      print( latitude );
 
       if ( targetName == null || targetName.isEmpty ){
 
@@ -208,7 +207,6 @@ Future<String> submitChangesOrReturnErrorMessage(
 
       }
       else{
-        print( "ready to pop!");
         if ( initialTargetName != null ){
           await targetListingsWithCoordinates.remove( initialTargetName );
         }
@@ -220,13 +218,15 @@ Future<String> submitChangesOrReturnErrorMessage(
         return errorMessage;
       }
 
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
       ScaffoldMessenger
       .of( context )
       .showSnackBar(
         CustomSnackBar(
           duration: const Duration( seconds: 2),
           bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
-          textContent: AppLocalizations.of(context)!.snackbar_invalidData,
+          textContent: errorMessage,
           textStyle: TextStyle( color: Theme.of(context).colorScheme.onError ),
           context: context
         )

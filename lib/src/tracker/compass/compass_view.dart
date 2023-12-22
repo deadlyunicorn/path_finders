@@ -57,6 +57,8 @@ class _CompassViewState extends State<CompassView> {
               
               onTap: ()async{
 
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                
                 ScaffoldMessenger.of(context)
                   .showSnackBar(
                     CustomSnackBar(
