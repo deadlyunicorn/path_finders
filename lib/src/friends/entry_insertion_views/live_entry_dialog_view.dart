@@ -9,7 +9,7 @@ import 'package:path_finders/src/friends/entry_insertion_views/dialog_actions.da
 import 'package:path_finders/src/friends/id_formatter.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 
-class LiveEntryDialog extends StatelessWidget{
+class LiveEntryDialog extends StatefulWidget{
 
   final TargetWithIdListingsProvider listingsProvider;
 
@@ -24,17 +24,26 @@ class LiveEntryDialog extends StatelessWidget{
       String? targetName,
     }) : _targetName = targetName, _targetId = targetId;
 
+  @override
+  State<LiveEntryDialog> createState() => _LiveEntryDialogState();
+}
 
+class _LiveEntryDialogState extends State<LiveEntryDialog> {
+
+  String targetId = "133-337";
+  String targetName = "easter egg"; //prevent restoring the widget vallue when isEmpty
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
 
     final appLocalizations = AppLocalizations.of( context );
 
-    String? targetId = _targetId;
-    String? targetName = _targetName;
+    //here
+    if ( targetId == "133-337" ) targetId = widget._targetId ?? "";
+    if ( targetName == "easter egg" ) targetName = widget._targetName ?? "";
 
-    final targetListingsWithId = listingsProvider;
+    final targetListingsWithId = widget.listingsProvider;
 
     return AlertDialog(
       title: Text( appLocalizations!.entry_live_insertion ),
@@ -45,14 +54,18 @@ class LiveEntryDialog extends StatelessWidget{
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: TextEditingController( text: targetId ),
+                controller: targetId == widget._targetId 
+                  ? TextEditingController( text: targetId )
+                  :null ,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   CustomInputFormatter(),
                   LengthLimitingTextInputFormatter(7),
                 ],
                 onChanged: (value) {
+                  setState( (){
                     targetId = value;
+                  });
                 },
                 decoration: const InputDecoration(
                   labelText: "ID",
@@ -65,16 +78,26 @@ class LiveEntryDialog extends StatelessWidget{
               ),
 
               TextField(
-                controller: TextEditingController( text: targetName ),
+                controller: targetName == widget._targetName 
+                ?TextEditingController( text: targetName )
+                :null,
                 onChanged: (value){
-                  targetName = value;
+                  setState((){
+                    targetName = value;
+                  });
                 },
                 decoration: InputDecoration(
                   labelText: appLocalizations.entry_friendlyName,
                   hintText: appLocalizations.entry_friendlyNameHint,
                 ),
 
+              ),
+              const SizedBox( height:8 ),
+              Text( 
+                errorMessage,
+                style: TextStyle( color: Theme.of(context).colorScheme.error )
               )
+
             ]
           ) 
         )
@@ -82,24 +105,27 @@ class LiveEntryDialog extends StatelessWidget{
       actionsAlignment: MainAxisAlignment.spaceAround,
       actions: dialogActions(
         context: context,
-        deletionHandler: (){
-          showDeletionConfirmationDialog(context, targetListingsWithId, _targetId);
-        },
+        deletionHandler: widget._targetId == null  ? null 
+          :(){
+            showDeletionConfirmationDialog(context, targetListingsWithId, widget._targetId);
+          },
         cancellationHandler: (){
           Navigator.pop(context,"Cancel");
         },
         submissionHandler: () async{
           
-          final finalTargetId = targetId;
-
-          //Return maybe causes bugs here??
-          if( finalTargetId != null && finalTargetId.length == 7 ){ 
-            await targetListingsWithId.remove(finalTargetId);
-            if ( _targetId != null ) await targetListingsWithId.remove(_targetId);
-            await targetListingsWithId.add( finalTargetId, targetName: targetName );
+          if( targetId.isNotEmpty && targetId.length == 7 ){ 
+            await targetListingsWithId.remove( targetId );
+            if ( widget._targetId != null ) await targetListingsWithId.remove( widget._targetId ?? "" );
+            await targetListingsWithId.add( targetId, targetName: targetName );
             if ( context.mounted ){
               Navigator.pop(context, "Submit");
             } 
+          }
+          else{
+            setState( (){
+              errorMessage = appLocalizations.errors_invalidUserId;
+            });
           }
         }, 
       )

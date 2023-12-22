@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/custom/fixed_text_editing_controller.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/friends/entry_insertion_views/deletion_prompt.dart';
 import 'package:path_finders/src/friends/entry_insertion_views/dialog_actions.dart';
@@ -10,7 +11,7 @@ import 'package:path_finders/src/friends/entry_insertion_views/dialog_actions.da
 import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
-class StaticEntryDialog extends StatelessWidget{
+class StaticEntryDialog extends StatefulWidget{
 
   final TargetWithCoordinatesListingsProvider staticListingsProvider;
 
@@ -26,25 +27,36 @@ class StaticEntryDialog extends StatelessWidget{
     }
   ) : _targetName = targetName, _coordinates = coordinates;
 
-  
+  @override
+  State<StaticEntryDialog> createState() => _StaticEntryDialogState();
+}
+
+class _StaticEntryDialogState extends State<StaticEntryDialog> {
+
+  String errorMessage = "";
+  String targetName   = "easter egg";
+  double latitude  = 0.314; //user is unlikely to type this value - so it won't be replace by widget default when sb types 0
+  double longitude = 0.314;
+
 
   @override
   Widget build(BuildContext context) {
 
     final appLocalizations = AppLocalizations.of(context);
 
-    String? targetName = _targetName;
-    double? latitude;
-    double? longitude;
 
-    if ( _coordinates != null ){
-
-      latitude = _coordinates.latitude;
-      longitude = _coordinates.longitude;
-
+    if ( targetName == "easter egg" ){
+      targetName = widget._targetName ?? "";
+    }
+    if ( latitude == 0.314 ){
+      latitude = widget._coordinates?.latitude ?? 0.0000 ;
+    }
+    if ( longitude == 0.314 ){
+      longitude = widget._coordinates?.longitude ?? 0.0000 ;
     }
 
-    final targetListingsWithCoordinates = staticListingsProvider;
+
+    final targetListingsWithCoordinates = widget.staticListingsProvider;
 
     return AlertDialog(
       title: Text( appLocalizations!.entry_static_insertion ),
@@ -56,10 +68,15 @@ class StaticEntryDialog extends StatelessWidget{
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: TextEditingController( text: targetName),
+                controller:  ( targetName == widget._targetName ) 
+                ? FixedTextEditingController( 
+                  text: targetName,
+                ) : null,
                 keyboardType: TextInputType.name,
                 onChanged: (value) {
+                  setState((){
                     targetName = value;
+                  });
                 },
                 decoration: InputDecoration(
                   labelText: appLocalizations.entry_friendlyName,
@@ -72,14 +89,18 @@ class StaticEntryDialog extends StatelessWidget{
               ),
 
               TextField(
-                controller: TextEditingController(
-                  text: latitude?.toString()
-                ),
+                controller: ( latitude == widget._coordinates?.latitude || latitude == 0 )
+                  ?FixedTextEditingController(
+                    text: latitude.toString()
+                  ):null,
                 keyboardType: TextInputType.number,
                 onChanged: (value){
-
-                    latitude = double.tryParse(value);
-                
+                  final tempValue = double.tryParse( value );
+                  if ( tempValue != null ) {
+                    setState((){
+                      latitude = tempValue;
+                    });
+                  }
                 },
                 decoration: InputDecoration(
                   labelText: appLocalizations.latitude,
@@ -93,13 +114,19 @@ class StaticEntryDialog extends StatelessWidget{
               ),
 
               TextField(
-                controller: TextEditingController(
-                  text: longitude?.toString()
-                ),
+                controller: ( longitude == widget._coordinates?.longitude || longitude == 0 )
+                  ?FixedTextEditingController(
+                    text: longitude.toString()
+                  ):null,
                 keyboardType: TextInputType.number,
                 onChanged: (value){
 
-                  longitude = double.tryParse(value);
+                  final tempValue = double.tryParse( value );
+                  if ( tempValue != null ) {
+                    setState((){
+                      longitude = tempValue;
+                    });
+                  }
 
                 },
                 decoration: InputDecoration(
@@ -107,6 +134,12 @@ class StaticEntryDialog extends StatelessWidget{
                   hintText: appLocalizations.longitudeHint,
                 ),
                 
+              ),
+              const SizedBox( height:8 ),
+              Text( 
+                errorMessage,
+                style: TextStyle( color: Theme.of(context).colorScheme.error ),
+                textAlign: TextAlign.center,
               )
 
             ]
@@ -117,20 +150,25 @@ class StaticEntryDialog extends StatelessWidget{
       actions: dialogActions(
         context: context,
         submissionHandler: ()async{
-          await submissionHandler( 
+          final tempErrorMessage = await submitChangesOrReturnErrorMessage( 
             latitude: latitude,
             longitude: longitude,
             targetName: targetName,
-            initialTargetName: _targetName,
+            initialTargetName: widget._targetName,
             context: context,
             targetListingsWithCoordinates: targetListingsWithCoordinates
           );
+          if ( tempErrorMessage.isNotEmpty ){
+            setState(() {
+              errorMessage = tempErrorMessage;
+            });
+          }
         }, 
         cancellationHandler:  (){
           Navigator.pop(context,"Cancel");
         },
         deletionHandler: (){
-            showDeletionConfirmationDialog(context, targetListingsWithCoordinates, _targetName);
+            showDeletionConfirmationDialog(context, targetListingsWithCoordinates, widget._targetName);
         }
 
       )
@@ -139,7 +177,7 @@ class StaticEntryDialog extends StatelessWidget{
   }
 }
 
-Future<void> submissionHandler(  
+Future<String> submitChangesOrReturnErrorMessage(  
   { 
     required double? longitude, 
     required double? latitude, 
@@ -149,40 +187,50 @@ Future<void> submissionHandler(
     required BuildContext context
   } ) async{
 
-              if( 
-              targetName != null && targetName.isNotEmpty
-               && latitude != null
-               && longitude != null 
-               && ( latitude < 90 && latitude > -90 )
-               && ( longitude < 180 && longitude > -180  )){
+      String errorMessage = "";
+      final appLocalizations = AppLocalizations.of(context)!;
 
+      print( latitude );
 
-                (() async{
-                  
+      if ( targetName == null || targetName.isEmpty ){
 
-                  if ( initialTargetName != null ){
-                    await targetListingsWithCoordinates.remove( initialTargetName );
-                  }
-                  await targetListingsWithCoordinates.remove(targetName);
-                  await targetListingsWithCoordinates.add( targetName, Coordinates( latitude, longitude) );
-                  if ( context.mounted ){
-                    Navigator.pop(context, "Submit");
-                  } 
-                })();
+        errorMessage = appLocalizations.errors_invalidTargetName;
 
-              }
+      }
+      else if ( latitude == null || latitude > 90 || latitude < -90  ){
 
-              else{
-                ScaffoldMessenger
-                .of( context )
-                .showSnackBar(
-                  CustomSnackBar(
-                    duration: const Duration( seconds: 2),
-                    bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
-                    textContent: AppLocalizations.of(context)!.snackbar_invalidData,
-                    textStyle: TextStyle( color: Theme.of(context).colorScheme.onError ),
-                    context: context
-                  )
-                );
-              }
-            }
+        errorMessage = appLocalizations.errors_invalidLatitude;
+
+      }
+      else if( longitude == null || longitude > 180 || longitude < - 180 ){
+
+        errorMessage = appLocalizations.errors_invalidLongitude;
+
+      }
+      else{
+        print( "ready to pop!");
+        if ( initialTargetName != null ){
+          await targetListingsWithCoordinates.remove( initialTargetName );
+        }
+        await targetListingsWithCoordinates.remove(targetName);
+        await targetListingsWithCoordinates.add( targetName, Coordinates( latitude, longitude) );
+        if ( context.mounted ){
+          Navigator.pop(context, "Submit");
+        } 
+        return errorMessage;
+      }
+
+      ScaffoldMessenger
+      .of( context )
+      .showSnackBar(
+        CustomSnackBar(
+          duration: const Duration( seconds: 2),
+          bgColor: Theme.of(context).colorScheme.error.withAlpha( 220 ),
+          textContent: AppLocalizations.of(context)!.snackbar_invalidData,
+          textStyle: TextStyle( color: Theme.of(context).colorScheme.onError ),
+          context: context
+        )
+      );
+
+      return errorMessage;
+}
