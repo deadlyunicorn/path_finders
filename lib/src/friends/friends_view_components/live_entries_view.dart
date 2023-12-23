@@ -2,7 +2,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:path_finders/src/friends/entry_insertion_views/live_entry_dialog_view.dart';
+import 'package:path_finders/src/friends/friends_view_components/entry_insertion_views/live_entry_dialog_view.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
