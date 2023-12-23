@@ -1,10 +1,12 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:path_finders/src/friends/entry_insertion_views/live_entry_dialog_view.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/target_location_fetch.dart';
-import 'package:provider/provider.dart';
 
 class LiveEntriesView extends StatelessWidget{
 
@@ -16,6 +18,8 @@ class LiveEntriesView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+
+    final appLocalizations = AppLocalizations.of( context )!;
 
 
     return FutureBuilder(
@@ -172,13 +176,34 @@ class LiveEntriesView extends StatelessWidget{
                                   child: leadingIcon
                                 
                                 ) ,
-                                trailing: targetDetailsSnapshotData != null 
-                                  ? targetDetailsSnapshotData.hasErrorMessage()
-                                    ? Text( targetDetailsSnapshotData.getErrorMessage()! )
-                                    : const Text( "User is sharing their location" )
-                                  : targetDetailsFutureSnapshot.connectionState == ConnectionState.done 
-                                    ? const Text("Network error") 
-                                    : const SizedBox.shrink(),
+                                trailing: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 200
+                                    ),
+                                    child: Flex(
+                                    direction: Axis.horizontal,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        
+                                        child: Text(
+                                            targetDetailsSnapshotData != null 
+                                            ? ( targetDetailsSnapshotData.hasErrorMessage()
+                                              ? targetDetailsSnapshotData.getErrorMessage()! 
+                                              : appLocalizations.entry_live_isSharing )
+                                            : ( targetDetailsFutureSnapshot.connectionState == ConnectionState.done 
+                                              ? appLocalizations.exception_networkError
+                                              : "" ),
+                                              overflow: TextOverflow.fade,
+                                              textAlign: TextAlign.end,
+                                              maxLines: 1,
+
+                                          ) 
+                                          
+                                      )
+                                    ],
+                                  ) 
+                                ),
                                 onTap: () {
                                   if ( targetDetailsSnapshotData != null 
                                     && !targetDetailsSnapshotData.hasErrorMessage() 
@@ -216,7 +241,7 @@ class LiveEntriesView extends StatelessWidget{
               ); 
 
             }
-            return const Center( child: Text( "No friend entries." ) ); 
+            return Center( child: Text( appLocalizations.friends_noEntries ) ); 
           
           }
           else { 

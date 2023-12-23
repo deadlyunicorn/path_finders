@@ -26,12 +26,15 @@
 
   "friends_static" : "Static Entries",
   "friends_live" : "Live Entries",
+  "friends_noEntries" : "There are no Entries",
   "friends_currentSelection": "Current selection: ",
   "friends_addLive" : "New Live",
   "friends_addStatic" : "New Static",
 
   "entry_static_insertion": "Enter location coordinates",
   "entry_live_insertion": "Enter user ID",
+  "entry_live_isSharing": "User is sharing their location.",
+
 
   "entry_friendlyName": "Friendly Name",
   "entry_friendlyNameHint": "A wonderful location",

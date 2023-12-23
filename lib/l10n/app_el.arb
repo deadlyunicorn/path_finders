@@ -29,12 +29,14 @@
 
   "friends_static" : "Στατικές Εγγραφές",
   "friends_live" : "Ζωντανές Εγγραφές",
+  "friends_noEntries" : "Δεν υπάρχουν Εγγραφές",
   "friends_currentSelection": "Τρέχουσα επιλογή: ",
   "friends_addLive" : "Νέα Ζων.",
   "friends_addStatic" : "Νέα Στατ.",
 
   "entry_static_insertion": "Εισαγωγή συντεταγμένων",
   "entry_live_insertion": "Εισαγωγή ID χρήστη",
+  "entry_live_isSharing": "Ο Χρήστης μοιράζεται την τοποθεσία του.",
 
   "entry_friendlyName": "Φιλικό Όνομα",
   "entry_friendlyNameHint": "Ένα υπέροχο μέρος",
