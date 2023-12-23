@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:path_finders/src/custom/styles.dart';
-import 'package:path_finders/src/settings/bug_report_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:path_finders/src/settings/bug_report_button.dart';
+import 'package:path_finders/src/settings/color_theme_menu.dart';
+import 'package:path_finders/src/settings/locale_settings_drop_menu.dart';
+import 'package:path_finders/src/settings/leave_review_button.dart';
+import 'package:path_finders/src/settings/sponsor_button.dart';
 
 
 import 'settings_controller.dart';
@@ -33,103 +35,20 @@ class SettingsView extends StatelessWidget {
         // When a user selects a theme from the dropdown list, the
         // SettingsController is updated, which rebuilds the MaterialApp.
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             
             Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text( "${appLocalizations.settings_theme}: ", style: Theme.of(context).textTheme.bodyLarge ),
-                    DropdownButton<ThemeMode>(
-                      // Read the selected themeMode from the controller
-                      value: settingsController.themeMode,
-                      // Call the updateThemeMode method any time the user selects a theme.
-                      onChanged: settingsController.updateThemeMode,
-                      items: [
-                        DropdownMenuItem(
-                          value: ThemeMode.system,
-                          child: Text( appLocalizations.settings_systemTheme),
-                        ),
-                        DropdownMenuItem(
-                          value: ThemeMode.light,
-                          child: Text( appLocalizations.settings_lightMode ),
-                        ),
-                        DropdownMenuItem(
-                          value: ThemeMode.dark,
-                          child: Text( appLocalizations.settings_darkMode),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text( "${appLocalizations.settings_language}: ", style: Theme.of(context).textTheme.bodyLarge ),
-                    DropdownButton(
-                      value: settingsController.locale,
-                      items: [
-                        DropdownMenuItem(
-                          value: "en",
-                          child: Text( "🇺🇸 English - ${appLocalizations.lang_english}" ),
-                        ),
-                        DropdownMenuItem(
-                          value: "el",
-                          child: Text( "🇬🇷 Greek - ${appLocalizations.lang_greek}" ),
-                        ),
-                      ], 
-                      onChanged: (value) {
-                        if ( value != null ){
-                          settingsController.updateLocaleSetting( value );
-                        }
-                      },
-                    )
-                  ],
-                )
+                ColorThemeMenu(appLocalizations: appLocalizations, settingsController: settingsController),
+                LocaleSettingsDropMenu(appLocalizations: appLocalizations, settingsController: settingsController)
 
               ],
             ),
             Column(
               children: [
-                TextButton(
-                  style: squaredButtonStyle,
-                  onPressed: ()async{
-                    
-                    
-                    const appId = "com.deadlyunicorn.path_finders";  //edit inside gradle
-
-                    try{
-
-                       await launchUrl( 
-                        Uri.parse("market://details?id=$appId"),
-                       );
-
-                    }
-                    catch( error ){ //no playstore installed?!
-                      await launchUrl( 
-                        Uri.parse("https://play.google.com/store/apps/details?id=$appId"),
-                       );
-
-                    }
-                   
-                  }, 
-                  child: Text( appLocalizations.reviewText )
-                ),
-                TextButton(
-                  style: squaredButtonStyle,
-                  onPressed: (){
-                    showDialog(
-                      context: context, 
-                      builder: (context) => const BugReportDialog()
-                    );
-                  }, 
-                  child: Text( appLocalizations.bugReport )
-                )
-                
+                LeaveReviewButton(appLocalizations: appLocalizations),
+                BugReportButton(appLocalizations: appLocalizations)
 
               ],
             )
