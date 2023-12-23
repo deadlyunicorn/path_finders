@@ -101,6 +101,8 @@ class _TrackerViewState extends State<TrackerView> {
                     .toStringAsFixed(7) 
               );
 
+
+
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,7 +138,8 @@ class _TrackerViewState extends State<TrackerView> {
                         ?const SizedBox.shrink()
                         :CompassView( 
                           targetLocationRotationInRads: targetLocationRotationInRads, 
-                          targetLocation: targetLocation 
+                          targetLocation: targetLocation,
+                          distanceToTarget: distanceToTarget,
                         ),
                       Column(
                         children: [
@@ -175,7 +178,8 @@ class _TrackerViewState extends State<TrackerView> {
                   ?Expanded(
                     child: CompassView(
                       targetLocationRotationInRads: targetLocationRotationInRads, 
-                      targetLocation: targetLocation
+                      targetLocation: targetLocation,
+                      distanceToTarget: distanceToTarget
                     )
                   ) 
                   :const SizedBox.shrink()

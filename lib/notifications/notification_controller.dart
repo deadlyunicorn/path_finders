@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:path_finders/src/tracker/format_distance.dart';
 
 class NotificationController {
 
@@ -15,7 +16,7 @@ class NotificationController {
   static Future<void> initializeLocalNotifications() async {
     await AwesomeNotifications()
       .initialize(
-        'resource://drawable/icon',// or null
+        null,// 'resource://drawable/icon.png',// or null
         [
           NotificationChannel(
               channelKey: 'alerts',
@@ -26,9 +27,9 @@ class NotificationController {
               importance: NotificationImportance.Low,
               defaultPrivacy: NotificationPrivacy.Public,
               defaultColor: Colors.blue,
-              ledColor: Colors.blue)
+              ledColor: Colors.blue
+        )
         ],
-        debug: true
       );
 
   }
@@ -97,34 +98,34 @@ class NotificationController {
   ///  *********************************************
   ///     NOTIFICATION CREATION METHODS
   ///  *********************************************
-  static Future<void> createNewNotification( BuildContext context ) async {
+  static Future<void> createNewNotification( BuildContext context, int distanceToTarget ) async {
     
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
-            id: -1, // -1 is replaced by a random number
+            id: 45, // -1 is replaced by a random number //keep a specific one to have only one notification instance
             channelKey: 'alerts',
-            title: 'Hello world!',
-            progress: TimeOfDay.now().minute,
-            locked: true,
-            showWhen: false,
-            body: "OH NO",
-            autoDismissible: false,
-            notificationLayout: NotificationLayout.ProgressBar,
-            category: NotificationCategory.LocalSharing,
+            notificationLayout: NotificationLayout.BigText,
 
-            
-            payload: {'notificationId': '1234567890'}),
+            // notificationLayout: NotificationLayout.BigPicture,
+            // bigPicture: "asset://assets/images/deadlyunicorn.png",
+            title: '${DistanceFormatter.metersFormatter(distanceToTarget)} to Target',
+            locked: true,
+            summary: "Distance Tracker",
+            showWhen: false,
+            // body: DateTime.timestamp().toString(),
+            autoDismissible: false,
+              category: NotificationCategory.LocalSharing,
+            ),
         actionButtons: [
-          NotificationActionButton(
-              key: 'REPLY',
-              label: 'Reply Message',
-              actionType: ActionType.SilentAction),
-          NotificationActionButton(
-              key: 'DISMISS',
-              label: 'Dismiss',
-              actionType: ActionType.DismissAction,
-              isDangerousOption: true)
-        ]);
+          // NotificationActionButton(
+          //     key: 'DISMISS',
+          //     label: 'Dismiss',
+          //     actionType: ActionType.DismissAction,
+          //     isDangerousOption: true,
+              
+          // )
+        ]
+        );
   }
 
   static Future<void> cancelNotifications() async {
