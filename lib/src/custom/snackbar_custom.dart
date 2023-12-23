@@ -22,10 +22,10 @@ class CustomSnackBar extends SnackBar {
       textAlign: TextAlign.center,
       style: textStyle !=null 
         ? textStyle.copyWith( fontWeight: FontWeight.w600 )
-        : TextStyle( color: Theme.of(context).colorScheme.onBackground ).copyWith( fontWeight: FontWeight.w600 )
+        : TextStyle( color: Theme.of(context).colorScheme.onPrimary ).copyWith( fontWeight: FontWeight.w600 )
     ),
     width: max(MediaQuery.sizeOf(context).width/2 , min( MediaQuery.sizeOf(context).width - 50, 500) ) ,
-    backgroundColor: bgColor ?? Theme.of(context).primaryColor.withAlpha( 220 ),
+    backgroundColor: bgColor ?? Theme.of(context).colorScheme.primary.withAlpha( 220 ),
     behavior: SnackBarBehavior.floating,
   );
 
