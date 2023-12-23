@@ -48,6 +48,7 @@ class SettingsView extends StatelessWidget {
             Column(
               children: [
                 LeaveReviewButton(appLocalizations: appLocalizations),
+                SponsorButton(appLocalizations: appLocalizations),
                 BugReportButton(appLocalizations: appLocalizations)
 
               ],
