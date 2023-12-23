@@ -100,7 +100,7 @@ class SettingsView extends StatelessWidget {
                   onPressed: ()async{
                     
                     
-                    const appId = "com.example.path_finders";  //edit inside gradle
+                    const appId = "com.deadlyunicorn.path_finders";  //edit inside gradle
 
                     try{
 
