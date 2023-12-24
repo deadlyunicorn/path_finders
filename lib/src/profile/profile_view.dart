@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/styles.dart';
+import 'package:path_finders/src/profile/disclaimer/disclaimer_dialog.dart';
 import 'package:path_finders/src/profile/location_sharing_widget.dart';
 import 'package:path_finders/src/storage_services.dart';
 
@@ -197,87 +198,10 @@ class _ProfileViewState extends State<ProfileView> {
 
 showDisclaimerDialog( BuildContext context ){
 
-  final appLocalizations = AppLocalizations.of( context );
 
   return showDialog(
     context: context, 
-    builder: ( context )=> Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular( 4 )
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all( 8.0 ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon( 
-                  shadows: [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 4,
-                    )
-                  ],
-                  Icons.warning, 
-                  color: Colors.yellow,
-                ),
-                const SizedBox.square( dimension: 12 ),
-                Text( "Disclaimer", 
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                const SizedBox.square( dimension: 12 ),
-                const Icon( 
-                  shadows: [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 4,
-                        )
-                      ],
-                  Icons.warning, 
-                  color: Colors.yellow
-                ),
-              ],
-            ),
-            const SizedBox.square( dimension: 12 ),
-            Text(
-              appLocalizations!.dialog_liveSharing_disclaimer,
-              textAlign: TextAlign.center),
-            
-            Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  }, 
-                  style: squaredButtonStyle,
-                  child: Text( appLocalizations.dialog_nevermind, style: TextStyle( color: Theme.of(context).colorScheme.error ),)
-                ),
-                TextButton(
-                  style: squaredButtonStyle,
-                  onPressed: ()async{
-                    await DisclaimerAcceptionFile.acceptDisclaimer();
-                    
-                    if ( context.mounted ){
-                      Navigator.pop(context);
-                    }
-                  }, 
-                  child: Text( appLocalizations.dialog_confirm )
-                )
-
-              ],
-            )
-            
-
-
-          ],
-        ) 
-      )
-    )
+    builder: ( context )=> const DisclaimerDialog()
   );
 
 }
