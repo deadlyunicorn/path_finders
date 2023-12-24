@@ -9,20 +9,20 @@ import 'package:path_finders/src/friends/friends_view_components/entry_insertion
 import 'package:path_finders/src/friends/friends_view_components/entry_insertion_views/dialog_actions.dart';
 import 'package:path_finders/src/friends/id_formatter.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
+import 'package:provider/provider.dart';
 
 class LiveEntryDialog extends StatefulWidget{
 
-  final TargetWithIdListingsProvider listingsProvider;
-
   final String? _targetId; 
   final String? _targetName;
+  final TargetWithIdListingsProvider listingsProvider;
 
   const LiveEntryDialog(
     {
       super.key, 
-      required this.listingsProvider,
       String? targetId,
       String? targetName,
+      required this.listingsProvider
     }) : _targetName = targetName, _targetId = targetId;
 
   @override

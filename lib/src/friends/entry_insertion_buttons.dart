@@ -42,8 +42,9 @@ class EntryInsertionButtons extends StatelessWidget{
 
                   onPressed: () => showDialog(
                     context: context, 
-                    builder: (context) => 
-                      LiveEntryDialog( listingsProvider: liveListingsProvider ),
+                    builder: (context) {
+                      return LiveEntryDialog( listingsProvider: liveListingsProvider );
+                    }
                   ),
                   child: Text( appLocalizations.friends_addLive ) 
                 )

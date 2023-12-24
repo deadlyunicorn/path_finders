@@ -7,17 +7,13 @@ class TargetProvider with ChangeNotifier{
   String _targetName = "North Pole";
 
   void setTargetLocation( Coordinates newLocation ){
-
     _targetLocation = newLocation;
     notifyListeners();
-
   }
 
   void setTargetName( String newName ){
-    
     _targetName = newName;
     notifyListeners();
-
   }
 
   Coordinates get targetLocation => _targetLocation;
