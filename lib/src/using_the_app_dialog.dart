@@ -78,6 +78,7 @@ class _UsingTheAppDialogState extends State<UsingTheAppDialog> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
+                                tooltip: "Previous tip",
                                 onPressed: (){
                                   setState(() {
                                     i--;
@@ -95,6 +96,7 @@ class _UsingTheAppDialogState extends State<UsingTheAppDialog> {
                             children: [
                               ( i < UsingTheAppDialog._descriptions.length - 1  ) 
                                 ?IconButton(
+                                  tooltip: "Next tip",
                                   onPressed: (){
                                     setState(() {
                                       i++;
