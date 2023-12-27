@@ -150,7 +150,7 @@ class _TrackerViewState extends State<TrackerView> {
                                           },
                                           tooltip: appLocalizations.tracking_showOnMap,
                                           color: Theme.of(context).colorScheme.primary,
-                                          icon: const Icon ( Icons.navigation_outlined ),
+                                          icon: const Icon ( Icons.navigation ),
                                         ),
                                       ),
                                     )
