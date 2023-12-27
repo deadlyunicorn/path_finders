@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
-import 'package:path_finders/notifications/notification_controller.dart';
 import 'package:path_finders/src/copying_service.dart';
 import 'package:path_finders/src/custom/is_landscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
@@ -132,16 +131,6 @@ class _CompassViewState extends State<CompassView> {
                                 : accuracy < 30? appLocalizations.compass_accuracy_low :appLocalizations.compass_accuracy_great
                               :appLocalizations.compass_accuracy_calibrationNeeded}"
                         ),
-                      ),
-                      FutureBuilder(
-                        future:(()async{
-                          if ( notificationEnabled ){
-                            if ( context.mounted ) NotificationController.createNewNotification( context, widget.distanceToTarget );
-                          } else{
-                            await NotificationController.cancelNotifications();
-                          }
-                        })(), 
-                        builder: (context, snapshot) => const SizedBox.shrink(),
                       ),
                     ],
                   ),
