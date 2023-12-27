@@ -113,7 +113,7 @@ class _TrackerViewState extends State<TrackerView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.85,
+                        width: isLandscape(context)? MediaQuery.sizeOf(context).width * 0.5 :MediaQuery.sizeOf(context).width * 0.85,
                         child: Padding(
                           padding: const EdgeInsets.only( top: 8 ),
                           child: distanceToTarget < 15
