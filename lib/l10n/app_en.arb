@@ -8,6 +8,7 @@
   "tracking_currentPositionIs": "Your current position is",
   "tracking_nearby": "Your target is nearby",
   "tracking_distanceToIs": "Your distance to {point} is",
+  "tracking_showOnMap": "Show on the map",
 
   "snackbar_copied" : "Copied",
   "snackbar_invalidData" : "Your data is not valid.",

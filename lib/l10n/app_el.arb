@@ -10,6 +10,8 @@
   "tracking_currentPositionIs": "Οι τρέχουσες συντεταγμένες σας είναι",
   "tracking_nearby": "Ο στόχος σας βρίσκεται τριγύρω",
   "tracking_distanceToIs": "{point} απέχει από εσάς",
+  "tracking_showOnMap": "Εμφάνιση στον χάρτη",
+
 
   "snackbar_copied" : "Έγινε Αντιγραφή",
   "snackbar_invalidData" : "Μη έγκυρα δεδομένα.",

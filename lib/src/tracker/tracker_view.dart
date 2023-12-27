@@ -12,6 +12,7 @@ import 'package:path_finders/src/storage_services.dart';
 import 'package:path_finders/src/tracker/compass/compass_view.dart';
 import 'package:path_finders/src/tracker/format_distance.dart';
 import 'package:path_finders/src/types/coordinates.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TrackerView extends StatefulWidget{
 
@@ -111,28 +112,54 @@ class _TrackerViewState extends State<TrackerView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only( top: 8 ),
-                        child: RichText( 
-                          text: 
-                          ( distanceToTarget < 15 )
-                          ?TextSpan( 
-                            text: appLocalizations!.tracking_nearby ,
-                            style: TextStyle( color: Theme.of(context).colorScheme.primary ),
-                          )
-                          :TextSpan(
-                            text: " ${ appLocalizations!.tracking_distanceToIs(appState.targetName)}\n",
-                            style: TextStyle( color: Theme.of(context).colorScheme.onBackground ),
-                            children: [ 
-                              TextSpan( 
-                                style: const TextStyle( fontSize: 24 ),
-                                text: DistanceFormatter.metersFormatter( distanceToTarget )
-                              )
-                            ]
-                          ),
-                          textAlign: TextAlign.center,
-                          textScaler: const TextScaler.linear(1.5),
-                        )
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.85,
+                        child: Padding(
+                          padding: const EdgeInsets.only( top: 8 ),
+                          child: distanceToTarget < 15
+                            ?Text(
+                              appLocalizations!.tracking_nearby,
+                              style: Theme.of(context).textTheme.headlineSmall,
+                              textAlign: TextAlign.center,
+                            )
+                            :Column( 
+                              children:[
+                                Text( 
+                                  " ${ appLocalizations!.tracking_distanceToIs(appState.targetName)}",
+                                  style: Theme.of(context).textTheme.headlineSmall,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(
+                                      width: 48,
+                                    ),
+                                    Text( 
+                                      DistanceFormatter.metersFormatter( distanceToTarget ),
+                                      style: Theme.of(context).textTheme.headlineMedium,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(
+                                      width: 48,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: IconButton(
+                                          onPressed: ()async{
+                                            await launchUrl( Uri.parse( "http://maps.google.com/maps?daddr=${targetLocation.toString()}" ));
+                                          },
+                                          tooltip: appLocalizations.tracking_showOnMap,
+                                          color: Theme.of(context).colorScheme.primary,
+                                          icon: const Icon ( Icons.navigation_outlined ),
+                                        ),
+                                      ),
+                                    )
+                                    
+                                  ],
+                                )
+                              ]
+                            ),
+                        ),
                       ),
                       isLandscape(context)
                         ?const SizedBox.shrink()
