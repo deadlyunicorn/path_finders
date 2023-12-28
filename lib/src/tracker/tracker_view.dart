@@ -24,6 +24,7 @@ class TrackerView extends StatefulWidget{
 
 class _TrackerViewState extends State<TrackerView> {
 
+  bool notificationIsEnabled = false;
 
   @override
   void initState() {
@@ -108,13 +109,19 @@ class _TrackerViewState extends State<TrackerView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      DistanceToTargetView(distanceToTarget: distanceToTarget, appLocalizations: appLocalizations, appState: appState, targetLocation: targetLocation),
+                      DistanceToTargetView(
+                        appState: appState,
+                        distanceToTarget: distanceToTarget, 
+                        appLocalizations: appLocalizations,
+                        notificationIsEnabled: notificationIsEnabled, 
+                        targetLocation: targetLocation),
                       isLandscape(context)
                         ?const SizedBox.shrink()
                         :CompassView( 
                           targetLocationRotationInRads: targetLocationRotationInRads, 
                           targetLocation: targetLocation,
                           distanceToTarget: distanceToTarget,
+                          toggleNotificationIndication: toggleNotificationIndication,
                         ),
                       CurrentPositionView(appLocalizations: appLocalizations, currentLocation: currentLocation)
                      
@@ -125,7 +132,8 @@ class _TrackerViewState extends State<TrackerView> {
                       child: CompassView(
                         targetLocationRotationInRads: targetLocationRotationInRads, 
                         targetLocation: targetLocation,
-                        distanceToTarget: distanceToTarget
+                        distanceToTarget: distanceToTarget,
+                        toggleNotificationIndication: toggleNotificationIndication,
                       )
                     ) 
                     :const SizedBox.shrink()
@@ -157,5 +165,11 @@ class _TrackerViewState extends State<TrackerView> {
         }
       )
     );
+  }
+
+  void toggleNotificationIndication() {
+    setState(() {
+      notificationIsEnabled = !notificationIsEnabled;
+    });
   }
 }

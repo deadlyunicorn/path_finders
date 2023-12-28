@@ -16,12 +16,14 @@ class CompassView extends StatefulWidget {
   final double targetLocationRotationInRads;
   final Coordinates targetLocation;
   final int distanceToTarget;
+  final Function toggleNotificationIndication;
 
   const CompassView({
     super.key, 
     required this.targetLocationRotationInRads, 
     required this.targetLocation ,
-    required this.distanceToTarget
+    required this.distanceToTarget,
+    required this.toggleNotificationIndication
   });
 
   @override
@@ -31,7 +33,6 @@ class CompassView extends StatefulWidget {
 class _CompassViewState extends State<CompassView> {
 
   bool isBehavingLikeRealCompass = true;
-  bool notificationEnabled = false;
 
   @override
   Widget build( BuildContext context){
@@ -83,11 +84,8 @@ class _CompassViewState extends State<CompassView> {
               },
               onDoubleTap: (){
                 
-                setState(() {
-                  notificationEnabled = !notificationEnabled;
-                });
+                widget.toggleNotificationIndication();
                 
-                // NotificationAbstractions.displayTest();
               },
               onLongPress: (){
                 CopyService.copyTextToClipboard( widget.targetLocation.toString(), context: context);
