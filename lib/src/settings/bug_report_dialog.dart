@@ -66,6 +66,7 @@ class _BugReportDialogState extends State<BugReportDialog> {
                       if ( context.mounted ){
                         
                         Navigator.pop( context );
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger
                         .of( context )
                         .showSnackBar(

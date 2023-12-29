@@ -100,7 +100,9 @@ class _CompassViewState extends State<CompassView> {
                     await checkForegroundPermissions();
                     if ( await Geolocator.checkPermission() != LocationPermission.always ){
 
+                      
                       if ( context.mounted ) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           CustomSnackBar(textContent: appLocalizations.tracking_alwaysOnRequest, context: context)
                         );
