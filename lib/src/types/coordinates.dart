@@ -13,7 +13,22 @@ class Coordinates {
   /// this can also be reffered to as ΔCoordinates.
   Coordinates getDifference( Coordinates pointB ){
 
-    return Coordinates( pointB.latitude - latitude, pointB.longitude - longitude );
+    double longitudeDiff = pointB.longitude - longitude;
+
+
+    //if the distance to travel is larget than 180 degs on earth
+    // we need to go the other way
+    if (  longitudeDiff.abs() > 180  ){ 
+
+      if ( longitude > pointB.longitude ){
+        longitudeDiff = 360 - longitudeDiff.abs();
+      }
+      else{
+        longitudeDiff =  - ( 360 - longitudeDiff.abs() );
+      }
+    }
+
+    return Coordinates( pointB.latitude - latitude, longitudeDiff );
   }
 
   /// Find the distance from point A ( 0, 0 ) to point B.
