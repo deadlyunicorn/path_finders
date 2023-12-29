@@ -9,6 +9,7 @@
   "tracking_nearby": "Your target is nearby",
   "tracking_distanceToIs": "Your distance to {point} is",
   "tracking_showOnMap": "Show on the map",
+  "tracking_alwaysOnRequest": "Make sure the app's location access is always on, in order to display the distance to your target as a notification.",
 
   "snackbar_copied" : "Copied",
   "snackbar_invalidData" : "Your data is not valid.",

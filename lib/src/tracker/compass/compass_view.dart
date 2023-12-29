@@ -1,29 +1,31 @@
 import 'dart:math' as math;
 
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
-import 'package:path_finders/src/copying_service.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:path_finders/src/custom/copying_service.dart';
 import 'package:path_finders/src/custom/is_landscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/tracker/compass/compass_widget.dart';
+import 'package:path_finders/src/tracker/compass/notification_service.dart';
 import 'package:path_finders/src/types/coordinates.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CompassView extends StatefulWidget {
   
   final double targetLocationRotationInRads;
   final Coordinates targetLocation;
   final int distanceToTarget;
-  final Function toggleNotificationIndication;
 
   const CompassView({
     super.key, 
     required this.targetLocationRotationInRads, 
     required this.targetLocation ,
     required this.distanceToTarget,
-    required this.toggleNotificationIndication
   });
 
   @override
@@ -33,6 +35,7 @@ class CompassView extends StatefulWidget {
 class _CompassViewState extends State<CompassView> {
 
   bool isBehavingLikeRealCompass = true;
+  bool notificationIsEnabled = false;
 
   @override
   Widget build( BuildContext context){
@@ -82,9 +85,47 @@ class _CompassViewState extends State<CompassView> {
 
 
               },
-              onDoubleTap: (){
-                
-                widget.toggleNotificationIndication();
+              onDoubleTap: ()async{
+
+                 if ( notificationIsEnabled ){
+
+                  if ( await FlutterForegroundTask.isRunningService ) await FlutterForegroundTask.stopService();
+                  setState(() {
+                    notificationIsEnabled = false;
+                  });
+
+                }else{
+                  
+                  try{
+                    await checkForegroundPermissions();
+                    if ( await Geolocator.checkPermission() != LocationPermission.always ){
+
+                      if ( context.mounted ) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          CustomSnackBar(textContent: appLocalizations.tracking_alwaysOnRequest, context: context)
+                        );
+                      } 
+                      await Permission.locationAlways.request();
+                      return;
+                    }
+
+                  }catch( error ){
+                    //something went wrong
+                  }
+
+                  if ( !(await FlutterForegroundTask.isRunningService) ){
+                    await FlutterForegroundTask.startService(
+                      notificationTitle: "Distance Tracker", 
+                      notificationText: "Initializing..",
+                      callback: startCallback
+                    );
+                  }
+                  
+                  setState(() {
+                    notificationIsEnabled = true;
+                  });
+                  
+                }
                 
               },
               onLongPress: (){
@@ -147,5 +188,49 @@ class _CompassViewState extends State<CompassView> {
     );
 
     
+  }
+
+  
+  @override
+  void initState(){
+    super.initState();
+    FlutterForegroundTask.init(
+      androidNotificationOptions: AndroidNotificationOptions(
+        channelId: 'path_finders_foreground_service',
+        channelName: 'Path Finders Foreground Service Notification',
+        channelDescription: 'Distance to the current target is shown as notification.',
+        channelImportance: NotificationChannelImportance.LOW,
+        priority: NotificationPriority.LOW,
+        iconData: const NotificationIconData(
+          resType: ResourceType.mipmap,
+          resPrefix: ResourcePrefix.ic,
+          name: 'launcher',
+        ),
+        buttons: [
+          const NotificationButton(id: "dismissButton", text: "Dismiss")
+        ]
+      ),
+      iosNotificationOptions: const IOSNotificationOptions(
+        showNotification: true,
+        playSound: false,
+      ),
+      foregroundTaskOptions: const ForegroundTaskOptions(
+        isOnceEvent: true,
+      ),
+    );
+  }
+
+  Future<void> checkForegroundPermissions() async {
+    if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
+      // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
+      await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+    }
+    
+    // Android 13 and higher, you need to allow notification permission to expose foreground service notification.
+    final NotificationPermission notificationPermissionStatus =
+        await FlutterForegroundTask.checkNotificationPermission();
+    if (notificationPermissionStatus != NotificationPermission.granted) {
+      await FlutterForegroundTask.requestNotificationPermission();
+    }
   }
 }
