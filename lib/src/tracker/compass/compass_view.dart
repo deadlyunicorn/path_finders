@@ -201,7 +201,7 @@ class _CompassViewState extends State<CompassView> {
         channelId: 'path_finders_foreground_service',
         channelName: 'Path Finders Foreground Service Notification',
         channelDescription: 'Distance to the current target is shown as notification.',
-        channelImportance: NotificationChannelImportance.LOW,
+        channelImportance: NotificationChannelImportance.DEFAULT,
         priority: NotificationPriority.LOW,
         iconData: const NotificationIconData(
           resType: ResourceType.mipmap,
