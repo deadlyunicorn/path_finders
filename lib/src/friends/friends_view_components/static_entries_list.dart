@@ -46,8 +46,7 @@ class StaticEntriesList extends StatelessWidget {
                   final SharedPreferences prefs = await SharedPreferences.getInstance();
                   await prefs.setString( 'staticTarget', targetName );
     
-                  targetProvider.setTargetLocation( targetCoordinates );
-                  targetProvider.setTargetName( targetName );
+                  targetProvider.setTarget(targetName: targetName, targetLocation: targetCoordinates);
     
     
                 },

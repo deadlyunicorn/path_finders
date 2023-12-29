@@ -89,9 +89,10 @@ class LiveEntryListing extends StatelessWidget {
             && !targetDetailsSnapshotData.hasErrorMessage() 
           ){
         
-            targetProvider.setTargetName( targetId ) ;
-            targetProvider.setTargetLocation( targetDetailsSnapshotData.getCoordinates()! ) ;
-        
+            targetProvider.setTarget(
+              targetName: targetName, 
+              targetLocation: targetDetailsSnapshotData.getCoordinates()!
+            );
           }
         },
         onLongPress: () {

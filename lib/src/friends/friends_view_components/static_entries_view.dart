@@ -66,8 +66,7 @@ class StaticEntriesView extends StatelessWidget{
                   if ( element["targetName"] == lastStaticTarget ){
     
                     final coordinates = Coordinates( element["latitude"], element["longitude"] );
-                    targetProvider.setTargetName(lastStaticTarget);
-                    targetProvider.setTargetLocation( coordinates );
+                    targetProvider.setTarget(targetName: lastStaticTarget, targetLocation: coordinates);
                     
                   } 
                 }
