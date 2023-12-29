@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path_finders/src/custom/styles.dart';
-import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
 
 class DisclaimerDialogButtons extends StatelessWidget {
   const DisclaimerDialogButtons({

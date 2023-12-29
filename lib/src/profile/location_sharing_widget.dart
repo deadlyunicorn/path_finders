@@ -8,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path_finders/src/profile/user_registration_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_finders/src/providers/location_services_provider.dart';
-import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
 import 'package:provider/provider.dart';
 
 

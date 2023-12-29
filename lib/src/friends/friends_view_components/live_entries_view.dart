@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:path_finders/src/friends/friends_view_components/entry_lists/live_entries_list.dart';
 import 'package:provider/provider.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
-import 'package:path_finders/src/storage_services.dart';
-import 'package:path_finders/src/target_location_fetch.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
+import 'package:path_finders/src/custom/target_location_fetch.dart';
 
 class LiveEntriesView extends StatelessWidget{
 

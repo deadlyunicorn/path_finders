@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:path_finders/src/copying_service.dart';
+import 'package:path_finders/src/custom/copying_service.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
 class CurrentPositionView extends StatelessWidget {

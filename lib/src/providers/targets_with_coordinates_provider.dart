@@ -1,5 +1,5 @@
 import 'package:path_finders/src/providers/target_listings_abstract.dart';
-import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
 class TargetWithCoordinatesListingsProvider extends TargetListingsProviderAbstract{

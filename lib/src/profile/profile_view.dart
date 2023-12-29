@@ -1,11 +1,11 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
-import 'package:path_finders/src/copying_service.dart';
+import 'package:path_finders/src/custom/copying_service.dart';
 import 'package:path_finders/src/custom/styles.dart';
 import 'package:path_finders/src/profile/disclaimer/disclaimer_dialog.dart';
 import 'package:path_finders/src/profile/location_sharing_widget.dart';
-import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
 
 class ProfileView extends StatefulWidget{
 

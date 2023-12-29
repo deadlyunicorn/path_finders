@@ -9,7 +9,7 @@ import 'package:path_finders/src/providers/location_services_provider.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
 import 'package:path_finders/src/providers/target_with_id_listings_provider.dart';
 import 'package:path_finders/src/providers/targets_with_coordinates_provider.dart';
-import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
 import 'package:path_finders/src/tracker/tracker_view.dart';
 import 'package:path_finders/src/using_the_app_dialog.dart';
 
