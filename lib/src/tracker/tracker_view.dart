@@ -10,7 +10,7 @@ import 'package:path_finders/src/tracker/loading_view_with_taking_too_long_messa
 import 'package:path_finders/src/custom/is_landscape.dart';
 import 'package:path_finders/src/custom/snackbar_custom.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
-import 'package:path_finders/src/storage_services.dart';
+import 'package:path_finders/src/custom/storage_services.dart';
 import 'package:path_finders/src/tracker/compass/compass_view.dart';
 import 'package:path_finders/src/types/coordinates.dart';
 
@@ -121,7 +121,6 @@ class _TrackerViewState extends State<TrackerView> {
                           targetLocationRotationInRads: targetLocationRotationInRads, 
                           targetLocation: targetLocation,
                           distanceToTarget: distanceToTarget,
-                          toggleNotificationIndication: toggleNotificationIndication,
                         ),
                       CurrentPositionView(appLocalizations: appLocalizations, currentLocation: currentLocation)
                      
@@ -133,7 +132,6 @@ class _TrackerViewState extends State<TrackerView> {
                         targetLocationRotationInRads: targetLocationRotationInRads, 
                         targetLocation: targetLocation,
                         distanceToTarget: distanceToTarget,
-                        toggleNotificationIndication: toggleNotificationIndication,
                       )
                     ) 
                     :const SizedBox.shrink()
@@ -167,9 +165,4 @@ class _TrackerViewState extends State<TrackerView> {
     );
   }
 
-  void toggleNotificationIndication() {
-    setState(() {
-      notificationIsEnabled = !notificationIsEnabled;
-    });
-  }
 }
