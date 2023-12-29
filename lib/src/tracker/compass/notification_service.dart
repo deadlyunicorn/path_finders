@@ -79,5 +79,13 @@ class FirstTaskHandler extends TaskHandler {
   void onDestroy(DateTime timestamp, SendPort? sendPort) async {
 
     await _userPositionStream?.cancel();
+    await FlutterForegroundTask.stopService();
+  }
+
+  @override
+  void onNotificationButtonPressed(String id) async{
+
+    await _userPositionStream?.cancel();
+    await FlutterForegroundTask.stopService();
   }
 }
