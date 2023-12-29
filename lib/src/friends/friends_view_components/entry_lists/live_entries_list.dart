@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:path_finders/src/friends/friends_view_components/entry_lists/live_entry_listing.dart';
 import 'package:path_finders/src/providers/target_provider.dart';
-import 'package:path_finders/src/target_location_fetch.dart';
+import 'package:path_finders/src/custom/target_location_fetch.dart';
 import 'package:path_finders/src/types/target_details.dart';
 import 'package:provider/provider.dart';
 
@@ -54,13 +54,13 @@ class LiveEntriesList extends StatelessWidget {
     
     
             // Updating the target provider's location whenever there is new data.
-            // liveTargetLocationUpdater(
-            //   targetId, 
-            //   selectedTargetName, 
-            //   targetDetailsFutureSnapshot, 
-            //   targetDetailsSnapshotData, 
-            //   targetProvider
-            // );
+            liveTargetLocationUpdater(
+              targetId, 
+              targetProvider.targetName, 
+              targetDetailsFutureSnapshot, 
+              targetDetailsSnapshotData, 
+              targetProvider
+            );
     
     
             final targetStatus = targetDetailsSnapshotData != null 
@@ -85,37 +85,37 @@ class LiveEntriesList extends StatelessWidget {
     );
   }
 
-  // void liveTargetLocationUpdater(String targetId, String selectedTargetName, AsyncSnapshot<TargetDetails?> targetDetailsFutureSnapshot, TargetDetails? targetDetailsSnapshotData, TargetProvider targetProvider) {
-  //   if ( targetId == selectedTargetName ){
+  void liveTargetLocationUpdater(String targetId, String selectedTargetName, AsyncSnapshot<TargetDetails?> targetDetailsFutureSnapshot, TargetDetails? targetDetailsSnapshotData, TargetProvider targetProvider) {
+    if ( targetId == selectedTargetName ){
         
-  //     if ( 
-  //       targetDetailsFutureSnapshot.connectionState == ConnectionState.done
-  //       && targetDetailsSnapshotData != null 
-  //     ){
+      if ( 
+        targetDetailsFutureSnapshot.connectionState == ConnectionState.done
+        && targetDetailsSnapshotData != null 
+      ){
         
-  //       final targetLocationFromServer = targetDetailsSnapshotData.getCoordinates();
-  //       final targetLocationFromProvider = targetProvider.targetLocation;
+        final targetLocationFromServer = targetDetailsSnapshotData.getCoordinates();
+        final targetLocationFromProvider = targetProvider.targetLocation;
     
-  //       //Updating the Target Provider in case
-  //       //Our streamer has returned new data about them.
-  //       //
-  //       //this basically updates the "Your distance is: XX m" widget.
-  //       if ( 
-  //         targetLocationFromServer != null 
-  //         && targetLocationFromServer.latitude != targetLocationFromProvider.latitude 
-  //         && targetLocationFromServer.longitude != targetLocationFromProvider.longitude 
-  //       ){
+        //Updating the Target Provider in case
+        //Our streamer has returned new data about them.
+        //
+        //this basically updates the "Your distance is: XX m" widget.
+        if ( 
+          targetLocationFromServer != null 
+          && targetLocationFromServer.latitude != targetLocationFromProvider.latitude 
+          && targetLocationFromServer.longitude != targetLocationFromProvider.longitude 
+        ){
         
-  //         WidgetsBinding.instance.addPostFrameCallback((duration) { 
-  //           targetProvider.setTargetLocation( targetLocationFromServer );
-  //         });
+          WidgetsBinding.instance.addPostFrameCallback((duration) { 
+            targetProvider.setTarget(targetName: selectedTargetName, targetLocation: targetLocationFromServer);
+          });
         
-  //       }
+        }
         
-  //     }
+      }
         
-  //   }
-  // }
+    }
+  }
 
   Widget setLeadingIconBasedOnTargetConnectionStatus(AsyncSnapshot<TargetDetails?> targetDetailsFutureSnapshot, Widget leadingIcon, TargetDetails? targetDetailsSnapshotData) {
     
