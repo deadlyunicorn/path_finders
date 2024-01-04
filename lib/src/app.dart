@@ -1,4 +1,3 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/ui/with_foreground_task.dart';
 import 'package:path_finders/src/page_selector.dart';
@@ -25,8 +24,19 @@ class MyApp extends StatelessWidget {
   
   final SettingsController settingsController;
   
-  static final _defaultLightColorScheme = ColorScheme.fromSwatch();
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch( brightness: Brightness.dark );
+  static final _defaultLightColorScheme = ColorScheme.fromSwatch(
+    backgroundColor: Colors.white,
+    primarySwatch: Colors.blue,
+    accentColor: Colors.blue,
+    errorColor: Colors.red,
+    brightness: Brightness.light,
+  );
+  static final _defaultDarkColorScheme = ColorScheme.fromSwatch( 
+    primarySwatch: Colors.blue,
+    accentColor: Colors.blue,  
+    backgroundColor: Colors.black,
+    brightness: Brightness.dark
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -45,57 +55,60 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, Widget? child) {
       
           return Consumer<SettingsController>(
-            builder: (context, value, child) => DynamicColorBuilder(
-              builder: ( lightColorScheme, darkColorScheme ) => MaterialApp( 
-      
-                restorationScopeId: 'path-finders',
-                locale: Locale( settingsController.locale ), 
-      
-                localizationsDelegates: const [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en', ''), // English, no country code
-                  Locale('el', 'GR'),
-                ],
-                onGenerateTitle: (BuildContext context) => "Path Finders",
-      
-                theme: ThemeData(
-                  useMaterial3: true,
-                  colorScheme: lightColorScheme ?? _defaultLightColorScheme 
-                ),
-                darkTheme: ThemeData(
-                  useMaterial3: true,
-                  colorScheme: darkColorScheme ?? _defaultDarkColorScheme
-                ),
-                themeMode: settingsController.themeMode,
-      
-      
-                home:  Scaffold(
-                  appBar: heightIsSmall(context)
-                  ? null
-                  : AppBar(
-                    elevation: 1,
-                    backgroundColor: Theme.of( context).primaryColor.withAlpha( 100 ),
-                    title: const Text( "Path Finders" ),
-                    actions: [
-                      SettingsDialogButton( settingsController: settingsController )
-                    ],
-                    
-                  ),
-                  body: Container(
-                    padding: const EdgeInsets.all( 20 ),
-                    alignment: Alignment.center,
-                    child: const PageSelector(),
-                  ),
-                
-                  bottomNavigationBar: const CustomNavigationBar() ,
+            builder: (context, value, child) => MaterialApp( 
+    
+              restorationScopeId: 'path-finders',
+              locale: Locale( settingsController.locale ), 
+    
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', ''), // English, no country code
+                Locale('el', 'GR'),
+              ],
+              onGenerateTitle: (BuildContext context) => "Path Finders",
+    
+              theme: ThemeData(
+                useMaterial3: true,
+                colorScheme: _defaultLightColorScheme,
+                appBarTheme: const AppBarTheme(
+                  backgroundColor: Colors.blue
                 )
+              ),
+              darkTheme: ThemeData(
+                useMaterial3: true,
+                colorScheme: _defaultDarkColorScheme,
+                appBarTheme: AppBarTheme(
+                  backgroundColor: Colors.blue.shade900.withAlpha(110)
+                ),
+              ),
+              themeMode: settingsController.themeMode,
+    
+    
+              home:  Scaffold(
+                appBar: heightIsSmall(context)
+                ? null
+                : AppBar(
+                  elevation: 1,
+                  title: const Text( "Path Finders" ),
+                  actions: [
+                    SettingsDialogButton( settingsController: settingsController )
+                  ],
+                  
+                ),
+                body: Container(
+                  padding: const EdgeInsets.all( 20 ),
+                  alignment: Alignment.center,
+                  child: const PageSelector(),
+                ),
+              
+                bottomNavigationBar: const CustomNavigationBar() ,
               )
-            ),
+            )
           ); 
         },
       
