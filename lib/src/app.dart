@@ -27,13 +27,13 @@ class MyApp extends StatelessWidget {
   static final _defaultLightColorScheme = ColorScheme.fromSwatch(
     backgroundColor: Colors.white,
     primarySwatch: Colors.blue,
-    accentColor: Colors.blue,
+    accentColor: Colors.blue.shade600,
     errorColor: Colors.red,
     brightness: Brightness.light,
   );
   static final _defaultDarkColorScheme = ColorScheme.fromSwatch( 
     primarySwatch: Colors.blue,
-    accentColor: Colors.blue,  
+    accentColor: Colors.blue.shade200,  
     backgroundColor: Colors.black,
     brightness: Brightness.dark
   );
@@ -76,7 +76,22 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
                 colorScheme: _defaultLightColorScheme,
                 appBarTheme: const AppBarTheme(
-                  backgroundColor: Colors.blue
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white
+                ),
+                switchTheme: SwitchThemeData(
+                  trackOutlineColor: MaterialStateProperty.resolveWith((states) {
+                    if( states.isEmpty ){
+                      return Colors.grey.shade400;
+                    }
+                  }),
+                  trackOutlineWidth: const MaterialStatePropertyAll(1),
+                  trackColor: MaterialStateProperty.resolveWith((states) {
+                    if ( !states.contains(MaterialState.selected)){
+                      return Colors.grey.shade200;
+                    }
+                    return null;
+                  })
                 )
               ),
               darkTheme: ThemeData(

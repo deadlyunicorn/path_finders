@@ -61,7 +61,7 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                       child: Text(
                         "${appLocalizations!.profile_yourIdIs} #${userId.substring(0,3)}-${userId.substring(3)}",
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith( color: Theme.of(context).colorScheme.onBackground ),
+                        style: Theme.of(context).textTheme.headlineLarge,
                         textAlign: TextAlign.center,
                       ), 
                     ),
