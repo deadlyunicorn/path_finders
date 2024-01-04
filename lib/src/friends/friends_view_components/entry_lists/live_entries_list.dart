@@ -22,7 +22,7 @@ class LiveEntriesList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final targetProvider = context.watch<TargetProvider>();
-
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return ListView.builder(
     
@@ -78,6 +78,7 @@ class LiveEntriesList extends StatelessWidget {
               targetStatus: targetStatus, 
               targetDetailsFutureSnapshot: targetDetailsFutureSnapshot, 
               targetProvider: targetProvider,
+              screenWidth: screenWidth
             );
           }
         );
@@ -86,8 +87,9 @@ class LiveEntriesList extends StatelessWidget {
   }
 
   void liveTargetLocationUpdater(String targetId, String selectedTargetName, AsyncSnapshot<TargetDetails?> targetDetailsFutureSnapshot, TargetDetails? targetDetailsSnapshotData, TargetProvider targetProvider) {
-    if ( targetId == selectedTargetName ){
-        
+
+    if ( selectedTargetName.contains( targetId ) ){
+
       if ( 
         targetDetailsFutureSnapshot.connectionState == ConnectionState.done
         && targetDetailsSnapshotData != null 

@@ -13,9 +13,11 @@ class LiveEntryListing extends StatelessWidget {
     required this.leadingIcon,
     required this.targetStatus,
     required this.targetDetailsFutureSnapshot,
-    required this.targetProvider
+    required this.targetProvider,
+    required this.screenWidth
   });
 
+  final double screenWidth;
   final String targetId;
   final String targetName;
   final Widget leadingIcon;
@@ -49,7 +51,7 @@ class LiveEntryListing extends StatelessWidget {
         
             const SizedBox( width: 5 ),
             
-            targetName.isNotEmpty
+            ( targetName.isNotEmpty && screenWidth > 550 )
             //target name exists? show targetId
             //else nothing
             ? Text( "#$targetId", textScaler: const TextScaler.linear(0.6) ) 
@@ -90,7 +92,7 @@ class LiveEntryListing extends StatelessWidget {
           ){
         
             targetProvider.setTarget(
-              targetName: targetName, 
+              targetName: "$targetName (#$targetId)", 
               targetLocation: targetDetailsSnapshotData.getCoordinates()!
             );
           }
@@ -116,7 +118,7 @@ class LiveEntryListing extends StatelessWidget {
   }
 
   BoxDecoration? borderHighlighter(TargetProvider targetProvider, BuildContext context) {
-    return targetProvider.targetName == targetId 
+    return targetProvider.targetName.contains( targetId )  
     ? BoxDecoration( //target is selected
       border: Border.all(
         color: Theme.of( context ).highlightColor
