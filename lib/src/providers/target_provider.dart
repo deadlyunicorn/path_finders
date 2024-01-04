@@ -13,7 +13,14 @@ class TargetProvider with ChangeNotifier{
     await FlutterForegroundTask.saveData(key: "targetLocation", value: targetLocation.toString());
     await FlutterForegroundTask.saveData(key: "targetName", value: targetName);
 
-    if ( await FlutterForegroundTask.isRunningService ) await FlutterForegroundTask.restartService();
+    try{
+      if ( await FlutterForegroundTask.isRunningService ) await FlutterForegroundTask.restartService();
+    }
+    catch(_){
+      //the above plugin throws errors when debugging
+      //using the desktop binary
+      //thus causing the whole function to fail..
+    }
 
     _targetLocation = targetLocation;
     _targetName = targetName;
